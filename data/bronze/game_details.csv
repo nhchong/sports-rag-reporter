@@ -1,0 +1,640 @@
+GameID,EventType,Period,Time,Strength,Team,Description,ScoreState,ScrapedAt
+1151048,PeriodScore,Final,,,The Shockers,1,,2025-12-18
+1151048,PeriodScore,Final,,,Don Cherry's,6,,2025-12-18
+1151048,Star,1ST STAR,,,Don Cherry's,Koch Tsatsos,,2025-12-18
+1151048,Star,2ND STAR,,,Don Cherry's,Ryan Willms,,2025-12-18
+1151048,Star,3RD STAR,,,The Shockers,Maxime Gagnon,,2025-12-18
+1151048,Goal,2nd,07:41,Ev,The Shockers,"#85 Maxime Gagnon (#24 Patrick Mcmullan, #3 Caden Bower)",1 - 0 Shockers,2025-12-18
+1151048,Goal,2nd,04:26,Ev,Don Cherry's,"#90 Ryan Willms (#13 Koch Tsatsos, #74 Sean Murphy)",1 - 1 Tie,2025-12-18
+1151048,Goal,2nd,03:43,Ev,Don Cherry's,"#74 Sean Murphy (#13 Koch Tsatsos, #90 Ryan Willms)",1 - 2 Cherry's,2025-12-18
+1151048,Goal,2nd,01:41,Ev,Don Cherry's,"#24 Dongyeon Kim (#19 Michael Murphy, #11 Jack Pirie)",1 - 3 Cherry's,2025-12-18
+1151048,Goal,3rd,13:12,Ev,Don Cherry's,"#13 Koch Tsatsos (#90 Ryan Willms, #14 Jack Spears)",1 - 4 Cherry's,2025-12-18
+1151048,Goal,3rd,08:00,Ev,Don Cherry's,"#14 Jack Spears (#13 Koch Tsatsos, #24 Dongyeon Kim)",1 - 5 Cherry's,2025-12-18
+1151048,Goal,3rd,04:46,Ev,Don Cherry's,"#90 Ryan Willms (#13 Koch Tsatsos, #88 Sam Pasich)",1 - 6 Cherry's,2025-12-18
+1151048,Penalty,1st,08:14,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1151048,Penalty,1st,02:36,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1151048,Penalty,2nd,12:58,02:00,Don Cherry's,Cross-Checking (Minor Penalty),,2025-12-18
+1151048,Penalty,3rd,05:59,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1151048,Penalty,3rd,02:01,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1151048,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1151048,Official,,,,,Referee: Mark Donohoe,,2025-12-18
+1151048,Official,,,,,Referee: Basil Jones,,2025-12-18
+1151037,PeriodScore,Final,,,Muffin Men,5,,2025-12-18
+1151037,PeriodScore,Final,,,The Sahara,1,,2025-12-18
+1151037,Star,1ST STAR,,,Muffin Men,Owen Burry,,2025-12-18
+1151037,Star,2ND STAR,,,Muffin Men,Cosimo Morin,,2025-12-18
+1151037,Star,3RD STAR,,,The Sahara,Jake Goldstein,,2025-12-18
+1151037,Goal,1st,12:37,Ev,Muffin Men,"#7 Cosimo Morin (#2 Owen Lownie, #27 Alan Wren)",1 - 0 Muffin Men,2025-12-18
+1151037,Goal,2nd,09:28,Ev,Muffin Men,#21 Owen Burry (#6 Cole Nead),2 - 0 Muffin Men,2025-12-18
+1151037,Goal,2nd,02:59,Ev,Muffin Men,"#21 Owen Burry (#10 Charles Levy, #44 Austin Walker)",3 - 0 Muffin Men,2025-12-18
+1151037,Goal,2nd,01:08,Ev,The Sahara,"#93 Jake Goldstein (#8 Mitchell Moloney, #26 Jamal Spencer-Guirgis)",3 - 1 Muffin Men,2025-12-18
+1151037,Goal,3rd,01:47,Ev,Muffin Men,#2 Owen Lownie,4 - 1 Muffin Men,2025-12-18
+1151037,Goal,3rd,01:23,Ev,Muffin Men,#7 Cosimo Morin (#11 Ryan Irwin),5 - 1 Muffin Men,2025-12-18
+1151037,Penalty,3rd,03:08,02:00,Muffin Men,Roughing (Minor Penalty),,2025-12-18
+1151037,Penalty,3rd,03:08,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1151037,Official,,,,,Referee: John Hall,,2025-12-18
+1151037,Official,,,,,Referee: Shane Bowler,,2025-12-18
+1151037,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1151040,PeriodScore,Final,,,4 Lines,4,,2025-12-18
+1151040,PeriodScore,Final,,,Flat-Earthers,4,,2025-12-18
+1151040,Star,1ST STAR,,,4 Lines,Jamie Poole,,2025-12-18
+1151040,Star,2ND STAR,,,Flat-Earthers,Ryan Lee,,2025-12-18
+1151040,Star,3RD STAR,,,4 Lines,Shane Ferguson,,2025-12-18
+1151040,Goal,1st,12:57,Ev,Flat-Earthers,"#2 Anthony Pennino (#5 Reid Chessell, #8 Ryan Lee)",0 - 1 Earthers,2025-12-18
+1151040,Goal,1st,01:16,Ev,4 Lines,#9 Jamie Poole (#19 Ethan Lowe),1 - 1 Tie,2025-12-18
+1151040,Goal,2nd,10:54,Ev,4 Lines,"#28 Shane Ferguson (#9 Jamie Poole, #19 Ethan Lowe)",2 - 1 4 Lines,2025-12-18
+1151040,Goal,2nd,04:23,Ev,Flat-Earthers,#5 Reid Chessell (#8 Ryan Lee),2 - 2 Tie,2025-12-18
+1151040,Goal,2nd,03:30,Ev,4 Lines,"#029 Thomas Mchugh (#28 Shane Ferguson, #10 Luke Gravett)",3 - 2 4 Lines,2025-12-18
+1151040,Goal,3rd,09:45,Ev,Flat-Earthers,#8 Ryan Lee (#86 Ethan Hirst),3 - 3 Tie,2025-12-18
+1151040,Goal,3rd,03:52,Ev,4 Lines,"#9 Jamie Poole (#28 Shane Ferguson, #29 Aidan O'Brien)",4 - 3 4 Lines,2025-12-18
+1151040,Goal,3rd,00:44,PP (EA),Flat-Earthers,#2 Anthony Pennino (#8 Ryan Lee),4 - 4 Tie,2025-12-18
+1151040,Penalty,2nd,13:08,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1151040,Penalty,2nd,13:08,02:00,4 Lines,Roughing (Minor Penalty),,2025-12-18
+1151040,Penalty,2nd,09:07,02:00,Flat-Earthers,Delay of Game (Minor Penalty),,2025-12-18
+1151040,Penalty,2nd,07:59,02:00,4 Lines,Slashing (Minor Penalty),,2025-12-18
+1151040,Penalty,3rd,01:38,02:00,4 Lines,Tripping (Minor Penalty),,2025-12-18
+1151040,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1151040,Official,,,,,Referee: John Hall,,2025-12-18
+1151040,Official,,,,,Referee: Shane Bowler,,2025-12-18
+1150350,PeriodScore,Final,,,Muffin Men,1,,2025-12-18
+1150350,PeriodScore,Final,,,The Shockers,6,,2025-12-18
+1150350,Star,1ST STAR,,,The Shockers,Nick Chong,,2025-12-18
+1150350,Star,2ND STAR,,,The Shockers,Marcus Gwyn-Neumann,,2025-12-18
+1150350,Star,3RD STAR,,,The Shockers,Michael Maddalena,,2025-12-18
+1150350,Goal,1st,14:23,Ev,The Shockers,"#2 Jack Matthews (#9 Josh Pope, #3 Caden Bower)",0 - 1 Shockers,2025-12-18
+1150350,Goal,1st,09:09,Ev,The Shockers,#7 Keelan Hughes (#9 Josh Pope),0 - 2 Shockers,2025-12-18
+1150350,Goal,2nd,13:44,Ev,The Shockers,#16 Marcus Gwyn-Neumann (#44 Nick Chong),0 - 3 Shockers,2025-12-18
+1150350,Goal,2nd,07:27,Ev,The Shockers,#44 Nick Chong,0 - 4 Shockers,2025-12-18
+1150350,Goal,2nd,05:28,Ev,The Shockers,#24 Patrick Mcmullan,0 - 5 Shockers,2025-12-18
+1150350,Goal,2nd,03:03,Ev,The Shockers,#3 Caden Bower (#85 Maxime Gagnon),0 - 6 Shockers,2025-12-18
+1150350,Goal,3rd,04:06,Ev,Muffin Men,#10 Charles Levy (#22 Harris Casper),1 - 6 Shockers,2025-12-18
+1150350,Penalty,1st,07:21,02:00,The Shockers,Too Many Men (Bench Minor Penalty),,2025-12-18
+1150350,Penalty,2nd,09:46,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1150350,Penalty,3rd,09:42,02:00,The Shockers,Slashing (Minor Penalty),,2025-12-18
+1150350,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1150350,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1150350,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1150351,PeriodScore,Final,,,Don Cherry's,4,,2025-12-18
+1150351,PeriodScore,Final,,,Flat-Earthers,2,,2025-12-18
+1150351,Star,1ST STAR,,,Don Cherry's,Ryan Willms,,2025-12-18
+1150351,Star,2ND STAR,,,Don Cherry's,Sean Murphy,,2025-12-18
+1150351,Star,3RD STAR,,,Flat-Earthers,Ryan Lee,,2025-12-18
+1150351,Goal,1st,11:23,Ev,Flat-Earthers,#8 Ryan Lee (#5 Reid Chessell),0 - 1 Earthers,2025-12-18
+1150351,Goal,1st,00:18,Ev,Don Cherry's,"#74 Sean Murphy (#93 Conor Pang, #90 Ryan Willms)",1 - 1 Tie,2025-12-18
+1150351,Goal,2nd,11:13,Ev,Flat-Earthers,#5 Reid Chessell (#8 Ryan Lee),1 - 2 Earthers,2025-12-18
+1150351,Goal,3rd,08:23,Ev,Don Cherry's,"#3 Nik Tsatsos (#19 Michael Murphy, #21 Cassady Louks)",2 - 2 Tie,2025-12-18
+1150351,Goal,3rd,07:12,Ev,Don Cherry's,#90 Ryan Willms (#19 Michael Murphy),3 - 2 Cherry's,2025-12-18
+1150351,Goal,3rd,03:11,SH,Don Cherry's,#74 Sean Murphy (#14 Jack Spears),4 - 2 Cherry's,2025-12-18
+1150351,Penalty,2nd,09:16,02:00,Don Cherry's,Tripping (Minor Penalty),,2025-12-18
+1150351,Penalty,3rd,05:21,02:00,Don Cherry's,Tripping (Minor Penalty),,2025-12-18
+1150351,Penalty,3rd,01:51,02:00,Flat-Earthers,Body Contact (Minor Penalty),,2025-12-18
+1150351,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1150351,Official,,,,,Referee: Shane Bowler,,2025-12-18
+1150351,Official,,,,,Referee: Eric Beltrami,,2025-12-18
+1150345,PeriodScore,Final,,,The Sahara,6,,2025-12-18
+1150345,PeriodScore,Final,,,4 Lines,4,,2025-12-18
+1150345,Star,1ST STAR,,,The Sahara,Sam Goldstein,,2025-12-18
+1150345,Star,2ND STAR,,,The Sahara,Derrick Wong,,2025-12-18
+1150345,Star,3RD STAR,,,4 Lines,Ryan Fitzgerald,,2025-12-18
+1150345,Goal,1st,09:13,Ev,The Sahara,"#3 Isaac Jeffers (#48 Derrick Wong, #14 Wes Martin)",1 - 0 Sahara,2025-12-18
+1150345,Goal,1st,02:50,Ev,The Sahara,"#6 Sam Goldstein (#16 Phil Nenadovic, #3 Isaac Jeffers)",2 - 0 Sahara,2025-12-18
+1150345,Goal,1st,00:01,SH,4 Lines,#24 Ryan Fitzgerald (#88 Thomas Hunter),2 - 1 Sahara,2025-12-18
+1150345,Goal,2nd,13:08,SH,4 Lines,#10 Luke Gravett (#33 Austin Weiler),2 - 2 Tie,2025-12-18
+1150345,Goal,3rd,13:50,Ev,4 Lines,#58 Ellis Gerussi-Turner (#9 Jamie Poole),2 - 3 4 Lines,2025-12-18
+1150345,Goal,3rd,10:39,Ev,4 Lines,"#11 Thomas Bevilacqua (#17 Adam Miller, #24 Ryan Fitzgerald)",2 - 4 4 Lines,2025-12-18
+1150345,Goal,3rd,06:54,Ev,The Sahara,"#16 Phil Nenadovic (#6 Sam Goldstein, #23 Yanir Levy)",3 - 4 4 Lines,2025-12-18
+1150345,Goal,3rd,02:39,PP,The Sahara,"#48 Derrick Wong (#17 Brendan Hancock, #3 Isaac Jeffers)",4 - 4 Tie,2025-12-18
+1150345,Goal,3rd,02:02,Ev,The Sahara,#6 Sam Goldstein (#48 Derrick Wong),5 - 4 Sahara,2025-12-18
+1150345,Goal,3rd,00:37,Ev (EN),The Sahara,#8 Mitchell Moloney (#14 Wes Martin),6 - 4 Sahara,2025-12-18
+1150345,Penalty,1st,01:15,04:00,4 Lines,Head Contact (Double Minor Penalty),,2025-12-18
+1150345,Penalty,2nd,08:02,02:00,The Sahara,Interference (Minor Penalty),,2025-12-18
+1150345,Penalty,2nd,04:48,02:00,The Sahara,Interference (Minor Penalty),,2025-12-18
+1150345,Penalty,2nd,03:27,02:00,The Sahara,Slashing (Minor Penalty),,2025-12-18
+1150345,Penalty,3rd,03:10,02:00,4 Lines,Roughing (Minor Penalty),,2025-12-18
+1150345,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1150345,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1150345,Official,,,,,Referee: Mike Bonke,,2025-12-18
+1147645,PeriodScore,Final,,,Flat-Earthers,1,,2025-12-18
+1147645,PeriodScore,Final,,,Muffin Men,8,,2025-12-18
+1147645,Star,1ST STAR,,,Muffin Men,Charles Levy,,2025-12-18
+1147645,Star,2ND STAR,,,Muffin Men,Cameron MacDonald,,2025-12-18
+1147645,Star,3RD STAR,,,Muffin Men,Cosimo Morin,,2025-12-18
+1147645,Goal,1st,13:21,Ev,Flat-Earthers,#71 Aaron Johnson,1 - 0 Earthers,2025-12-18
+1147645,Goal,1st,03:22,Ev,Muffin Men,"#11 Ryan Irwin (#21 Owen Burry, #7 Matt Mikelberg)",1 - 1 Tie,2025-12-18
+1147645,Goal,1st,02:15,Ev,Muffin Men,"#07 Cosimo Morin (#12 Cole Singleton, #10 Charles Levy)",1 - 2 Muffin Men,2025-12-18
+1147645,Goal,1st,00:20,Ev,Muffin Men,"#9 Connor Douglas (#10 Charles Levy, #69 Sean Hoey)",1 - 3 Muffin Men,2025-12-18
+1147645,Goal,2nd,14:35,Ev,Muffin Men,#69 Sean Hoey,1 - 4 Muffin Men,2025-12-18
+1147645,Goal,2nd,08:58,Ev,Muffin Men,#21 Owen Burry (#10 Charles Levy),1 - 5 Muffin Men,2025-12-18
+1147645,Goal,2nd,04:49,Ev,Muffin Men,#10 Charles Levy (#21 Owen Burry),1 - 6 Muffin Men,2025-12-18
+1147645,Goal,3rd,10:15,Ev,Muffin Men,#10 Charles Levy (#07 Cosimo Morin),1 - 7 Muffin Men,2025-12-18
+1147645,Goal,3rd,00:52,Ev,Muffin Men,#93 Aaron Barrett (#11 Ryan Irwin),1 - 8 Muffin Men,2025-12-18
+1147645,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1147645,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1147645,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1147639,PeriodScore,Final,,,The Shockers,7,,2025-12-18
+1147639,PeriodScore,Final,,,The Sahara,1,,2025-12-18
+1147639,Star,1ST STAR,,,The Shockers,Alex Matheson,,2025-12-18
+1147639,Star,2ND STAR,,,The Shockers,Patrick Mcmullan,,2025-12-18
+1147639,Star,3RD STAR,,,The Shockers,Michael Maddalena,,2025-12-18
+1147639,Goal,1st,01:30,Ev,The Shockers,"#18 Gabe Fischer-Schmidt (#24 Patrick Mcmullan, #91 Alex Matheson)",1 - 0 Shockers,2025-12-18
+1147639,Goal,2nd,14:18,Ev,The Shockers,"#44 Nick Chong (#85 Maxime Gagnon, #0 Julian Ezman)",2 - 0 Shockers,2025-12-18
+1147639,Goal,2nd,03:30,Ev,The Shockers,#24 Patrick Mcmullan (#3 Caden Bower),3 - 0 Shockers,2025-12-18
+1147639,Goal,2nd,01:37,Ev,The Shockers,#24 Patrick Mcmullan,4 - 0 Shockers,2025-12-18
+1147639,Goal,3rd,09:13,Ev,The Sahara,"#27 Ian Istvan (#13 Nolan Klumak, #26 Jamal Spencer-Guirgis)",4 - 1 Shockers,2025-12-18
+1147639,Goal,3rd,09:04,Ev,The Shockers,#91 Alex Matheson (#85 Maxime Gagnon),5 - 1 Shockers,2025-12-18
+1147639,Goal,3rd,06:48,Ev,The Shockers,#91 Alex Matheson (#24 Patrick Mcmullan),6 - 1 Shockers,2025-12-18
+1147639,Goal,3rd,04:30,Ev,The Shockers,"#85 Maxime Gagnon (#3 Caden Bower, #44 Nick Chong)",7 - 1 Shockers,2025-12-18
+1147639,Penalty,3rd,13:28,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1147639,Penalty,3rd,13:24,02:00,The Shockers,Interference (Minor Penalty),,2025-12-18
+1147639,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1147639,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1147639,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1147633,PeriodScore,Final,,,4 Lines,5,,2025-12-18
+1147633,PeriodScore,Final,,,Don Cherry's,8,,2025-12-18
+1147633,Star,1ST STAR,,,Don Cherry's,Koch Tsatsos,,2025-12-18
+1147633,Star,2ND STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1147633,Star,3RD STAR,,,4 Lines,Luke Gravett,,2025-12-18
+1147633,Goal,1st,13:42,Ev,Don Cherry's,"#13 Koch Tsatsos (#19 Michael Murphy, #9 Ben Pirie)",0 - 1 Cherry's,2025-12-18
+1147633,Goal,1st,11:39,Ev,Don Cherry's,"#13 Koch Tsatsos (#74 Sean Murphy, #4 Colin Digiacomo)",0 - 2 Cherry's,2025-12-18
+1147633,Goal,1st,06:58,Ev,Don Cherry's,"#19 Michael Murphy (#88 Sam Pasich, #4 Colin Digiacomo)",0 - 3 Cherry's,2025-12-18
+1147633,Goal,1st,05:09,Ev,Don Cherry's,#9 Ben Pirie (#14 Jack Spears),0 - 4 Cherry's,2025-12-18
+1147633,Goal,1st,02:19,Ev,4 Lines,#10 Luke Gravett (#11 Thomas Bevilacqua),1 - 4 Cherry's,2025-12-18
+1147633,Goal,2nd,12:38,Ev,Don Cherry's,"#11 Jack Pirie (#14 Jack Spears, #90 Ryan Willms)",1 - 5 Cherry's,2025-12-18
+1147633,Goal,2nd,07:03,Ev,4 Lines,"#19 Ethan Lowe (#10 Luke Gravett, #58 Ellis Gerussi-Turner)",2 - 5 Cherry's,2025-12-18
+1147633,Goal,2nd,05:38,Ev,4 Lines,#81 Spare (#29 Aidan O'Brien),3 - 5 Cherry's,2025-12-18
+1147633,Goal,2nd,04:47,Ev,Don Cherry's,"#13 Koch Tsatsos (#14 Jack Spears, #74 Sean Murphy)",3 - 6 Cherry's,2025-12-18
+1147633,Goal,3rd,09:12,Ev,4 Lines,"#19 Ethan Lowe (#029 Thomas Mchugh, #58 Ellis Gerussi-Turner)",4 - 6 Cherry's,2025-12-18
+1147633,Goal,3rd,04:29,Ev,Don Cherry's,#9 Ben Pirie (#74 Sean Murphy),4 - 7 Cherry's,2025-12-18
+1147633,Goal,3rd,03:15,Ev,4 Lines,"#33 Austin Weiler (#17 Adam Miller, #28 Shane Ferguson)",5 - 7 Cherry's,2025-12-18
+1147633,Goal,3rd,02:38,Ev,Don Cherry's,"#19 Michael Murphy (#11 Jack Pirie, #24 Dongyeon Kim)",5 - 8 Cherry's,2025-12-18
+1147633,Penalty,3rd,00:32,04:00,Don Cherry's,Slashing (Double Minor Penalty),,2025-12-18
+1147633,Official,,,,,Referee: Mike Bonke,,2025-12-18
+1147633,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1147633,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1145319,PeriodScore,Final,,,Muffin Men,5,,2025-12-18
+1145319,PeriodScore,Final,,,The Sahara,2,,2025-12-18
+1145319,Star,1ST STAR,,,Muffin Men,Aaron Barrett,,2025-12-18
+1145319,Star,2ND STAR,,,Muffin Men,Ryan Irwin,,2025-12-18
+1145319,Star,3RD STAR,,,The Sahara,Wes Martin,,2025-12-18
+1145319,Goal,1st,07:35,Ev,The Sahara,#48 Derrick Wong (#14 Wes Martin),0 - 1 Sahara,2025-12-18
+1145319,Goal,1st,06:38,Ev,Muffin Men,#7 Matt Mikelberg (#11 Ryan Irwin),1 - 1 Tie,2025-12-18
+1145319,Goal,1st,02:33,Ev,Muffin Men,"#93 Aaron Barrett (#10 Charles Levy, #6 Cole Nead)",2 - 1 Muffin Men,2025-12-18
+1145319,Goal,2nd,07:52,Ev,Muffin Men,#11 Ryan Irwin (#10 Charles Levy),3 - 1 Muffin Men,2025-12-18
+1145319,Goal,2nd,03:28,PP,The Sahara,"#14 Wes Martin (#26 Jamal Spencer-Guirgis, #17 Brendan Hancock)",3 - 2 Muffin Men,2025-12-18
+1145319,Goal,2nd,02:06,Ev,Muffin Men,#93 Aaron Barrett (#11 Ryan Irwin),4 - 2 Muffin Men,2025-12-18
+1145319,Goal,3rd,01:49,Ev,Muffin Men,#07 Cosimo Morin,5 - 2 Muffin Men,2025-12-18
+1145319,Penalty,1st,00:17,02:00,The Sahara,Tripping (Minor Penalty),,2025-12-18
+1145319,Penalty,2nd,11:53,02:00,The Sahara,Cross-Checking (Minor Penalty),,2025-12-18
+1145319,Penalty,2nd,06:24,02:00,Muffin Men,Hooking (Minor Penalty),,2025-12-18
+1145319,Penalty,3rd,09:36,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1145319,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1145319,Official,,,,,Referee: Brad Kuchar,,2025-12-18
+1145319,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1145304,PeriodScore,Final,,,Flat-Earthers,2,,2025-12-18
+1145304,PeriodScore,Final,,,4 Lines,5,,2025-12-18
+1145304,Star,1ST STAR,,,4 Lines,Luke Gravett,,2025-12-18
+1145304,Star,2ND STAR,,,Flat-Earthers,Anthony Pennino,,2025-12-18
+1145304,Star,3RD STAR,,,4 Lines,Adam Miller,,2025-12-18
+1145304,Goal,1st,13:43,Ev,4 Lines,"#28 Shane Ferguson (#88 Thomas Hunter, #10 Luke Gravett)",0 - 1 4 Lines,2025-12-18
+1145304,Goal,1st,11:50,Ev,Flat-Earthers,#34 Alex Adolphe (#2 Anthony Pennino),1 - 1 Tie,2025-12-18
+1145304,Goal,2nd,11:53,Ev,4 Lines,"#19 Ethan Lowe (#58 Ellis Gerussi-Turner, #24 Ryan Fitzgerald)",1 - 2 4 Lines,2025-12-18
+1145304,Goal,2nd,01:58,Ev,Flat-Earthers,"#8 Ryan Lee (#21 Marcus Simmonds, #2 Anthony Pennino)",2 - 2 Tie,2025-12-18
+1145304,Goal,3rd,11:16,PP,4 Lines,"#10 Luke Gravett (#3 Elliott Sharp, #28 Shane Ferguson)",2 - 3 4 Lines,2025-12-18
+1145304,Goal,3rd,06:44,Ev,4 Lines,"#17 Adam Miller (#10 Luke Gravett, #28 Shane Ferguson)",2 - 4 4 Lines,2025-12-18
+1145304,Goal,3rd,01:55,Ev (EN),4 Lines,#10 Luke Gravett,2 - 5 4 Lines,2025-12-18
+1145304,Penalty,2nd,07:53,02:00,4 Lines,Too Many Men (Bench Minor Penalty),,2025-12-18
+1145304,Penalty,3rd,13:04,02:00,Flat-Earthers,Too Many Men (Bench Minor Penalty),,2025-12-18
+1145304,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1145304,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1145304,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1145306,PeriodScore,Final,,,The Shockers,2,,2025-12-18
+1145306,PeriodScore,Final,,,Don Cherry's,3,,2025-12-18
+1145306,Star,1ST STAR,,,Don Cherry's,Sean Murphy,,2025-12-18
+1145306,Star,2ND STAR,,,The Shockers,Alex Matheson,,2025-12-18
+1145306,Star,3RD STAR,,,The Shockers,Keelan Hughes,,2025-12-18
+1145306,Goal,1st,13:21,Ev,Don Cherry's,#13 Koch Tsatsos,0 - 1 Cherry's,2025-12-18
+1145306,Goal,2nd,13:37,Ev,The Shockers,#7 Keelan Hughes,1 - 1 Tie,2025-12-18
+1145306,Goal,3rd,08:12,PP,The Shockers,#91 Alex Matheson,2 - 1 Shockers,2025-12-18
+1145306,Goal,3rd,02:52,Ev,Don Cherry's,#74 Sean Murphy,2 - 2 Tie,2025-12-18
+1145306,Goal,3rd,00:21,PP,Don Cherry's,#21 Cassady Louks (#74 Sean Murphy),2 - 3 Cherry's,2025-12-18
+1145306,Penalty,1st,05:24,02:00,The Shockers,Tripping (Minor Penalty),,2025-12-18
+1145306,Penalty,2nd,12:21,02:00,Don Cherry's,Interference (Minor Penalty),,2025-12-18
+1145306,Penalty,3rd,10:19,02:00,Don Cherry's,Tripping (Minor Penalty),,2025-12-18
+1145306,Penalty,3rd,01:50,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1145306,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1145306,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1145306,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1144898,PeriodScore,Final,,,The Sahara,4,,2025-12-18
+1144898,PeriodScore,Final,,,Flat-Earthers,7,,2025-12-18
+1144898,Star,1ST STAR,,,Flat-Earthers,Ryan Lee,,2025-12-18
+1144898,Star,2ND STAR,,,Flat-Earthers,Daniel Solomos,,2025-12-18
+1144898,Star,3RD STAR,,,The Sahara,Jake Goldstein,,2025-12-18
+1144898,Goal,1st,13:27,Ev,Flat-Earthers,#08 Ryan Lee (#0 Brandon Sanders),0 - 1 Earthers,2025-12-18
+1144898,Goal,1st,09:53,Ev,Flat-Earthers,#08 Ryan Lee (#0 Brandon Sanders),0 - 2 Earthers,2025-12-18
+1144898,Goal,1st,06:31,Ev,Flat-Earthers,#16 Daniel Solomos,0 - 3 Earthers,2025-12-18
+1144898,Goal,1st,04:07,Ev,Flat-Earthers,#08 Ryan Lee (#29 Nicholas Adolphe),0 - 4 Earthers,2025-12-18
+1144898,Goal,2nd,13:32,Ev,Flat-Earthers,#21 Marcus Simmonds,0 - 5 Earthers,2025-12-18
+1144898,Goal,2nd,04:31,Ev,The Sahara,#93 Jake Goldstein,1 - 5 Earthers,2025-12-18
+1144898,Goal,2nd,03:54,Ev,The Sahara,#48 Derrick Wong (#16 Phil Nenadovic),2 - 5 Earthers,2025-12-18
+1144898,Goal,2nd,02:29,Ev,The Sahara,"#23 Yanir Levy (#28 Andrew Biggs, #4 Mac Savage)",3 - 5 Earthers,2025-12-18
+1144898,Goal,3rd,12:12,Ev,Flat-Earthers,#08 Ryan Lee,3 - 6 Earthers,2025-12-18
+1144898,Goal,3rd,10:39,Ev,Flat-Earthers,"#16 Daniel Solomos (#34 Alex Adolphe, #11 Colin Lata)",3 - 7 Earthers,2025-12-18
+1144898,Goal,3rd,04:29,Ev,The Sahara,#8 Mitchell Moloney (#14 Wes Martin),4 - 7 Earthers,2025-12-18
+1144898,Penalty,2nd,05:50,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1144898,Penalty,2nd,05:50,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1144898,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1144898,Official,,,,,Referee: Sonny Martinello,,2025-12-18
+1144898,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1144895,PeriodScore,Final,,,4 Lines,4,,2025-12-18
+1144895,PeriodScore,Final,,,The Shockers,2,,2025-12-18
+1144895,Star,1ST STAR,,,4 Lines,Shane Ferguson,,2025-12-18
+1144895,Star,2ND STAR,,,4 Lines,Aidan O'Brien,,2025-12-18
+1144895,Star,3RD STAR,,,The Shockers,Alex Matheson,,2025-12-18
+1144895,Goal,1st,10:28,Ev,4 Lines,"#33 Austin Weiler (#9 Jamie Poole, #28 Shane Ferguson)",1 - 0 4 Lines,2025-12-18
+1144895,Goal,1st,09:10,Ev,4 Lines,#28 Shane Ferguson (#9 Jamie Poole),2 - 0 4 Lines,2025-12-18
+1144895,Goal,1st,03:51,Ev,The Shockers,"#16 Marcus Gwyn-Neumann (#91 Alex Matheson, #24 Patrick Mcmullan)",2 - 1 4 Lines,2025-12-18
+1144895,Goal,3rd,13:47,Ev,4 Lines,#29 Aidan O'Brien (#11 Thomas Bevilacqua),3 - 1 4 Lines,2025-12-18
+1144895,Goal,3rd,07:13,Ev,4 Lines,"#28 Shane Ferguson (#29 Aidan O'Brien, #1 David Taylor)",4 - 1 4 Lines,2025-12-18
+1144895,Goal,3rd,04:59,Ev,The Shockers,#91 Alex Matheson,4 - 2 4 Lines,2025-12-18
+1144895,Penalty,3rd,01:25,02:00,4 Lines,Roughing (Minor Penalty),,2025-12-18
+1144895,Penalty,3rd,00:51,02:00,The Shockers,Unsportsmanlike Conduct (Bench Minor Penalty),,2025-12-18
+1144895,Penalty,3rd,00:51,02:00,4 Lines,Unsportsmanlike Conduct (Bench Minor Penalty),,2025-12-18
+1144895,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1144895,Official,,,,,Referee: Mark Donohoe,,2025-12-18
+1144895,Official,,,,,Referee: Shane Bowler,,2025-12-18
+1144894,PeriodScore,Final,,,Muffin Men,2,,2025-12-18
+1144894,PeriodScore,Final,,,Don Cherry's,2,,2025-12-18
+1144894,Star,1ST STAR,,,Don Cherry's,Ryan Willms,,2025-12-18
+1144894,Star,2ND STAR,,,Muffin Men,Cole Nead,,2025-12-18
+1144894,Star,3RD STAR,,,Muffin Men,Matt Mikelberg,,2025-12-18
+1144894,Goal,1st,00:59,Ev,Muffin Men,"#21 Owen Burry (#6 Cole Nead, #27 Alan Wren)",1 - 0 Muffin Men,2025-12-18
+1144894,Goal,2nd,11:55,Ev,Muffin Men,"#7 Matt Mikelberg (#6 Cole Nead, #9 Connor Douglas)",2 - 0 Muffin Men,2025-12-18
+1144894,Goal,3rd,12:33,Ev,Don Cherry's,#90 Ryan Willms,2 - 1 Muffin Men,2025-12-18
+1144894,Goal,3rd,08:44,Ev,Don Cherry's,#90 Ryan Willms (#19 Michael Murphy),2 - 2 Tie,2025-12-18
+1144894,Penalty,1st,08:33,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1144894,Penalty,2nd,07:54,02:00,Muffin Men,Body Contact (Minor Penalty),,2025-12-18
+1144894,Penalty,2nd,05:09,02:00,Muffin Men,Body Contact (Minor Penalty),,2025-12-18
+1144894,Penalty,2nd,04:04,04:00,Don Cherry's,Roughing (Double Minor Penalty),,2025-12-18
+1144894,Penalty,2nd,00:53,02:00,Muffin Men,Hooking (Minor Penalty),,2025-12-18
+1144894,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1144894,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1144894,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1141034,PeriodScore,Final,,,The Sahara,5,,2025-12-18
+1141034,PeriodScore,Final,,,Don Cherry's,5,,2025-12-18
+1141034,Star,1ST STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1141034,Star,2ND STAR,,,The Sahara,Jake Goldstein,,2025-12-18
+1141034,Star,3RD STAR,,,The Sahara,Derrick Wong,,2025-12-18
+1141034,Goal,1st,12:23,Ev,The Sahara,#48 Derrick Wong (#13 Nolan Klumak),1 - 0 Sahara,2025-12-18
+1141034,Goal,1st,09:12,Ev,Don Cherry's,#19 Michael Murphy (#14 Jack Spears),1 - 1 Tie,2025-12-18
+1141034,Goal,1st,04:22,Ev,Don Cherry's,#19 Michael Murphy,1 - 2 Cherry's,2025-12-18
+1141034,Goal,1st,03:29,Ev,Don Cherry's,#19 Michael Murphy (#90 Ryan Willms),1 - 3 Cherry's,2025-12-18
+1141034,Goal,1st,00:44,Ev,The Sahara,"#93 Jake Goldstein (#23 Yanir Levy, #16 Phil Nenadovic)",2 - 3 Cherry's,2025-12-18
+1141034,Goal,1st,00:21,Ev,Don Cherry's,#19 Michael Murphy (#74 Sean Murphy),2 - 4 Cherry's,2025-12-18
+1141034,Goal,2nd,11:20,Ev,Don Cherry's,"#24 Dongyeon Kim (#90 Ryan Willms, #14 Jack Spears)",2 - 5 Cherry's,2025-12-18
+1141034,Goal,2nd,03:30,PP,The Sahara,"#28 Andrew Biggs (#23 Yanir Levy, #48 Derrick Wong)",3 - 5 Cherry's,2025-12-18
+1141034,Goal,3rd,09:01,Ev,The Sahara,#13 Nolan Klumak (#93 Jake Goldstein),4 - 5 Cherry's,2025-12-18
+1141034,Goal,3rd,02:01,Ev,The Sahara,"#93 Jake Goldstein (#16 Phil Nenadovic, #14 Wes Martin)",5 - 5 Tie,2025-12-18
+1141034,Penalty,2nd,05:50,02:00,Don Cherry's,Hooking (Minor Penalty),,2025-12-18
+1141034,Penalty,3rd,11:36,02:00,Don Cherry's,Cross-Checking (Minor Penalty),,2025-12-18
+1141034,Penalty,3rd,11:36,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1141034,Penalty,3rd,00:59,02:00,The Sahara,Roughing (Minor Penalty),,2025-12-18
+1141034,Penalty,3rd,00:59,05:00,Don Cherry's,Slashing (Major Penalty),,2025-12-18
+1141034,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1141034,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1141034,Official,,,,,Referee: Mark Donohoe,,2025-12-18
+1141032,PeriodScore,Final,,,The Shockers,3,,2025-12-18
+1141032,PeriodScore,Final,,,Flat-Earthers,6,,2025-12-18
+1141032,Star,1ST STAR,,,Flat-Earthers,Marcus Simmonds,,2025-12-18
+1141032,Star,2ND STAR,,,Flat-Earthers,Anthony Pennino,,2025-12-18
+1141032,Star,3RD STAR,,,The Shockers,Patrick Mcmullan,,2025-12-18
+1141032,Goal,1st,05:20,Ev,Flat-Earthers,#2 Anthony Pennino,0 - 1 Earthers,2025-12-18
+1141032,Goal,2nd,12:10,Ev,The Shockers,"#7 Keelan Hughes (#8 Josh Pope, #24 Patrick Mcmullan)",1 - 1 Tie,2025-12-18
+1141032,Goal,2nd,09:54,Ev,The Shockers,#24 Patrick Mcmullan,2 - 1 Shockers,2025-12-18
+1141032,Goal,2nd,09:18,Ev,Flat-Earthers,"#21 Marcus Simmonds (#97 Ethan Hirst, #8 Ryan Lee)",2 - 2 Tie,2025-12-18
+1141032,Goal,2nd,07:26,Ev,Flat-Earthers,#2 Anthony Pennino,2 - 3 Earthers,2025-12-18
+1141032,Goal,2nd,05:51,Ev,The Shockers,"#16 Marcus Gwyn-Neumann (#19 Gabe Fischer-Schmidt, #44 Nick Chong)",3 - 3 Tie,2025-12-18
+1141032,Goal,2nd,03:38,Ev,Flat-Earthers,#21 Marcus Simmonds,3 - 4 Earthers,2025-12-18
+1141032,Goal,3rd,11:08,Ev,Flat-Earthers,#97 Ethan Hirst,3 - 5 Earthers,2025-12-18
+1141032,Goal,3rd,05:27,PP,Flat-Earthers,#5 Reid Chessell (#34 Alex Adolphe),3 - 6 Earthers,2025-12-18
+1141032,Penalty,1st,01:52,02:00,Flat-Earthers,Interference (Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,06:20,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,06:20,04:00,The Shockers,Cross-Checking (Double Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,04:46,02:00,The Shockers,Roughing (Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,04:46,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,02:03,02:00,Flat-Earthers,Slashing (Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,02:03,04:00,Flat-Earthers,Slashing (Double Minor Penalty),,2025-12-18
+1141032,Penalty,3rd,00:33,05:00,Flat-Earthers,Fighting (Major Penalty),,2025-12-18
+1141032,Official,,,,,Referee: John Hall,,2025-12-18
+1141032,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1141032,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1141029,PeriodScore,Final,,,4 Lines,2,,2025-12-18
+1141029,PeriodScore,Final,,,Muffin Men,0,,2025-12-18
+1141029,Star,1ST STAR,,,4 Lines,David Taylor,,2025-12-18
+1141029,Star,2ND STAR,,,4 Lines,Jamie Wilson,,2025-12-18
+1141029,Star,3RD STAR,,,4 Lines,Thomas Bevilacqua,,2025-12-18
+1141029,Goal,1st,06:57,Ev,4 Lines,"#11 Thomas Bevilacqua (#19 Ethan Lowe, #029 Thomas Mchugh)",1 - 0 4 Lines,2025-12-18
+1141029,Goal,1st,01:05,Ev,4 Lines,"#44 Jamie Wilson (#10 Luke Gravett, #029 Thomas Mchugh)",2 - 0 4 Lines,2025-12-18
+1141029,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1141029,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1141029,Official,,,,,Referee: John Hall,,2025-12-18
+1138909,PeriodScore,Final,,,The Shockers,3,,2025-12-18
+1138909,PeriodScore,Final,,,Don Cherry's,6,,2025-12-18
+1138909,Star,1ST STAR,,,Don Cherry's,Ben Pirie,,2025-12-18
+1138909,Star,2ND STAR,,,The Shockers,Nicolas Fischer-Schmidt,,2025-12-18
+1138909,Star,3RD STAR,,,Don Cherry's,Sean Murphy,,2025-12-18
+1138909,Goal,1st,08:08,Ev,Don Cherry's,#24 Dongyeon Kim,0 - 1 Cherry's,2025-12-18
+1138909,Goal,2nd,09:39,Ev,Don Cherry's,#21 Cassady Louks (#74 Sean Murphy),0 - 2 Cherry's,2025-12-18
+1138909,Goal,2nd,06:41,PP,Don Cherry's,#90 Daniel Swift,0 - 3 Cherry's,2025-12-18
+1138909,Goal,2nd,05:21,Ev,Don Cherry's,"#7 Ben Pirie (#74 Sean Murphy, #21 Cassady Louks)",0 - 4 Cherry's,2025-12-18
+1138909,Goal,3rd,11:50,Ev,The Shockers,"#7 Gabe Fischer-Schmidt (#24 Patrick Mcmullan, #14 Nicolas Fischer-Schmidt)",1 - 4 Cherry's,2025-12-18
+1138909,Goal,3rd,08:56,Ev,Don Cherry's,#7 Ben Pirie (#74 Sean Murphy),1 - 5 Cherry's,2025-12-18
+1138909,Goal,3rd,06:58,Ev,Don Cherry's,"#19 Michael Murphy (#24 Dongyeon Kim, #7 Ben Pirie)",1 - 6 Cherry's,2025-12-18
+1138909,Goal,3rd,06:01,Ev,The Shockers,"#24 Patrick Mcmullan (#7 Gabe Fischer-Schmidt, #14 Nicolas Fischer-Schmidt)",2 - 6 Cherry's,2025-12-18
+1138909,Goal,3rd,00:06,Ev,The Shockers,#6 Kamil Paris (#14 Nicolas Fischer-Schmidt),3 - 6 Cherry's,2025-12-18
+1138909,Penalty,1st,09:35,02:00,Don Cherry's,Unsportsmanlike Conduct (Minor Penalty),,2025-12-18
+1138909,Penalty,1st,09:35,02:00,The Shockers,Unsportsmanlike Conduct (Minor Penalty),,2025-12-18
+1138909,Penalty,1st,06:27,02:00,The Shockers,Tripping (Minor Penalty),,2025-12-18
+1138909,Penalty,2nd,08:32,02:00,The Shockers,Slashing (Minor Penalty),,2025-12-18
+1138909,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1138909,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1138909,Official,,,,,Referee: John Hall,,2025-12-18
+1138903,PeriodScore,Final,,,Flat-Earthers,4,,2025-12-18
+1138903,PeriodScore,Final,,,Muffin Men,2,,2025-12-18
+1138903,Star,1ST STAR,,,Flat-Earthers,Marcus Simmonds,,2025-12-18
+1138903,Star,2ND STAR,,,Flat-Earthers,Colin Lata,,2025-12-18
+1138903,Star,3RD STAR,,,Muffin Men,Cole Singleton,,2025-12-18
+1138903,Goal,1st,10:35,Ev,Flat-Earthers,"#97 Ethan Hirst (#11 Colin Lata, #21 Marcus Simmonds)",1 - 0 Earthers,2025-12-18
+1138903,Goal,1st,09:10,Ev,Flat-Earthers,#21 Marcus Simmonds (#4 David Kim),2 - 0 Earthers,2025-12-18
+1138903,Goal,1st,05:12,Ev,Muffin Men,"#10 Charles Levy (#12 Cole Singleton, #44 Austin Walker)",2 - 1 Earthers,2025-12-18
+1138903,Goal,3rd,13:04,Ev,Flat-Earthers,#21 Marcus Simmonds (#11 Colin Lata),3 - 1 Earthers,2025-12-18
+1138903,Goal,3rd,08:53,Ev,Muffin Men,"#12 Cole Singleton (#7 Matt Mikelberg, #6 Cole Nead)",3 - 2 Earthers,2025-12-18
+1138903,Goal,3rd,01:16,Ev,Flat-Earthers,"#08 Matthew McIntosh (#5 Reid Chessell, #11 Colin Lata)",4 - 2 Earthers,2025-12-18
+1138903,Penalty,1st,03:44,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1138903,Penalty,2nd,07:35,02:00,Flat-Earthers,Interference (Minor Penalty),,2025-12-18
+1138903,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1138903,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1138903,Official,,,,,Referee: Shane Bowler,,2025-12-18
+1138894,PeriodScore,Final,,,4 Lines,0,,2025-12-18
+1138894,PeriodScore,Final,,,The Sahara,0,,2025-12-18
+1137565,PeriodScore,Final,,,Flat-Earthers,2,,2025-12-18
+1137565,PeriodScore,Final,,,Don Cherry's,9,,2025-12-18
+1137565,Star,1ST STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1137565,Star,2ND STAR,,,Don Cherry's,Koch Tsatsos,,2025-12-18
+1137565,Star,3RD STAR,,,Don Cherry's,Ryan Willms,,2025-12-18
+1137565,Goal,1st,10:50,Ev,Don Cherry's,#90 Ryan Willms,0 - 1 Cherry's,2025-12-18
+1137565,Goal,1st,07:15,Ev,Don Cherry's,"#24 Dongyeon Kim (#90 Ryan Willms, #93 Conor Pang)",0 - 2 Cherry's,2025-12-18
+1137565,Goal,1st,04:54,Ev,Don Cherry's,#13 Koch Tsatsos,0 - 3 Cherry's,2025-12-18
+1137565,Goal,1st,01:12,Ev,Don Cherry's,#76 Riley Venton (#19 Michael Murphy),0 - 4 Cherry's,2025-12-18
+1137565,Goal,2nd,10:23,Ev,Don Cherry's,#88 Sam Pasich,0 - 5 Cherry's,2025-12-18
+1137565,Goal,2nd,05:42,Ev,Don Cherry's,#11 Jack Pirie (#4 Colin Digiacomo),0 - 6 Cherry's,2025-12-18
+1137565,Goal,2nd,01:32,Ev,Don Cherry's,#19 Michael Murphy (#76 Riley Venton),0 - 7 Cherry's,2025-12-18
+1137565,Goal,3rd,09:53,Ev,Don Cherry's,#19 Michael Murphy (#24 Dongyeon Kim),0 - 8 Cherry's,2025-12-18
+1137565,Goal,3rd,09:00,Ev,Flat-Earthers,"#02 Kris Jansen (#5 Reid Chessell, #97 Ethan Hirst)",1 - 8 Cherry's,2025-12-18
+1137565,Goal,3rd,07:23,Ev,Flat-Earthers,"#02 Kris Jansen (#5 Reid Chessell, #71 Aaron Johnson)",2 - 8 Cherry's,2025-12-18
+1137565,Goal,3rd,05:22,Ev,Don Cherry's,#13 Koch Tsatsos (#74 Sean Murphy),2 - 9 Cherry's,2025-12-18
+1137565,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1137565,Official,,,,,Referee: Aaron Anderson,,2025-12-18
+1137565,Official,,,,,Referee: Mike Bonke,,2025-12-18
+1137558,PeriodScore,Final,,,Muffin Men,0,,2025-12-18
+1137558,PeriodScore,Final,,,The Shockers,1,,2025-12-18
+1137552,PeriodScore,Final,,,4 Lines,0,,2025-12-18
+1137552,PeriodScore,Final,,,The Sahara,0,,2025-12-18
+1131390,PeriodScore,Final,,,Muffin Men,2,,2025-12-18
+1131390,PeriodScore,Final,,,Don Cherry's,4,,2025-12-18
+1131390,Star,1ST STAR,,,Don Cherry's,Koch Tsatsos,,2025-12-18
+1131390,Star,2ND STAR,,,Muffin Men,Charles Levy,,2025-12-18
+1131390,Star,3RD STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1131390,Goal,2nd,14:07,Ev,Don Cherry's,#19 Michael Murphy,0 - 1 Cherry's,2025-12-18
+1131390,Goal,2nd,12:18,Ev,Muffin Men,"#10 Charles Levy (#27 Alan Wren, #0 Cole Nead)",1 - 1 Tie,2025-12-18
+1131390,Goal,2nd,07:40,Ev,Don Cherry's,#76 Riley Venton (#21 Cassady Louks),1 - 2 Cherry's,2025-12-18
+1131390,Goal,2nd,01:06,Ev,Muffin Men,"#10 Charles Levy (#11 Ryan Irwin, #55 Elliott Lade)",2 - 2 Tie,2025-12-18
+1131390,Goal,3rd,13:56,Ev,Don Cherry's,"#3 Nik Tsatsos (#13 Koch Tsatsos, #19 Michael Murphy)",2 - 3 Cherry's,2025-12-18
+1131390,Goal,3rd,05:01,Ev,Don Cherry's,#13 Koch Tsatsos (#19 Michael Murphy),2 - 4 Cherry's,2025-12-18
+1131390,Penalty,3rd,10:31,02:00,Don Cherry's,Interference (Minor Penalty),,2025-12-18
+1131390,Official,,,,,Referee: John Hall,,2025-12-18
+1131390,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1131390,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1131383,PeriodScore,Final,,,The Sahara,2,,2025-12-18
+1131383,PeriodScore,Final,,,Flat-Earthers,5,,2025-12-18
+1131383,Star,1ST STAR,,,Flat-Earthers,Daniel Solomos,,2025-12-18
+1131383,Star,2ND STAR,,,Flat-Earthers,Reid Chessell,,2025-12-18
+1131383,Star,3RD STAR,,,The Sahara,Mac Savage,,2025-12-18
+1131383,Goal,1st,07:04,Ev,Flat-Earthers,"#16 Daniel Solomos (#97 Ethan Hirst, #5 Reid Chessell)",0 - 1 Earthers,2025-12-18
+1131383,Goal,1st,05:34,Ev,The Sahara,#17 Brendan Hancock,1 - 1 Tie,2025-12-18
+1131383,Goal,1st,01:53,Ev,Flat-Earthers,"#5 Reid Chessell (#2 Anthony Pennino, #0 Brandon Sanders)",1 - 2 Earthers,2025-12-18
+1131383,Goal,2nd,02:19,Ev,The Sahara,#4 Mac Savage (#6 Sam Goldstein),2 - 2 Tie,2025-12-18
+1131383,Goal,3rd,13:23,Ev,Flat-Earthers,"#71 Aaron Johnson (#0 Brandon Sanders, #97 Ethan Hirst)",2 - 3 Earthers,2025-12-18
+1131383,Goal,3rd,09:42,Ev,Flat-Earthers,#97 Ethan Hirst (#0 Brandon Sanders),2 - 4 Earthers,2025-12-18
+1131383,Goal,3rd,02:57,Ev,Flat-Earthers,"#16 Daniel Solomos (#8 Matthew McIntosh, #5 Reid Chessell)",2 - 5 Earthers,2025-12-18
+1131383,Penalty,3rd,05:39,02:00,The Sahara,Slashing (Minor Penalty),,2025-12-18
+1131383,Penalty,3rd,00:00,04:00,The Sahara,Body Contact (Double Minor Penalty),,2025-12-18
+1131383,Official,,,,,Referee: John Hall,,2025-12-18
+1131383,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1131383,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1131387,PeriodScore,Final,,,4 Lines,2,,2025-12-18
+1131387,PeriodScore,Final,,,The Shockers,3,,2025-12-18
+1131387,Star,1ST STAR,,,The Shockers,Alex Matheson,,2025-12-18
+1131387,Star,2ND STAR,,,4 Lines,Jamie Wilson,,2025-12-18
+1131387,Star,3RD STAR,,,The Shockers,Patrick Mcmullan,,2025-12-18
+1131387,Goal,1st,06:44,Ev,The Shockers,#24 Patrick Mcmullan (#7 Gabe Fischer-Schmidt),0 - 1 Shockers,2025-12-18
+1131387,Goal,1st,05:46,Ev,4 Lines,"#44 Jamie Wilson (#11 Elliott Sharp, #28 Shane Ferguson)",1 - 1 Tie,2025-12-18
+1131387,Goal,2nd,10:20,Ev,The Shockers,#49 Che Doucette (#91 Alex Matheson),1 - 2 Shockers,2025-12-18
+1131387,Goal,3rd,14:04,Ev,The Shockers,#91 Alex Matheson,1 - 3 Shockers,2025-12-18
+1131387,Goal,3rd,00:21,Ev,4 Lines,"#24 Ryan Fitzgerald (#44 Jamie Wilson, #29 Aidan O'Brien)",2 - 3 Shockers,2025-12-18
+1131387,Penalty,1st,02:37,02:00,4 Lines,Slashing (Minor Penalty),,2025-12-18
+1131387,Penalty,2nd,07:53,02:00,The Shockers,Tripping (Minor Penalty),,2025-12-18
+1131387,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1131387,Official,,,,,Referee: Andrew Groves,,2025-12-18
+1131387,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1119006,PeriodScore,Final,,,Muffin Men,3,,2025-12-18
+1119006,PeriodScore,Final,,,4 Lines,2,,2025-12-18
+1119006,Star,1ST STAR,,,Muffin Men,Ryan Irwin,,2025-12-18
+1119006,Star,2ND STAR,,,Muffin Men,Charles Levy,,2025-12-18
+1119006,Star,3RD STAR,,,4 Lines,Shane Ferguson,,2025-12-18
+1119006,Goal,1st,12:14,Ev,4 Lines,#9 Jamie Poole (#28 Shane Ferguson),0 - 1 4 Lines,2025-12-18
+1119006,Goal,2nd,11:11,Ev,Muffin Men,#10 Charles Levy (#44 Austin Walker),1 - 1 Tie,2025-12-18
+1119006,Goal,2nd,05:54,Ev,Muffin Men,#10 Charles Levy (#11 Ryan Irwin),2 - 1 Muffin Men,2025-12-18
+1119006,Goal,2nd,00:18,Ev,Muffin Men,"#11 Ryan Irwin (#22 Harris Casper, #9 Connor Douglas)",3 - 1 Muffin Men,2025-12-18
+1119006,Goal,3rd,11:39,Ev,4 Lines,#28 Shane Ferguson,3 - 2 Muffin Men,2025-12-18
+1119006,Penalty,2nd,04:39,02:00,4 Lines,Tripping (Minor Penalty),,2025-12-18
+1119006,Penalty,3rd,08:17,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1119006,Penalty,3rd,02:06,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1119006,Penalty,3rd,00:16,02:00,4 Lines,Tripping (Minor Penalty),,2025-12-18
+1119006,Official,,,,,Referee: Mike Bonke,,2025-12-18
+1119006,Official,,,,,Referee: Morgan Moffat,,2025-12-18
+1119006,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1119010,PeriodScore,Final,,,Don Cherry's,1,,2025-12-18
+1119010,PeriodScore,Final,,,The Sahara,3,,2025-12-18
+1119010,Star,1ST STAR,,,The Sahara,Wil Nenadovic,,2025-12-18
+1119010,Star,2ND STAR,,,The Sahara,Ian Istvan,,2025-12-18
+1119010,Star,3RD STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1119010,Goal,1st,06:42,Ev,The Sahara,#8 Mitchell Moloney,0 - 1 Sahara,2025-12-18
+1119010,Goal,1st,00:17,Ev,The Sahara,"#24 Wil Nenadovic (#27 Ian Istvan, #16 Phil Nenadovic)",0 - 2 Sahara,2025-12-18
+1119010,Goal,2nd,14:55,Ev,Don Cherry's,#19 Michael Murphy (#5 John Gullane),1 - 2 Sahara,2025-12-18
+1119010,Goal,3rd,01:14,Ev,The Sahara,"#27 Ian Istvan (#24 Wil Nenadovic, #17 Brendan Hancock)",1 - 3 Sahara,2025-12-18
+1119010,Penalty,1st,12:12,02:00,The Sahara,Body Contact (Minor Penalty),,2025-12-18
+1119010,Penalty,3rd,09:58,02:00,Don Cherry's,Tripping (Minor Penalty),,2025-12-18
+1119010,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1119010,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1119010,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1119002,PeriodScore,Final,,,Flat-Earthers,1,,2025-12-18
+1119002,PeriodScore,Final,,,The Shockers,0,,2025-12-18
+1119002,Star,1ST STAR,,,Flat-Earthers,David Kim,,2025-12-18
+1119002,Star,2ND STAR,,,Flat-Earthers,Christopher Adolphe,,2025-12-18
+1119002,Star,3RD STAR,,,Flat-Earthers,Anthony Pennino,,2025-12-18
+1119002,Goal,3rd,13:00,Ev,Flat-Earthers,#4 David Kim (#2 Anthony Pennino),1 - 0 Earthers,2025-12-18
+1119002,Penalty,1st,06:59,02:00,The Shockers,Roughing (Minor Penalty),,2025-12-18
+1119002,Penalty,1st,06:59,02:00,Flat-Earthers,Roughing (Minor Penalty),,2025-12-18
+1119002,Penalty,2nd,09:51,02:00,Flat-Earthers,Cross-Checking (Minor Penalty),,2025-12-18
+1119002,Penalty,2nd,05:09,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1119002,Penalty,3rd,09:54,02:00,Flat-Earthers,Hooking (Minor Penalty),,2025-12-18
+1119002,Penalty,3rd,02:41,02:00,Flat-Earthers,Interference (Minor Penalty),,2025-12-18
+1119002,Official,,,,,Convenor: Cindy Brown,,2025-12-18
+1119002,Official,,,,,Referee: Russell Nichols,,2025-12-18
+1119002,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1119001,PeriodScore,Final,,,The Sahara,2,,2025-12-18
+1119001,PeriodScore,Final,,,Muffin Men,9,,2025-12-18
+1119001,Star,1ST STAR,,,Muffin Men,Cole Singleton,,2025-12-18
+1119001,Star,2ND STAR,,,Muffin Men,Charles Levy,,2025-12-18
+1119001,Star,3RD STAR,,,Muffin Men,Owen Burry,,2025-12-18
+1119001,Goal,1st,14:00,Ev,Muffin Men,#07 Matt Mikelberg (#10 Charles Levy),0 - 1 Muffin Men,2025-12-18
+1119001,Goal,1st,12:28,PP,The Sahara,"#48 Derrick Wong (#26 Jamal Spencer-Guirgis, #027 Sam Goldstein)",1 - 1 Tie,2025-12-18
+1119001,Goal,1st,10:31,Ev,Muffin Men,#21 Owen Burry (#69 Sean Hoey),1 - 2 Muffin Men,2025-12-18
+1119001,Goal,1st,08:56,Ev,Muffin Men,"#21 Owen Burry (#10 Charles Levy, #27 Alan Wren)",1 - 3 Muffin Men,2025-12-18
+1119001,Goal,1st,01:14,Ev,Muffin Men,#27 Alan Wren (#11 Ryan Irwin),1 - 4 Muffin Men,2025-12-18
+1119001,Goal,2nd,13:59,Ev,The Sahara,#16 Phil Nenadovic,2 - 4 Muffin Men,2025-12-18
+1119001,Goal,2nd,04:14,Ev,Muffin Men,#12 Cole Singleton (#10 Charles Levy),2 - 5 Muffin Men,2025-12-18
+1119001,Goal,2nd,00:16,Ev,Muffin Men,#12 Cole Singleton (#21 Owen Burry),2 - 6 Muffin Men,2025-12-18
+1119001,Goal,3rd,09:01,PP,Muffin Men,#10 Charles Levy,2 - 7 Muffin Men,2025-12-18
+1119001,Goal,3rd,08:22,Ev,Muffin Men,#12 Cole Singleton,2 - 8 Muffin Men,2025-12-18
+1119001,Goal,3rd,06:53,Ev,Muffin Men,#10 Charles Levy (#27 Alan Wren),2 - 9 Muffin Men,2025-12-18
+1119001,Penalty,1st,13:16,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1119001,Penalty,1st,04:31,02:00,The Sahara,High-Sticking (Minor Penalty),,2025-12-18
+1119001,Penalty,2nd,06:59,02:00,Muffin Men,Interference (Minor Penalty),,2025-12-18
+1119001,Penalty,3rd,13:45,02:00,Muffin Men,Interference (Minor Penalty),,2025-12-18
+1119001,Penalty,3rd,10:47,02:00,The Sahara,Tripping (Minor Penalty),,2025-12-18
+1119001,Official,,,,,Referee: Alex Husarewych,,2025-12-18
+1119001,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1119001,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1118996,PeriodScore,Final,,,Don Cherry's,2,,2025-12-18
+1118996,PeriodScore,Final,,,The Shockers,2,,2025-12-18
+1118996,Star,1ST STAR,,,The Shockers,Maxime Gagnon,,2025-12-18
+1118996,Star,2ND STAR,,,Don Cherry's,Michael Murphy,,2025-12-18
+1118996,Star,3RD STAR,,,The Shockers,Keelan Hughes,,2025-12-18
+1118996,Goal,1st,08:04,Ev,Don Cherry's,"#19 Michael Murphy (#29 Mike Wood, #74 Sean Murphy)",1 - 0 Cherry's,2025-12-18
+1118996,Goal,1st,01:55,Ev,Don Cherry's,"#19 Michael Murphy (#21 Cassady Louks, #76 Riley Venton)",2 - 0 Cherry's,2025-12-18
+1118996,Goal,2nd,03:11,Ev,The Shockers,"#7 Keelan Hughes (#6 Kamil Paris, #24 Patrick Mcmullan)",2 - 1 Cherry's,2025-12-18
+1118996,Goal,3rd,00:00,Ev,The Shockers,#85 Maxime Gagnon,2 - 2 Tie,2025-12-18
+1118996,Penalty,2nd,12:46,02:00,Don Cherry's,Too Many Men (Bench Minor Penalty),,2025-12-18
+1118996,Penalty,2nd,01:02,02:00,The Shockers,Tripping (Minor Penalty),,2025-12-18
+1118996,Official,,,,,Referee: Mark Donohoe,,2025-12-18
+1118996,Official,,,,,Convenor: Rick Borg,,2025-12-18
+1118996,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1118992,PeriodScore,Final,,,4 Lines,7,,2025-12-18
+1118992,PeriodScore,Final,,,The Sahara,3,,2025-12-18
+1118992,Star,1ST STAR,,,4 Lines,Adam Miller,,2025-12-18
+1118992,Star,2ND STAR,,,The Sahara,Brendan Hancock,,2025-12-18
+1118992,Star,3RD STAR,,,4 Lines,Shane Ferguson,,2025-12-18
+1118992,Goal,1st,04:33,Ev,4 Lines,"#17 Adam Miller (#19 Ethan Lowe, #88 Thomas Hunter)",1 - 0 4 Lines,2025-12-18
+1118992,Goal,2nd,08:54,Ev,4 Lines,#58 Ellis Gerussi-Turner (#10 Luke Gravett),2 - 0 4 Lines,2025-12-18
+1118992,Goal,2nd,07:30,Ev,4 Lines,#28 Shane Ferguson (#33 Austin Weiler),3 - 0 4 Lines,2025-12-18
+1118992,Goal,2nd,06:57,Ev,4 Lines,#17 Adam Miller (#28 Shane Ferguson),4 - 0 4 Lines,2025-12-18
+1118992,Goal,2nd,00:23,PP,The Sahara,"#17 Brendan Hancock (#24 Wil Nenadovic, #28 Andrew Biggs)",4 - 1 4 Lines,2025-12-18
+1118992,Goal,2nd,00:14,Ev,The Sahara,"#17 Brendan Hancock (#4 Mac Savage, #27 Ian Istvan)",4 - 2 4 Lines,2025-12-18
+1118992,Goal,3rd,11:09,Ev,4 Lines,#28 Shane Ferguson (#58 Ellis Gerussi-Turner),5 - 2 4 Lines,2025-12-18
+1118992,Goal,3rd,06:00,PP,4 Lines,#17 Adam Miller (#28 Shane Ferguson),6 - 2 4 Lines,2025-12-18
+1118992,Goal,3rd,04:45,Ev,4 Lines,#17 Adam Miller (#19 Ethan Lowe),7 - 2 4 Lines,2025-12-18
+1118992,Goal,3rd,00:22,Ev,The Sahara,#17 Brendan Hancock (#14 Wes Martin),7 - 3 4 Lines,2025-12-18
+1118992,Penalty,2nd,01:09,02:00,4 Lines,Hooking (Minor Penalty),,2025-12-18
+1118992,Penalty,3rd,07:24,02:00,The Sahara,Tripping (Minor Penalty),,2025-12-18
+1118992,Official,,,,,Referee: Alex Husarewych,,2025-12-18
+1118992,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1118992,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1118993,PeriodScore,Final,,,Don Cherry's,4,,2025-12-18
+1118993,PeriodScore,Final,,,Flat-Earthers,3,,2025-12-18
+1118993,Star,1ST STAR,,,Don Cherry's,Sean Murphy,,2025-12-18
+1118993,Star,2ND STAR,,,Flat-Earthers,Anthony Pennino,,2025-12-18
+1118993,Star,3RD STAR,,,Don Cherry's,John Gullane,,2025-12-18
+1118993,Goal,1st,12:24,Ev,Don Cherry's,#9 Ben Pirie (#13 Koch Tsatsos),1 - 0 Cherry's,2025-12-18
+1118993,Goal,1st,10:12,Ev,Flat-Earthers,#2 Anthony Pennino,1 - 1 Tie,2025-12-18
+1118993,Goal,2nd,12:41,PP,Don Cherry's,"#91 Spare (#19 Michael Murphy, #5 John Gullane)",2 - 1 Cherry's,2025-12-18
+1118993,Goal,2nd,02:56,Ev,Don Cherry's,"#74 Sean Murphy (#91 Spare, #19 Michael Murphy)",3 - 1 Cherry's,2025-12-18
+1118993,Goal,2nd,00:05,Ev,Flat-Earthers,#2 Anthony Pennino (#97 Ethan Hirst),3 - 2 Cherry's,2025-12-18
+1118993,Goal,3rd,13:59,Ev,Flat-Earthers,"#5 Reid Chessell (#02 Kris Jansen, #2 Anthony Pennino)",3 - 3 Tie,2025-12-18
+1118993,Goal,3rd,11:05,Ev,Don Cherry's,"#74 Sean Murphy (#5 John Gullane, #21 Cassady Louks)",4 - 3 Cherry's,2025-12-18
+1118993,Penalty,1st,03:59,02:00,Don Cherry's,Holding (Minor Penalty),,2025-12-18
+1118993,Penalty,2nd,13:23,02:00,Flat-Earthers,Slashing (Minor Penalty),,2025-12-18
+1118993,Penalty,2nd,08:38,02:00,Flat-Earthers,Slashing (Minor Penalty),,2025-12-18
+1118993,Official,,,,,Referee: Alex Husarewych,,2025-12-18
+1118993,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1118993,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1118990,PeriodScore,Final,,,The Shockers,2,,2025-12-18
+1118990,PeriodScore,Final,,,Muffin Men,4,,2025-12-18
+1118990,Star,1ST STAR,,,Muffin Men,Sean Hoey,,2025-12-18
+1118990,Star,2ND STAR,,,Muffin Men,Owen Lownie,,2025-12-18
+1118990,Star,3RD STAR,,,Muffin Men,Matt Mikelberg,,2025-12-18
+1118990,Goal,1st,00:34,PP,Muffin Men,"#7 Matt Mikelberg (#2 Owen Lownie, #69 Sean Hoey)",0 - 1 Muffin Men,2025-12-18
+1118990,Goal,2nd,07:06,Ev,Muffin Men,"#21 Owen Burry (#2 Owen Lownie, #69 Sean Hoey)",0 - 2 Muffin Men,2025-12-18
+1118990,Goal,3rd,13:38,PP,The Shockers,"#7 Spare (#16 Marcus Gwyn-Neumann, #91 Alex Matheson)",1 - 2 Muffin Men,2025-12-18
+1118990,Goal,3rd,10:23,Ev,The Shockers,#11 Spare (#22 Jack Matthews),2 - 2 Tie,2025-12-18
+1118990,Goal,3rd,01:39,Ev,Muffin Men,"#21 Owen Burry (#11 Ryan Irwin, #0 Cole Nead)",2 - 3 Muffin Men,2025-12-18
+1118990,Goal,3rd,00:22,Ev (EN),Muffin Men,#69 Sean Hoey,2 - 4 Muffin Men,2025-12-18
+1118990,Penalty,1st,08:01,02:00,Muffin Men,High-Sticking (Minor Penalty),,2025-12-18
+1118990,Penalty,1st,02:56,02:00,The Shockers,Roughing (Minor Penalty),,2025-12-18
+1118990,Penalty,1st,01:40,02:00,The Shockers,Holding the Stick (Minor Penalty),,2025-12-18
+1118990,Penalty,3rd,14:08,02:00,Muffin Men,Tripping (Minor Penalty),,2025-12-18
+1118990,Penalty,3rd,07:19,02:00,The Shockers,Interference (Minor Penalty),,2025-12-18
+1118990,Penalty,3rd,00:20,10:00,The Shockers,Leaving Bench During Alteraction (Misconduct (Game)),,2025-12-18
+1118990,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1118990,Official,,,,,Referee: John Hall,,2025-12-18
+1118990,Official,,,,,Referee: Sonny Martinello,,2025-12-18
+1117167,PeriodScore,Final,,,Muffin Men,6,,2025-12-18
+1117167,PeriodScore,Final,,,Flat-Earthers,4,,2025-12-18
+1117167,Star,1ST STAR,,,Muffin Men,Owen Burry,,2025-12-18
+1117167,Star,2ND STAR,,,Muffin Men,Cosimo Morin,,2025-12-18
+1117167,Star,3RD STAR,,,Flat-Earthers,Ethan Hirst,,2025-12-18
+1117167,Goal,1st,07:22,Ev,Muffin Men,#21 Owen Burry (#55 Elliott Lade),1 - 0 Muffin Men,2025-12-18
+1117167,Goal,1st,02:43,Ev,Muffin Men,"#11 Ryan Irwin (#07 Cosimo Morin, #55 Elliott Lade)",2 - 0 Muffin Men,2025-12-18
+1117167,Goal,1st,00:50,Ev,Flat-Earthers,#97 Ethan Hirst,2 - 1 Muffin Men,2025-12-18
+1117167,Goal,2nd,13:29,Ev,Muffin Men,#27 Alan Wren,3 - 1 Muffin Men,2025-12-18
+1117167,Goal,2nd,12:17,Ev,Flat-Earthers,"#5 Reid Chessell (#16 Daniel Solomos, #11 Colin Lata)",3 - 2 Muffin Men,2025-12-18
+1117167,Goal,2nd,09:38,Ev,Flat-Earthers,#2 Anthony Pennino (#97 Ethan Hirst),3 - 3 Tie,2025-12-18
+1117167,Goal,2nd,06:57,Ev,Muffin Men,#21 Owen Burry (#07 Cosimo Morin),4 - 3 Muffin Men,2025-12-18
+1117167,Goal,3rd,13:43,Ev,Muffin Men,#07 Cosimo Morin (#88 Mitchell Cianfarini),5 - 3 Muffin Men,2025-12-18
+1117167,Goal,3rd,06:03,Ev,Muffin Men,#00 Daniel Throop (#0 Cole Nead),6 - 3 Muffin Men,2025-12-18
+1117167,Goal,3rd,02:50,Ev,Flat-Earthers,#8 Ryan Lee (#11 Colin Lata),6 - 4 Muffin Men,2025-12-18
+1117167,Official,,,,,Referee: Sonny Martinello,,2025-12-18
+1117167,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1117167,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1117169,PeriodScore,Final,,,Don Cherry's,3,,2025-12-18
+1117169,PeriodScore,Final,,,4 Lines,3,,2025-12-18
+1117169,Star,1ST STAR,,,Don Cherry's,Koch Tsatsos,,2025-12-18
+1117169,Star,2ND STAR,,,4 Lines,Ryan Fitzgerald,,2025-12-18
+1117169,Star,3RD STAR,,,4 Lines,Thomas Bevilacqua,,2025-12-18
+1117169,Goal,1st,01:19,Ev,4 Lines,"#10 Luke Gravett (#28 Shane Ferguson, #88 Thomas Hunter)",0 - 1 4 Lines,2025-12-18
+1117169,Goal,2nd,10:51,Ev,Don Cherry's,"#11 Jack Pirie (#9 Nik Tsatsos, #17 Malcolm Salter)",1 - 1 Tie,2025-12-18
+1117169,Goal,2nd,10:24,Ev,4 Lines,#24 Ryan Fitzgerald,1 - 2 4 Lines,2025-12-18
+1117169,Goal,2nd,05:00,PP,4 Lines,#11 Thomas Bevilacqua (#29 Aidan O'Brien),1 - 3 4 Lines,2025-12-18
+1117169,Goal,3rd,12:58,PP,Don Cherry's,#19 Michael Murphy (#4 Colin Digiacomo),2 - 3 4 Lines,2025-12-18
+1117169,Goal,3rd,10:14,Ev,Don Cherry's,"#13 Koch Tsatsos (#9 Nik Tsatsos, #90 Ryan Willms)",3 - 3 Tie,2025-12-18
+1117169,Penalty,2nd,06:33,02:00,Don Cherry's,Interference (Minor Penalty),,2025-12-18
+1117169,Penalty,2nd,00:30,02:00,4 Lines,Interference (Minor Penalty),,2025-12-18
+1117169,Official,,,,,Referee: Darcy McNamee,,2025-12-18
+1117169,Official,,,,,Referee: Evan Benwell,,2025-12-18
+1117169,Official,,,,,Convenor: Spencer Watt,,2025-12-18
+1117165,PeriodScore,Final,,,The Sahara,3,,2025-12-18
+1117165,PeriodScore,Final,,,The Shockers,2,,2025-12-18
+1117165,Star,1ST STAR,,,The Sahara,Andrew Biggs,,2025-12-18
+1117165,Star,2ND STAR,,,The Shockers,Jeremy White,,2025-12-18
+1117165,Star,3RD STAR,,,The Sahara,Derrick Wong,,2025-12-18
+1117165,Goal,2nd,13:52,Ev,The Sahara,#48 Derrick Wong (#23 Yanir Levy),1 - 0 Sahara,2025-12-18
+1117165,Goal,2nd,09:41,Ev,The Shockers,#14 Nicolas Fischer-Schmidt (#69 Levi Tobe),1 - 1 Tie,2025-12-18
+1117165,Goal,2nd,08:02,Ev,The Shockers,#20 Jeremy White (#91 Alex Matheson),1 - 2 Shockers,2025-12-18
+1117165,Goal,3rd,10:43,PP,The Sahara,#17 Brendan Hancock (#26 Jamal Spencer-Guirgis),2 - 2 Tie,2025-12-18
+1117165,Goal,3rd,08:40,Ev,The Sahara,"#28 Andrew Biggs (#63 Drew Ingall, #24 Wil Nenadovic)",3 - 2 Sahara,2025-12-18
+1117165,Penalty,1st,12:49,02:00,The Shockers,Hooking (Minor Penalty),,2025-12-18
+1117165,Penalty,1st,03:39,02:00,The Sahara,Cross-Checking (Minor Penalty),,2025-12-18
+1117165,Penalty,3rd,11:28,02:00,The Shockers,Body Contact (Minor Penalty),,2025-12-18
+1117165,Official,,,,,Convenor: Dan Hickox,,2025-12-18
+1117165,Official,,,,,Referee: Carlos Verde,,2025-12-18
+1117165,Official,,,,,Referee: Darcy McNamee,,2025-12-18
