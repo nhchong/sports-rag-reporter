@@ -1,0 +1,20 @@
+# --- Virtual Environments ---
+# Prevents thousands of library files from bloating your repo
+.venv/
+venv/
+env/
+
+# --- Secrets & API Keys ---
+# Protects your Gemini API key from being exposed publicly
+.env
+
+# --- Data Layer ---
+# Ignores local CSV files to keep the code repository clean
+data/*.csv
+
+
+# --- Python & System Caches ---
+# Ignores temporary files that Python generates to run
+__pycache__/
+*.py[cod]
+.DS_Store
