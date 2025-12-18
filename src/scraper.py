@@ -14,9 +14,8 @@ STANDINGS_URL = "https://www.dmhl.ca/stats#/533/standings?division_id=41979&rend
 BOXSCORE_TEMPLATE = "https://www.dmhl.ca/stats#/533/game/{game_id}/boxscore"
 
 DATA_DIR = "data"
-BRONZE_DIR = os.path.join(DATA_DIR, "bronze")
-DETAILS_FILE = os.path.join(BRONZE_DIR, "game_details.csv")
-MANIFEST_FILE = os.path.join(BRONZE_DIR, "games_manifest.csv")
+DETAILS_FILE = os.path.join(DATA_DIR, "game_details.csv")
+MANIFEST_FILE = os.path.join(DATA_DIR, "games_manifest.csv")
 
 def setup_driver():
     """Configures a stealthy Chrome driver with modern headless compatibility."""
@@ -90,7 +89,7 @@ def scrape_hub(driver):
 
 def save_manifest(new_data):
     if not new_data: return
-    os.makedirs(BRONZE_DIR, exist_ok=True)
+    os.makedirs(DATA_DIR, exist_ok=True)
     if os.path.exists(MANIFEST_FILE):
         existing = pd.read_csv(MANIFEST_FILE)
         existing_ids = set(existing['GameID'].astype(str))
@@ -169,7 +168,7 @@ def save_new_events(new_data):
     df.to_csv(DETAILS_FILE, mode='a', header=not file_exists, index=False)
 
 def main():
-    os.makedirs(BRONZE_DIR, exist_ok=True)
+    os.makedirs(DATA_DIR, exist_ok=True)
     existing_ids = get_existing_game_ids()
     print(f"📚 History loaded. Found {len(existing_ids)} previously scraped games.")
     driver = setup_driver()
