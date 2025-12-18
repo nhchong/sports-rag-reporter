@@ -1,0 +1,18 @@
+# Security: Never commit API keys
+.env
+
+# Environment: Huge library folders we can reinstall
+.venv/
+venv/
+env/
+
+# Python: Compiled cache files (junk)
+__pycache__/
+*.pyc
+
+# OS: Mac system files
+.DS_Store
+
+# Data: We don't want to track huge CSVs or local reports yet
+data/*.csv
+reports/*.md
