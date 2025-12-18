@@ -43,7 +43,7 @@ def get_existing_game_ids():
         return set()
 
 def scrape_hub(driver):
-    """Scrapes the schedule to build a 'Manifest' of game metadata."""
+    """Scrapes the schedule to build a 'Manifest' of game metadata using 10-column logic."""
     print(f"📡 Connecting to Schedule Hub...")
     driver.get(SCORES_URL)
     
@@ -54,32 +54,45 @@ def scrape_hub(driver):
         print(f"❌ Hub Error: Table failed to load. {e}")
         return []
 
-    rows = driver.find_elements(By.XPATH, "//table//tbody/tr")
+    # Use role='article' to target only the actual game rows in the table
+    rows = driver.find_elements(By.XPATH, "//table//tbody/tr[@role='article']")
     game_list, manifest_data, seen_ids = [], [], set()
 
     print(f" ↳ Scanning {len(rows)} rows for game data...")
     for row in rows:
         try:
-            links = row.find_elements(By.XPATH, ".//a[contains(@href, '/game/')]")
-            if not links: continue
+            cols = row.find_elements(By.TAG_NAME, "td")
+            # Ensure the row has the full 10 columns we expect
+            if len(cols) < 10: continue
 
-            url = links[0].get_attribute("href")
+            # 1. Extract GameID from the link in column index 1 (Home vs Away)
+            link = cols[1].find_element(By.TAG_NAME, "a")
+            url = link.get_attribute("href")
             game_id = url.split("/game/")[1].split("?")[0].split("/")[0]
 
             if game_id in seen_ids: continue
             seen_ids.add(game_id)
 
-            cols = row.find_elements(By.TAG_NAME, "td")
-            if len(cols) < 5: continue
+            # 2. Extract Team Names - Using 'span.d' to get clean desktop text (avoiding mobile duplicates)
+            team_spans = cols[1].find_elements(By.CSS_SELECTOR, "span.d")
+            home_team = team_spans[0].text.strip()
+            away_team = team_spans[1].text.strip()
 
+            # 3. Build Manifest - Mapping to your 10-column structure
             manifest_data.append({
                 'GameID': game_id,
-                'Date': cols[0].text.strip(),
-                'Time': cols[1].text.strip(),
-                'Arena': cols[2].text.strip(),
-                'Home': cols[3].text.strip(),
-                'Away': cols[4].text.strip()
+                'Home': home_team,           # Index 1 (Split)
+                'Away': away_team,           # Index 1 (Split)
+                'Division': cols[2].text.strip(),
+                'Score': cols[3].text.strip(),
+                'Date': cols[4].text.strip(),
+                'Time': cols[5].text.strip(),
+                'Actions': cols[6].text.strip(),
+                'Facility': cols[7].text.strip(),
+                'Rink': cols[8].text.strip(),
+                'GT': cols[9].text.strip()
             })
+
             game_list.append({
                 'game_id': game_id,
                 'url': BOXSCORE_TEMPLATE.format(game_id=game_id)
