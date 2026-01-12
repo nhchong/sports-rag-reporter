@@ -20,6 +20,9 @@ MANIFEST_FILE = os.path.join(DATA_DIR, "games_manifest.csv")
 def setup_driver():
     """Configures a stealthy background browser with a desktop viewport."""
     options = Options()
+    options.page_load_strategy = 'eager' 
+    prefs = {"profile.managed_default_content_settings.images": 2}
+    options.add_experimental_option("prefs", prefs)
     options.add_argument("--headless=new") 
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--no-sandbox")
@@ -38,7 +41,7 @@ def scrape_hub(driver):
         time.sleep(1.0)
     
     try:
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "table")))
     except: 
         print("❌ Hub Error: Table didn't load.")
         return []
@@ -75,12 +78,12 @@ def scrape_hub(driver):
     return game_list
 
 def scrape_roster_spoke(driver, game_id):
-    """Forces Angular data-binding by waiting for visible rows."""
     print(f" ↳ 👥 Team Stats:", end=" ", flush=True)
     driver.get(TEAM_STATS_TEMPLATE.format(game_id=game_id))
     
     try:
-        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".menubar-navigation")))
+        # Wait for the tab container
+        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".tabs")))
     except: return []
 
     roster_events = []
@@ -91,29 +94,38 @@ def scrape_roster_spoke(driver, game_id):
             
             team_name = team_tabs[side_idx].text.strip()
             driver.execute_script("arguments[0].click();", team_tabs[side_idx])
-            time.sleep(2.0)
+            time.sleep(2) # Necessary for Angular hydration
 
-            visible_container = driver.find_element(By.CSS_SELECTOR, "div.ng-scope:not(.ng-hide)")
-            if "No player stats recorded" in visible_container.text:
-                continue
-
-            WebDriverWait(driver, 10).until(
-                lambda d: len(visible_container.find_elements(By.CSS_SELECTOR, "tr[ng-repeat*='e in'] .person-inline")) > 0
-            )
-
-            rows = visible_container.find_elements(By.CSS_SELECTOR, "tbody tr[ng-repeat*='e in']")
+            # TARGETING: Get the container that is visible AND not the 'fixed' ghost table
+            # We look for the table-scroll that does NOT have a table-fixed sibling
+            container = driver.find_element(By.CSS_SELECTOR, "div.ng-scope:not(.ng-hide) div.table-scroll")
+            
+            rows = container.find_elements(By.CSS_SELECTOR, "tbody tr")
             for row in rows:
                 cols = row.find_elements(By.TAG_NAME, "td")
-                if len(cols) < 7: continue 
+                if len(cols) < 7: continue
                 
-                name_el = row.find_elements(By.CLASS_NAME, "person-inline")
-                if name_el and name_el[0].text.strip():
+                # GET NAME: Look for <a> tag, if not found, take the raw TD text (for Spares)
+                name_cell = cols[1]
+                player_links = name_cell.find_elements(By.TAG_NAME, "a")
+                
+                if player_links:
+                    player_name = player_links[0].text.strip()
+                else:
+                    # Fallback for "Spare #0" - we split to remove the #number part
+                    player_name = name_cell.text.split("#")[0].strip()
+
+                if player_name:
                     roster_events.append({
-                        'GameID': game_id, 'EventType': 'RosterAppearance', 'Team': team_name,
-                        'Description': name_el[0].text.strip(), 'Strength': cols[6].text.strip(), 
+                        'GameID': game_id, 
+                        'EventType': 'RosterAppearance', 
+                        'Team': team_name,
+                        'Description': player_name, 
+                        'Strength': cols[6].text.strip(), # PIM column
                         'ScrapedAt': time.strftime("%Y-%m-%d")
                     })
-        except: continue
+        except Exception as e:
+            continue
     
     print(f"Captured {len(roster_events)} players.")
     return roster_events
