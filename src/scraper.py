@@ -54,13 +54,12 @@ def scrape_hub(driver):
         time.sleep(1.0)
     
     try:
-        # PM Decision: Targeting the 'main' table to avoid site-wide ticker 'ghost' data.
         WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, "main table")))
     except: 
         print("❌ Hub Error: Table didn't load.")
         return []
 
-    # PM Decision: Scoped to 'main' content to ensure data integrity.
+    # PM Decision: Scoped to 'main' content to ignore the site-wide ticker
     rows = driver.find_elements(By.XPATH, "//main//table//tbody/tr[@role='article']")
     game_list, manifest_data, seen_ids = [], [], set()
 
@@ -70,7 +69,7 @@ def scrape_hub(driver):
             if len(cols) < 8: continue
 
             link = cols[1].find_element(By.TAG_NAME, "a")
-            url = link.get_attribute("href")
+            url = link.get_dom_attribute("href")
             game_id = url.split("/game/")[1].split("?")[0].split("/")[0]
 
             if game_id in seen_ids: continue
@@ -110,6 +109,7 @@ def scrape_roster_spoke(driver, game_id):
             driver.execute_script("arguments[0].click();", team_tabs[side_idx])
             time.sleep(2) 
 
+            # Targets visible table container to avoid ghost data
             container = driver.find_element(By.CSS_SELECTOR, "div.ng-scope:not(.ng-hide) div.table-scroll")
             rows = container.find_elements(By.CSS_SELECTOR, "tbody tr")
             
@@ -121,15 +121,16 @@ def scrape_roster_spoke(driver, game_id):
                 player_links = name_cell.find_elements(By.TAG_NAME, "a")
                 player_name = player_links[0].text.strip() if player_links else name_cell.text.split("#")[0].strip()
 
-                if player_name:
-                    # PM Decision: Unified Schema Enforcement
-                    roster_events.append(format_event(
-                        game_id=game_id,
-                        event_type='RosterAppearance',
-                        team=team_name,
-                        desc=player_name,
-                        strength=cols[6].text.strip() # PIM column
-                    ))
+                # DATA GUARD: Skip if name is empty
+                if not player_name: continue
+
+                roster_events.append(format_event(
+                    game_id=game_id,
+                    event_type='RosterAppearance',
+                    team=team_name,
+                    desc=player_name,
+                    strength=cols[6].text.strip()
+                ))
         except Exception as e:
             continue
     
@@ -143,7 +144,7 @@ def scrape_boxscore_spoke(driver, game):
     time.sleep(3)
     events = []
 
-    # Get status text (Desktop focus)
+    # Get status text (textContent bypasses visibility issues)
     status_text = ""
     try:
         status_el = driver.find_element(By.CSS_SELECTOR, ".hero .d .bh-white")
@@ -156,62 +157,51 @@ def scrape_boxscore_spoke(driver, game):
         for row in score_rows:
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 5:
+                team_name = cols[0].text.strip()
+                if not team_name: continue # DATA GUARD
+                
                 score_val = cols[4].text.strip()
                 desc = f"{score_val} (Forfeit)" if "Forfeit" in status_text else score_val
-                # PM Decision: Unified Schema Enforcement
                 events.append(format_event(
-                    game_id=game_id,
-                    event_type='PeriodScore',
-                    team=cols[0].text.strip(),
-                    desc=desc,
-                    period='Final'
+                    game_id=game_id, event_type='PeriodScore', team=team_name, desc=desc, period='Final'
                 ))
 
-        # 2. GOALS
-        goal_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Scoring Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr")
+        # 2. GOALS (XPath hardened to ignore table-fixed layout tables)
+        goal_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Scoring Summary']/following::div[contains(@class, 'table-scroll')][1]/div[not(contains(@class, 'table-fixed'))]//table/tbody/tr")
         for row in goal_rows:
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 5:
-                # PM Decision: Unified Schema Enforcement
+                team_name = cols[3].text.strip()
+                if not team_name: continue # DATA GUARD
+                
                 events.append(format_event(
-                    game_id=game_id,
-                    event_type='Goal',
-                    team=cols[3].text.strip(),
-                    desc=cols[4].text.strip(),
-                    strength=cols[2].text.strip(),
-                    period=cols[0].text.strip(),
-                    time_val=cols[1].text.strip()
+                    game_id=game_id, event_type='Goal', team=team_name, desc=cols[4].text.strip(),
+                    strength=cols[2].text.strip(), period=cols[0].text.strip(), time_val=cols[1].text.strip()
                 ))
 
-        # 3. PENALTIES
-        pen_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Penalty Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr")
+        # 3. PENALTIES (XPath hardened to ignore table-fixed layout tables)
+        pen_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Penalty Summary']/following::div[contains(@class, 'table-scroll')][1]/div[not(contains(@class, 'table-fixed'))]//table/tbody/tr")
         for row in pen_rows:
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 4:
-                # PM Decision: Unified Schema Enforcement
+                team_name = cols[3].text.strip()
+                if not team_name: continue # DATA GUARD
+                
                 events.append(format_event(
-                    game_id=game_id,
-                    event_type='Penalty',
-                    team=cols[3].text.strip(),
-                    desc=cols[4].text.strip(),
-                    period=cols[0].text.strip(),
-                    time_val=cols[1].text.strip()
+                    game_id=game_id, event_type='Penalty', team=team_name, desc=cols[4].text.strip(),
+                    period=cols[0].text.strip(), time_val=cols[1].text.strip()
                 ))
 
         # 4. OFFICIALS
-        try:
-            off_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Officials']/following::table[1]//tbody/tr")
-            for row in off_rows:
-                cols = row.find_elements(By.TAG_NAME, "td")
-                if len(cols) >= 2:
-                    # PM Decision: Unified Schema Enforcement
-                    events.append(format_event(
-                        game_id=game_id,
-                        event_type='OfficialAssignment',
-                        desc=cols[1].text.strip(), # Name
-                        strength=cols[0].text.strip() # Role
-                    ))
-        except: pass
+        off_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Officials']/following::table[1]//tbody/tr")
+        for row in off_rows:
+            cols = row.find_elements(By.TAG_NAME, "td")
+            if len(cols) >= 2:
+                name = cols[1].text.strip()
+                if not name: continue # DATA GUARD
+                events.append(format_event(
+                    game_id=game_id, event_type='OfficialAssignment', desc=name, strength=cols[0].text.strip()
+                ))
 
     except Exception as e:
         pass
