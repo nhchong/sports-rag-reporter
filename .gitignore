@@ -9,8 +9,9 @@ env/
 .env
 
 # --- Data Layer ---
-# Ignores local CSV files to keep the code repository clean
+# Ignores local CSV files and generated reports to keep the repo focused on logic
 data/*.csv
+data/weekly_report.md
 
 
 # --- Python & System Caches ---
