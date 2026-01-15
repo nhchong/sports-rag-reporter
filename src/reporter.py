@@ -6,7 +6,6 @@ from datetime import datetime
 from google import genai
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 # --- CONFIGURATION ---
@@ -15,103 +14,94 @@ PLAYER_STATS_FILE = "data/player_stats.csv"
 DETAILS_FILE = "data/game_details.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
 
-# API Setup
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-if not api_key:
-    print("❌ Error: No API Key found in .env file.")
-    sys.exit(1)
-
 client = genai.Client(api_key=api_key)
 
-def build_reporting_brief(days_back=10):
+def build_reporting_brief(days_back=7):
     """
-    PM Decision: Tiered Data Ingestion.
-    Filters raw logs into a structured 'Story Brief' for the LLM.
+    PM Decision: Contextual Intelligence.
+    Aggregates the weekly 'tape' with discretionary official metadata.
     """
     try:
-        # 1. Macro Trends (The Season Narrative)
         standings = pd.read_csv(TEAM_STATS_FILE).to_dict(orient='records')
         leaders = pd.read_csv(PLAYER_STATS_FILE).head(15).to_dict(orient='records')
         
-        # 2. Filter for Recency (The 'Current' Tape)
         details_df = pd.read_csv(DETAILS_FILE)
         details_df['ScrapedAt'] = pd.to_datetime(details_df['ScrapedAt'])
         
-        # Ground the report in the most recent data point
         latest_data_date = details_df['ScrapedAt'].max()
         cutoff_date = latest_data_date - pd.Timedelta(days=days_back)
         
         recent_details = details_df[details_df['ScrapedAt'] >= cutoff_date].copy()
+        
+        # Capture officials for discretionary use
+        officials = recent_details[recent_details['EventType'] == 'OfficialAssignment']
+        ref_map = officials.groupby('GameID')['Description'].apply(list).to_dict()
+
         recent_details['ScrapedAt'] = recent_details['ScrapedAt'].dt.strftime('%Y-%m-%d')
         
-        # 3. Contextual Grounding (Schedule Manifest)
         manifest_df = pd.read_csv(MANIFEST_FILE)
         recent_game_ids = recent_details['GameID'].unique().astype(str)
         recent_manifest = manifest_df[manifest_df['GameID'].astype(str).isin(recent_game_ids)]
 
-        # 4. Construct the JSON Brief
         brief = {
-            "metadata": {
-                "today_date": "January 14, 2026",
-                "reporting_window": f"{cutoff_date.date()} to {latest_data_date.date()}",
-                "league": "DMHL Division 533",
-                "location": "Toronto, ON"
+            "league_meta": {
+                "name": "Downtown Men's Hockey League (DMHL)",
+                "division": "Monday/Wednesday Low B (Division 533)",
+                "context": "Non-contact, ages 22-35, Toronto-based competitive rec league.",
+                "arenas": ["Upper Canada College (UCC)", "Mattamy Athletic Centre", "St. Michael's Arena"],
+                "report_date": "January 15, 2026"
             },
             "season_snapshot": {
                 "standings": standings,
-                "scoring_leaders": leaders
+                "overall_leaderboard": leaders
             },
-            "the_tape": {
-                "recent_games_manifest": recent_manifest.to_dict(orient='records'),
-                "play_by_play_logs": recent_details.to_dict(orient='records')
+            "this_week_tape": {
+                "manifest": recent_manifest.to_dict(orient='records'),
+                "play_by_play": recent_details.to_dict(orient='records'),
+                "referee_assignments": ref_map
             }
         }
         return json.dumps(brief, indent=2)
-
     except Exception as e:
-        print(f"❌ Error building JSON brief: {e}")
+        print(f"❌ Error building brief: {e}")
         return None
 
 def generate_report():
-    # Build the structured context
-    json_brief = build_reporting_brief(days_back=10) 
+    json_brief = build_reporting_brief(days_back=7) 
     if not json_brief: return
 
-    print("🎙️ Producing the 'DMHL Insider' (V3 Captivating Edition)...")
+    print("🎙️ Producing 'The Low B Dispatch'...")
     
-    # PM Decision: Narrative Logic Instruction Set
+    # PM Decision: Narrative Persona Synthesis
     system_instruction = """
-    You are the lead columnist for the 'DMHL Insider'. Your brand is the 'Smart Insider'—someone who 
-    knows the stats like a scout but talks like a teammate at the bar. 
+    You are the lead columnist for 'The Low B Dispatch,' the definitive source for DMHL Division 533. 
+    Your audience is Toronto-based hockey players aged 22-35.
 
-    NARRATIVE STYLE:
-    - 32 THOUGHTS: Use a numbered list. Lead several points with "I'm curious about..." or "I wonder if..." 
-    - THE ATHLETIC: Analyze the data. If a team is leading the league but has a poor PK%, question their longevity.
-    - SPITTING CHICLETS: Be direct and locker-room honest. If a team got blown out, say they "didn't get off the bus." 
-    - NO FORCED SLANG: Do not force 'snipes' or 'sauce' unless it fits perfectly. Avoid cringey cliches.
+    EDITORIAL PERSONA:
+    - 32 THOUGHTS: Lead with numbered points. Use the 'insider' structure (e.g., 'I'm hearing...', 'I wonder if...').
+    - THE ATHLETIC: Use the data (PP%, standings movement, GFA) to ground your analysis.
+    - SPITTIN' CHICLETS: Infuse the casual, locker-room energy of the podcast. Be direct, blunt, and authentic. Treat the players like peers, not professionals. Chirp a 'donkey' performance if the data shows a high PIM count led to a loss, but keep it grounded in rec-league reality.
 
-    EDITORIAL FRAMEWORK:
-    1. THE "WHY": Speculate on why trends are happening based on PIMs or GFA.
-    2. THE STANDINGS LADDER: Mention how games affected the teams' 'Life in the Standings' (e.g., "Leapfrogging into 2nd").
-    3. THE TORONTO VIBE: It's mid-January in Toronto. Ground the report in the winter atmosphere at St. Mikes or Mattamy.
-    4. STRICT RECENCY: Only report on games in 'the_tape'. Use January context as 'NOW'.
+    NARRATIVE RULES:
+    1. THIS WEEK'S GAMES: Focus 90% on 'this_week_tape'. Recount the action at UCC, Mattamy, and St. Mikes.
+    2. DISCRETIONARY REFS: Mention the referees (from 'referee_assignments') ONLY if it impacts the story (e.g., a tight-whistle game vs. letting them play).
+    3. STANDINGS IMPACT: Weave how this week's results shifted the 'Standings Ladder.'
+    4. NO FORCED SLANG: Don't use 'hockey-speak' just to use it. Use it naturally.
+
+    FORMAT:
+    - INTRO: Set the scene (mid-January winter in Toronto).
+    - THE RUNDOWN: 5-6 numbered points on the week's matchups.
+    - LEADERBOARD WATCH: Highlights from the season stat leaders.
+    - THE THREE STARS:
+        - 1st Star: The week's standout MVP.
+        - 2nd Star: A clutch goal or massive goaltending performance.
+        - 3rd Star: The 'Unsung Hero' or depth contributor.
     """
 
-    prompt = f"""
-    CONTEXT DATA (JSON):
-    {json_brief}
-
-    TASK:
-    - Write a captivating weekly report.
-    - Format: 
-       * A sharp intro setting the January scene in Toronto.
-       * 5-6 numbered 'Thoughts' on the recent games and season standings.
-       * 'The PIM Tracker' (Who needs to stay out of the bin?)
-       * 'The Star of the Week' (Cross-reference recent goals with the season leaders).
-    """
+    prompt = f"DATA BRIEF:\n{json_brief}\n\nTask: Generate this week's edition of The Low B Dispatch."
 
     try:
-        # Using 2.0 Flash for high-speed narrative generation
         response = client.models.generate_content(
             model="gemini-2.5-flash", 
             contents=[system_instruction, prompt]
@@ -119,11 +109,10 @@ def generate_report():
         report_text = response.text
         
         print("\n" + "═"*60)
-        print(f"🏒  DMHL INSIDER REPORT | {datetime.now().strftime('%B %d, %Y')}  🏒")
+        print(f"🏒  THE LOW B DISPATCH | {datetime.now().strftime('%B %d, %Y')}  🏒")
         print("═"*60 + "\n")
         print(report_text)
         
-        os.makedirs("data", exist_ok=True)
         with open("data/weekly_report.md", "w") as f:
             f.write(report_text)
         print(f"\n✅ Report saved to data/weekly_report.md")
