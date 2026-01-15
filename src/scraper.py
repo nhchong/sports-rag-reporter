@@ -1,6 +1,5 @@
 import os
 import time
-import random
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -30,7 +29,6 @@ def setup_driver():
 def format_event(game_id, event_type, team="N/A", desc="N/A", strength="N/A", period="N/A", time_val="N/A"):
     """
     MASTER SCHEMA: Enforces a strict, identical column order for every single row.
-    This prevents 'Final' from appearing in the Team column.
     """
     return {
         'GameID': game_id,
@@ -42,6 +40,18 @@ def format_event(game_id, event_type, team="N/A", desc="N/A", strength="N/A", pe
         'Period': period,
         'Time': time_val
     }
+
+def get_processed_ids():
+    """
+    Identifies games already present in the local CSV to avoid redundant scraping.
+    """
+    if not os.path.exists(DETAILS_FILE):
+        return set()
+    try:
+        df = pd.read_csv(DETAILS_FILE)
+        return set(df['GameID'].astype(str).unique())
+    except:
+        return set()
 
 def scrape_hub(driver):
     """Scrapes the schedule hub for GameIDs and Arena context."""
@@ -59,7 +69,6 @@ def scrape_hub(driver):
         print("❌ Hub Error: Table didn't load.")
         return []
 
-    # PM Decision: Scoped to 'main' content to ignore the site-wide ticker
     rows = driver.find_elements(By.XPATH, "//main//table//tbody/tr[@role='article']")
     game_list, manifest_data, seen_ids = [], [], set()
 
@@ -109,7 +118,6 @@ def scrape_roster_spoke(driver, game_id):
             driver.execute_script("arguments[0].click();", team_tabs[side_idx])
             time.sleep(2) 
 
-            # Targets visible table container to avoid ghost data
             container = driver.find_element(By.CSS_SELECTOR, "div.ng-scope:not(.ng-hide) div.table-scroll")
             rows = container.find_elements(By.CSS_SELECTOR, "tbody tr")
             
@@ -121,18 +129,13 @@ def scrape_roster_spoke(driver, game_id):
                 player_links = name_cell.find_elements(By.TAG_NAME, "a")
                 player_name = player_links[0].text.strip() if player_links else name_cell.text.split("#")[0].strip()
 
-                # DATA GUARD: Skip if name is empty
                 if not player_name: continue
 
                 roster_events.append(format_event(
-                    game_id=game_id,
-                    event_type='RosterAppearance',
-                    team=team_name,
-                    desc=player_name,
-                    strength=cols[6].text.strip()
+                    game_id=game_id, event_type='RosterAppearance', team=team_name,
+                    desc=player_name, strength=cols[6].text.strip()
                 ))
-        except Exception as e:
-            continue
+        except: continue
     
     print(f"Captured {len(roster_events)} players.")
     return roster_events
@@ -144,7 +147,6 @@ def scrape_boxscore_spoke(driver, game):
     time.sleep(3)
     events = []
 
-    # Get status text (textContent bypasses visibility issues)
     status_text = ""
     try:
         status_el = driver.find_element(By.CSS_SELECTOR, ".hero .d .bh-white")
@@ -158,75 +160,68 @@ def scrape_boxscore_spoke(driver, game):
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 5:
                 team_name = cols[0].text.strip()
-                if not team_name: continue # DATA GUARD
-                
+                if not team_name: continue
                 score_val = cols[4].text.strip()
                 desc = f"{score_val} (Forfeit)" if "Forfeit" in status_text else score_val
-                events.append(format_event(
-                    game_id=game_id, event_type='PeriodScore', team=team_name, desc=desc, period='Final'
-                ))
+                events.append(format_event(game_id=game_id, event_type='PeriodScore', team=team_name, desc=desc, period='Final'))
 
-        # 2. GOALS (XPath hardened to ignore table-fixed layout tables)
+        # 2. GOALS (Hardened against Ghost Rows)
         goal_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Scoring Summary']/following::div[contains(@class, 'table-scroll')][1]/div[not(contains(@class, 'table-fixed'))]//table/tbody/tr")
         for row in goal_rows:
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 5:
                 team_name = cols[3].text.strip()
-                if not team_name: continue # DATA GUARD
-                
-                events.append(format_event(
-                    game_id=game_id, event_type='Goal', team=team_name, desc=cols[4].text.strip(),
-                    strength=cols[2].text.strip(), period=cols[0].text.strip(), time_val=cols[1].text.strip()
-                ))
+                if not team_name: continue
+                events.append(format_event(game_id=game_id, event_type='Goal', team=team_name, desc=cols[4].text.strip(), strength=cols[2].text.strip(), period=cols[0].text.strip(), time_val=cols[1].text.strip()))
 
-        # 3. PENALTIES (XPath hardened to ignore table-fixed layout tables)
+        # 3. PENALTIES (Hardened against Ghost Rows)
         pen_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Penalty Summary']/following::div[contains(@class, 'table-scroll')][1]/div[not(contains(@class, 'table-fixed'))]//table/tbody/tr")
         for row in pen_rows:
             cols = row.find_elements(By.TAG_NAME, "td")
             if len(cols) >= 4:
                 team_name = cols[3].text.strip()
-                if not team_name: continue # DATA GUARD
-                
-                events.append(format_event(
-                    game_id=game_id, event_type='Penalty', team=team_name, desc=cols[4].text.strip(),
-                    period=cols[0].text.strip(), time_val=cols[1].text.strip()
-                ))
+                if not team_name: continue
+                events.append(format_event(game_id=game_id, event_type='Penalty', team=team_name, desc=cols[4].text.strip(), period=cols[0].text.strip(), time_val=cols[1].text.strip()))
 
-        # 4. OFFICIALS
-        off_rows = driver.find_elements(By.XPATH, "//div[not(@aria-hidden='true')]//h3[text()='Officials']/following::table[1]//tbody/tr")
-        for row in off_rows:
-            cols = row.find_elements(By.TAG_NAME, "td")
-            if len(cols) >= 2:
-                name = cols[1].text.strip()
-                if not name: continue # DATA GUARD
-                events.append(format_event(
-                    game_id=game_id, event_type='OfficialAssignment', desc=name, strength=cols[0].text.strip()
-                ))
-
-    except Exception as e:
-        pass
+    except: pass
     
     print(f"Captured {len(events)} events.")
     return events
 
 def main():
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
-    if os.path.exists(DETAILS_FILE): os.remove(DETAILS_FILE)
+    
+    processed_ids = get_processed_ids()
+    print(f"📦 Local database: {len(processed_ids)} games found.")
     
     driver = setup_driver()
     try:
         all_games = scrape_hub(driver)
-        if all_games:
-            print(f"✨ Starting full season scrape ({len(all_games)} games)...")
-            for i, game in enumerate(all_games):
-                print(f"\n[{i+1}/{len(all_games)}] Processing Game {game['game_id']}")
+        # FILTER: Only process IDs not already in our CSV
+        new_games = [g for g in all_games if str(g['game_id']) not in processed_ids]
+        
+        if not new_games:
+            print("✨ System up to date. No new games to scrape.")
+            return
+
+        print(f"🚀 Found {len(new_games)} new games. Starting incremental update...")
+        for i, game in enumerate(new_games):
+            print(f"\n[{i+1}/{len(new_games)}] Processing Game {game['game_id']}")
+            try:
                 roster = scrape_roster_spoke(driver, game['game_id'])
                 boxscore = scrape_boxscore_spoke(driver, game)
-                
                 combined = roster + boxscore
+                
                 if combined:
                     pd.DataFrame(combined).to_csv(DETAILS_FILE, mode='a', header=not os.path.exists(DETAILS_FILE), index=False)
-            print("\n🏁 Full season scrape complete.")
+            except Exception as e:
+                print(f"⚠️ Error on {game['game_id']}: {e}")
+                if "invalid session id" in str(e):
+                    print("🔄 Session timeout. Restarting driver...")
+                    driver.quit()
+                    driver = setup_driver()
+                continue
+        print("\n🏁 Update complete.")
     finally:
         driver.quit()
 
