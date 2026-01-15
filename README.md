@@ -1,29 +1,46 @@
 # DMHL Analytics & RAG Reporting Engine 🏒
 
-A modular **Retrieval-Augmented Generation (RAG)** pipeline designed to scrape, analyze, and generate professional "NHL-style" reports for the **Downtown Men's Hockey League (DMHL)** in Toronto. 
+A modular **Structured RAG** pipeline that transforms raw recreational hockey data into high-fidelity, professional-grade news reports.
 
 ---
 
-## 🤖 RAG Architecture
-This project is a specialized implementation of **Structured RAG**. Unlike standard RAG that searches through PDFs, this engine retrieves structured statistical data to "augment" the LLM's generation:
+## 🎯 The Problem
+Recreational sports data is notoriously fragmented, often locked behind inconsistent web interfaces or poorly structured boxscores. This project builds a bridge between raw league data and professional narrative reporting, ensuring 100% statistical accuracy while maintaining an engaging, human-centric tone.
 
-1.  **Retrieval (The Python Pipeline):** The system retrieves live data from the DMHL via `scraper.py` and processes it into structured context via `analyzer.py`.
-2.  **Augmentation (The Context Window):** Raw boxscores and derived standings are injected into the LLM prompt, providing the model with "ground truth" facts it wasn't trained on.
-3.  **Generation (The Narrative):** The AI (Gemini/GPT-4) transforms the augmented data into a cohesive, contextually accurate hockey recap, preventing "hallucinations" regarding scores or player names.
+## 🤖 System Architecture
+Unlike standard RAG implementations that rely on unstructured text retrieval, this engine utilizes a **Structured Data Contract** to power its LLM generation:
 
-## 🛠️ System Components
-- **Ingestion (`src/scraper.py`):** A Selenium-based engine that performs incremental deep-dives into boxscores to capture goals, penalties, and period scores.
-- **Data Engineering (`src/analyzer.py`):** A Pandas-driven engine that reconstructs standings and calculates advanced metrics (L10, Streaks) using official league tie-breakers.
 
-## 📊 Data Features
-- **Semantic Scraping:** Identifies web elements by content/context rather than fragile XPaths.
-- **Contextual Awareness:** Captures arena locations (St. Mike's, Mattamy, UCC) to fuel narrative reporting.
-- **Structured Logic:** Math and standings are calculated in Python *before* reaching the AI to ensure 100% statistical accuracy.
+
+1.  **Extraction (Resilient Ingestion):** A state-aware Selenium pipeline that performs incremental updates and handles environmental instability (browser timeouts, responsive DOM duplication) automatically.
+2.  **Analysis (Deterministic Logic):** A Python/Pandas layer that handles the "Math" (standings, PIM normalization, special teams efficiency) before the data reaches the AI.
+3.  **Synthesis (Contextual Narrative):** A tiered JSON ingestion strategy that feeds the LLM both macro season trends and micro game-day details to produce a multi-persona weekly newsletter.
+
+
+
+## 🛠️ Core Capabilities
+
+### 🛰️ Resilient Data Collection
+* **State-Aware Scraping:** Only retrieves new game data, significantly reducing operational load and redundant network requests.
+* **Fault-Tolerant Design:** Auto-recovery logic and session management ensure completion across long-running data collection tasks.
+
+### 📊 Advanced Data Engineering
+* **Statistical Normalization:** Translates unstructured league logs and descriptive text into clean, numerical metrics for accurate analysis.
+* **Micro-to-Macro Mapping:** Automatically links individual game events and player performances to season-wide team standings and trends.
+
+### 🎙️ Narrative Intelligence
+* **Hybrid Editorial Tone:** Synthesizes analytical depth (*The Athletic*) with engaging, community-focused reporting and "insider" structures (*32 Thoughts*).
+* **Temporal Awareness:** Prioritizes current events through dynamic data filtering while utilizing historical context to identify streaks and anomalies.
+
+---
 
 ## 🚀 Getting Started
 
 ### Installation
-1. Clone the repo:
-   ```bash
-   git clone [https://github.com/yourusername/sports-rag-reporter.git](https://github.com/yourusername/sports-rag-reporter.git)
-   cd sports-rag-reporter
+```bash
+# Clone the repository
+git clone [https://github.com/nhchong/sports-rag-reporter.git](https://github.com/nhchong/sports-rag-reporter.git)
+cd sports-rag-reporter
+
+# Install dependencies
+pip install -r requirements.txt
