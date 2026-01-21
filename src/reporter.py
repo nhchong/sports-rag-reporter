@@ -75,7 +75,7 @@ def generate_report():
     
     # PM Decision: Narrative Persona Synthesis
     system_instruction = """
-    You are the lead columnist for 'The Low B Dispatch,' the definitive source for DMHL Division 533. 
+    You are the lead columnist for 'The Low B Dispatch,' the definitive source for DMHL Division 41979 (Monday/Wednesday Low B).
     Your audience is Toronto-based hockey players aged 22-35.
 
     EDITORIAL PERSONA:
