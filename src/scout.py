@@ -95,25 +95,21 @@ def generate_whatsapp_brief():
     
     # SYSTEM INSTRUCTION: Professional Data x Locker Room Grit
     system_instruction = f"""
-    You are the Shockers Lead Scout using Gemini 2.5 Flash. 
+    You are the Shockers Lead Scout.  
     Target Audience: 20-35 year old men (WhatsApp Group).
     
-    STRICT DATA RULES:
-    1. H2H ACCURACY: We are 0-3 against them. Explicitly mention the Oct 6 (0-1), Nov 3 (3-6), and Dec 22 (2-3) losses.
-    2. PIM INTEGRITY: If 'offenders' has data, use those numbers. Never report 0 PIMs if the data shows otherwise.
-    3. THE PATTERN: Analyze 'raw_tape' and 'records'. If they are #3 but have a -7 Goal Differential, call them 'Frauds' and explain why (e.g., they get shelled but squeak out wins).
     
     FORMAT: 
     - 1. STANDINGS (Seed & Pts)
     - 2. RECORDS (Full season W-L-T)
     - 3. H2H BATTLE (Specific dates and scores)
     - 4. OPPONENT INTEL (Top 3 Pts & PIM Leader with exact PIM count)
-    - 5. COMPELLING PATTERN (One high-value tactical insight)
+    - 5. Notable Story (One high-value tactical insight extrapolated from the data)
 
-    CONSTRAINT: Under 350 words. Pithy. No generic AI fluff.
+    CONSTRAINT: Under 350 words. Pithy. No generic AI fluff. No cringe hockey talk. When reporting on a player, make sure to mention their number, but only the first time they are mentioned. 
     """
 
-    prompt = f"DATA PACKAGE:\n{json.dumps(data)}\n\nTask: Generate the bare-bones WhatsApp scouting brief."
+    prompt = f"DATA PACKAGE:\n{json.dumps(data)}\n\nTask: Generate the bare-bones scouting brief to be shared ahead of today's game against the Flat-Earthers." 
 
     try:
         response = client.models.generate_content(

@@ -117,8 +117,6 @@ def generate_standings_base(df):
     std.insert(0, 'Rank', std.index)
     return std
 
-# ... (Rest of your calculate_team_metrics, find_game_winning_goals, calculate_player_stats remain the same) ...
-
 def calculate_team_metrics(df, standings_df):
     if standings_df.empty: return pd.DataFrame()
     print("📊 Calculating Special Teams efficiency...")
@@ -170,35 +168,64 @@ def calculate_player_stats(df):
     print("👤 Calculating Player Stats...")
     player_data = {}
     gwg_list = find_game_winning_goals(df)
+    
+    # 1. Initialize Roster & Games Played
     roster_df = df[df['EventType'] == 'RosterAppearance']
     for _, row in roster_df.iterrows():
         name, team = row['Description'].strip(), row['Team']
         if name not in player_data:
             player_data[name] = {'Team': team, 'GP': 0, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
         player_data[name]['GP'] += 1
-        player_data[name]['PIM'] += safe_int(row['Strength'])
 
+    # 2. FIXED PIM CALCULATION
+    penalty_events = df[df['EventType'] == 'Penalty']
+    for _, row in penalty_events.iterrows():
+        desc = row['Description']
+        
+        # NEW REGEX: Skips the '#' and number, grabs the name before the colon.
+        # Pattern: "#8 Mitchell Moloney: Unsportsmanlike..." -> grabs "Mitchell Moloney"
+        name_match = re.search(r'#\d+\s+(.*?):', desc)
+        
+        if name_match:
+            p_name = name_match.group(1).strip()
+            if p_name in player_data:
+                # OPTIONAL: Extracting PIMs directly from (02:00 mins) is safer than keyword search
+                # If you prefer to keep your calculate_pims_from_text, call it here.
+                pims = calculate_pims_from_text(desc)
+                player_data[p_name]['PIM'] += pims
+            else:
+                # Log this if a player gets a penalty but isn't in the RosterAppearance
+                # Useful for identifying scraping gaps
+                pass
+
+    # 3. SCORING LOGIC
     for _, row in df[df['EventType'] == 'Goal'].iterrows():
         desc, gid, strength = row['Description'], row['GameID'], row['Strength']
-        scorer_match = re.search(r'#\d+\s+([^(]+)', desc)
+        
+        # Scorer regex: grabs name after jersey number
+        scorer_match = re.search(r'#\d+\s+([^(:]+)', desc)
         if scorer_match:
             p_name = scorer_match.group(1).strip()
             if p_name in player_data:
                 p = player_data[p_name]
-                p['G'] += 1; p['Pts'] += 1
+                p['G'] += 1
+                p['Pts'] += 1
                 if 'PP' in str(strength): p['PPG'] += 1
                 if 'SH' in str(strength): p['SHG'] += 1
                 if (gid, desc) in gwg_list: p['GWG'] += 1
 
+        # Assists logic
         assist_chunk = re.search(r'\((.*?)\)', desc)
         if assist_chunk:
             for raw in assist_chunk.group(1).split(','):
-                a_match = re.search(r'#\d+\s+(.*)', raw)
+                a_match = re.search(r'#\d+\s+([^,]+)', raw)
                 if a_match:
                     a_name = a_match.group(1).strip()
                     if a_name in player_data:
-                        player_data[a_name]['A'] += 1; player_data[a_name]['Pts'] += 1
+                        player_data[a_name]['A'] += 1
+                        player_data[a_name]['Pts'] += 1
 
+    # 4. Final Conversion
     stats = []
     for name, d in player_data.items():
         stats.append({
@@ -206,7 +233,7 @@ def calculate_player_stats(df):
             'Pts': d['Pts'], 'Pts/G': round(d['Pts']/d['GP'], 2) if d['GP'] > 0 else 0,
             'PIM': d['PIM'], 'PPG': d['PPG'], 'SHG': d['SHG'], 'GWG': d['GWG']
         })
-    if not stats: return pd.DataFrame()
+    
     return pd.DataFrame(stats).sort_values(by='Pts', ascending=False)
 
 def main():
