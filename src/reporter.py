@@ -6,28 +6,36 @@ from datetime import datetime
 from google import genai
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
-# --- CONFIGURATION ---
+# --- FILE PATH CONFIGURATION ---
 TEAM_STATS_FILE = "data/team_stats.csv"
 PLAYER_STATS_FILE = "data/player_stats.csv"
 DETAILS_FILE = "data/game_details.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
 
+# Initialize the Gemini 2.5 Flash client
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 
-def build_reporting_brief():
+def compile_weekly_data_package():
     """
-    Constructs a high-fidelity data package for the LLM.
-    Labels data sources clearly to enable cross-referencing.
+    Constructs a comprehensive data package for the LLM by synthesizing 
+    seasonal context with granular weekly event data.
+    
+    The package includes:
+    - Seasonal standings and individual player metrics.
+    - Filtered play-by-play data for the current calendar week.
+    - Official assignments mapped to specific Game IDs.
+    - Geographic context (arenas and schedules).
     """
     try:
-        # 1. Seasonal Context (The Athletic style grounding)
+        # 1. Load Seasonal Context
         standings = pd.read_csv(TEAM_STATS_FILE).to_dict(orient='records')
         player_stats = pd.read_csv(PLAYER_STATS_FILE).to_dict(orient='records')
         
-        # 2. Weekly Evidence (The Tape)
+        # 2. Load and Filter Weekly Evidence
         details_df = pd.read_csv(DETAILS_FILE)
         manifest_df = pd.read_csv(MANIFEST_FILE)
         
@@ -35,69 +43,81 @@ def build_reporting_brief():
         today = datetime.now()
         monday_of_this_week = today - pd.Timedelta(days=today.weekday())
         
-        # Filter for current Monday/Wednesday action
-        this_week_details = details_df[details_df['ScrapedAt'] >= monday_of_this_week.replace(hour=0, minute=0)].copy()
+        # Isolating events from the current production cycle (Mon/Wed/Fri action)
+        this_week_details = details_df[
+            details_df['ScrapedAt'] >= monday_of_this_week.replace(hour=0, minute=0)
+        ].copy()
         
-        # Mapping Officials specifically for the current games
+        # 3. Map Official Assignments
         officials = this_week_details[this_week_details['EventType'] == 'Official']
         ref_map = officials.groupby('GameID')['Description'].apply(list).to_dict()
 
+        # Format timestamps for JSON serialization
         this_week_details['ScrapedAt'] = this_week_details['ScrapedAt'].dt.strftime('%Y-%m-%d')
         recent_game_ids = this_week_details['GameID'].unique().astype(str)
         recent_manifest = manifest_df[manifest_df['GameID'].astype(str).isin(recent_game_ids)]
 
+        # Construct final high-fidelity brief
         brief = {
             "data_sources": {
-                "league_standings": standings, # Context: Who is a powerhouse vs a cellar dweller
-                "individual_leaders": player_stats, # Context: Who are the elite threats and PIM kings
-                "weekly_play_by_play": this_week_details.to_dict(orient='records'), # The evidence: Goals, PIMs, Timing
-                "schedule_and_arenas": recent_manifest.to_dict(orient='records'), # The geography: Location and game times
-                "official_assignments": ref_map # The human element: Who was wearing the stripes
+                "league_standings": standings,
+                "individual_leaders": player_stats,
+                "weekly_play_by_play": this_week_details.to_dict(orient='records'),
+                "schedule_and_arenas": recent_manifest.to_dict(orient='records'),
+                "official_assignments": ref_map
             },
             "report_metadata": {
                 "current_date": today.strftime('%B %d, %Y'),
-                "target_audience": "20-35 year old Toronto-based hockey players"
+                "target_audience": "Toronto-based adult hockey players (20-35)"
             }
         }
         return json.dumps(brief, indent=2)
     except Exception as e:
-        print(f"❌ Error building brief: {e}")
+        print(f"❌ Error compiling weekly data package: {e}")
         return None
 
-def generate_report():
-    json_brief = build_reporting_brief() 
-    if not json_brief: return
+def generate_weekly_digest_report():
+    """
+    Orchestrates the LLM generation to produce 'The Low B Dispatch' weekly column.
+    
+    Integrates professional data-driven analysis with an authentic, 
+    community-focused narrative voice.
+    """
+    json_brief = compile_weekly_data_package() 
+    if not json_brief: 
+        return
 
-    print("🎙️ Producing 'The Low B Dispatch'...")
+    print("🎙️ Producing 'The Low B Dispatch' weekly digest...")
     
-    # SYSTEM INSTRUCTION: The Athletic (Data) x Spittin' Chiclets (Voice)
+    # AI System Configuration: Professional Analysis x Locker Room Authenticity
     system_instruction = f"""
-    You are the Senior Columnist for 'The Low B Dispatch.' 
+    You are the Senior Columnist for 'The Low B Dispatch,' a data-driven hockey newsletter. 
     
-    VOICE INSPIRATION:
-    - THE ATHLETIC: You are data-driven. You don't just say someone played well; you use 'individual_leaders' and 'weekly_play_by_play' to prove it. You identify seasonal trends (e.g., scoring droughts, special teams surges).
-    - SPITTIN' CHICLETS: You are a locker-room insider. You talk to your audience (20-35 year old men) like peers. You aren't afraid to chirp a 'donkey' performance or call out a team that clearly spent too much time at the bar before a 10:30 PM puck drop. Use raw, authentic language—no corporate AI fluff.
+    VOICE & STYLE:
+    - ANALYTICAL: Use 'individual_leaders' and 'weekly_play_by_play' to substantiate claims. 
+    - AUTHENTIC: Speak to the community as a peer. Use direct language and call out poor 
+      performances or unusual game circumstances (e.g., late starts, officiating).
+    - ZERO FLUFF: Avoid generic PR language.
 
     NARRATIVE STRATEGY:
-    1. THE BIG STORY: Look at 'league_standings'. Is the top team slipping? Is there a dark horse rising? Tie this week's games into this season-long arc.
-    2. DATA-DRIVEN CHIRPS: Use the 'weekly_play_by_play'. If a league leader ('individual_leaders') went scoreless while taking 6 minutes in penalties, that is your lead story. 
-    3. THE HUMAN ELEMENT (THE STRIPES): Cross-reference 'official_assignments' with penalty counts. If a certain ref duo called 12 penalties in a 30-minute game, call out the 'tight whistle' and how it killed the game's flow.
-    4. GEOGRAPHY & VIBE: Extract the arenas and game times from 'schedule_and_arenas'. Acknowledge the vibe of a late-night start at UCC vs. a prime-time slot at Mattamy. Mention the Toronto weather ONLY if it adds to the 'grind' of the night.
+    1. THE BIG STORY: Identify shifts in league standings or emerging dark horses.
+    2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies (e.g., scoring vs. PIMs).
+    3. THE OFFICIALS: Comment on officiating trends if supported by penalty volume.
+    4. VIBE & VENUE: Contextualize results based on arena and scheduling.
 
-    THE THREE STARS (Performance-Based):
-    Strictly earned through data.
-    - **1st Star**: The undeniable MVP. Use stats to justify this.
-    - **2nd Star**: A standout performance (e.g., a goalie clinic or a defenseman hitting a scoring milestone).
-    - **3rd Star**: The 'Productive Agitator'—someone who played a heavy game, maybe took a seat in the box, but moved the needle for their team.
+    THE THREE STARS:
+    Must be strictly based on weekly data.
+    - 1st Star: Undeniable MVP.
+    - 2nd Star: Standout performance (Goalie clinic, scoring milestone, etc).
+    - 3rd Star: The 'Productive Agitator'—someone who impacted the game physically and statistically.
 
     CONSTRAINTS:
-    - NO BULLSHIT: Avoid phrases like 'thrilling matchup' or 'testament to their skill.' 
-    - No references to specific division numbers unless found in the data.
-    - Length: Pithy. Professional. Funny.
-    - Format: Markdown (H1, H2, Bold).
+    - Markdown formatting required.
+    - Professional yet direct tone.
+    - Length: Pithy and insightful.
     """
 
-    prompt = f"DATA BRIEF:\n{json_brief}\n\nTask: Generate this week's Dispatch."
+    prompt = f"DATA BRIEF:\n{json_brief}\n\nTask: Generate this week's newsletter dispatch."
 
     try:
         response = client.models.generate_content(
@@ -106,9 +126,10 @@ def generate_report():
         )
         report_text = response.text
         
-        print(f"\n✅ Dispatch Ready.\n")
+        print(f"\n✅ Digest generated successfully.\n")
         print(report_text)
         
+        # Save output to Markdown for archive/GitHub publishing
         os.makedirs("data", exist_ok=True)
         with open("data/weekly_report.md", "w") as f:
             f.write(report_text)
@@ -117,4 +138,4 @@ def generate_report():
         print(f"❌ Gemini API Error: {e}")
 
 if __name__ == "__main__":
-    generate_report()
+    generate_weekly_digest_report()
