@@ -15,6 +15,7 @@ PLAYER_STATS_FILE = "data/player_stats.csv"
 DETAILS_FILE = "data/game_details.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
 DOCS_DIR = "docs"
+POSTS_DIR = os.path.join(DOCS_DIR, "_posts")
 
 # Initialize the Gemini 2.5 Flash client
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
@@ -84,24 +85,32 @@ def generate_weekly_digest_report():
     
     # AI System Configuration: Professional Analysis x Locker Room Authenticity
     system_instruction = """
-    You are the Senior Columnist for 'The Low B Dispatch,' a data-driven hockey newsletter. 
+    You are the Senior Columnist for 'The Low B Dispatch,' a data-driven hockey newsletter. You cover the DMHL, which stands for the Downtown Mens Hockey League. The league is based in Toronto. Most of the players are between the ages of 25 and 35. Games are played on Monday and Wednesday. The division that you are covering is Monday/Wednesday Low B. 
     
     VOICE & STYLE:
     - ANALYTICAL: Use data to substantiate claims. 
-    - AUTHENTIC: Speak to the community as a peer (locker-room tone).
+    - AUTHENTIC: Speak to the community as a peer but avois any unprofessional locker-room tone.
     - ZERO FLUFF: Avoid generic PR language.
+    - COMPELLING NARRATIVE: Similar to the media outlet, The Atheltic
+    - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
+    - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
 
     NARRATIVE STRATEGY:
     1. THE BIG STORY: Identify standings shifts.
     2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies.
-    3. THE OFFICIALS: Comment on officiating volume.
-    4. VIBE & VENUE: Contextualize results based on arena/time.
+    3. THE OFFICIALS: Comment on officiating volume and whether or not it impacted the game. 
+    4. VIBE & VENUE: Contextualize results based on arena/time. 
+    5. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
+    6. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
+
+    STRUCTURE & LENGTH:
+    - WORD LIMIT: Approximately 250 words.
 
     THE THREE STARS:
     Must be strictly based on weekly data.
     - 1st Star: MVP.
     - 2nd Star: Standout (Goalie/Defense).
-    - 3rd Star: The 'Productive Agitator'.
+    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter. 
     """
 
     prompt = f"DATA BRIEF:\n{json_brief}\n\nTask: Generate this week's newsletter dispatch."
@@ -115,23 +124,31 @@ def generate_weekly_digest_report():
         
         # --- PUBLIC ARCHIVING LOGIC (GitHub Pages) ---
         os.makedirs(DOCS_DIR, exist_ok=True)
+        os.makedirs(POSTS_DIR, exist_ok=True)
         today = datetime.now()
-        datestamp = today.strftime('%Y_%m_%d')
-        filename = f"dispatch_{datestamp}.md"
-        filepath = os.path.join(DOCS_DIR, filename)
+        datestamp = today.strftime('%Y-%m-%d')
+        filename = f"{datestamp}-dispatch.md"
+        filepath = os.path.join(POSTS_DIR, filename)
         
-        # 1. Save the specific report
+        # Format date for front matter title
+        formatted_date = today.strftime('%B %d, %Y')
+        
+        # Jekyll Front Matter
+        front_matter = f"""---
+layout: single
+title: 'Weekly Dispatch: {formatted_date}'
+excerpt: 'Data-driven analysis of the DMHL.'
+author_profile: true
+sidebar:
+  nav: "docs"
+---
+
+"""
+        
+        # Save the report with front matter
         with open(filepath, "w") as f:
+            f.write(front_matter)
             f.write(report_text)
-            
-        # 2. Update the public Index page
-        index_path = os.path.join(DOCS_DIR, "index.md")
-        if not os.path.exists(index_path):
-            with open(index_path, "w") as f:
-                f.write("# 🗞️ The Low B Dispatch Archive\n\nWelcome to the official record of DMHL drama.\n")
-        
-        with open(index_path, "a") as f:
-            f.write(f"\n* [{today.strftime('%B %d, %Y')} - Weekly Dispatch]({filename})")
 
         print(f"\n✅ Digest generated and archived: {filepath}")
         print(report_text)

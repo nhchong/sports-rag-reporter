@@ -1,0 +1,87 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes/initialize";
+
+/* --- THE ATHLETIC STYLE OVERRIDES --- */
+
+/* Serif fonts for headers (Georgia/Sentinel) */
+h1, h2, h3, h4, h5, h6,
+.page__title,
+.archive__item-title,
+.entry-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Clean Sans-Serif for body text (Inter/Helvetica) */
+body,
+p,
+.page__content,
+.archive__item-excerpt {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Athletic Red (#c00) as accent color */
+a,
+.page__title a,
+.archive__item-title a,
+.btn,
+.sidebar a {
+  color: #c00;
+  
+  &:hover,
+  &:focus {
+    color: #a00;
+  }
+}
+
+/* Header styling */
+.page__title {
+  color: #c00;
+  border-bottom: 2px solid #c00;
+  padding-bottom: 0.5rem;
+}
+
+/* Archive item styling */
+.archive__item {
+  border-left: 3px solid #c00;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.archive__item-title {
+  color: #000;
+  
+  a {
+    color: #000;
+    
+    &:hover {
+      color: #c00;
+    }
+  }
+}
+
+/* Sidebar navigation */
+.sidebar {
+  .nav__list {
+    a {
+      color: #333;
+      
+      &:hover {
+        color: #c00;
+      }
+    }
+  }
+}
+
+/* Code blocks maintain readability */
+code,
+pre {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
