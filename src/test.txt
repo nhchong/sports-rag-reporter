@@ -1,4 +1,4 @@
-curl 'https://web.api.digitalshift.ca/partials/stats/team?team_id=591804' \
+curl 'https://web.api.digitalshift.ca/partials/stats/team/roster?team_id=591804' \
   -H 'Accept: application/json, text/plain, */*' \
   -H 'Accept-Language: en-US,en;q=0.9' \
   -H 'Authorization: ticket="L3NutYEhmS9PA0ScGKjzEwhg7-lYrTqD2qEBhfnESydZPPb_Ogns-l2hKOB2tcXWS3Gc_IygKfTDih6Qiy7tUXOd"' \

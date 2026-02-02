@@ -9,7 +9,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException, InvalidSessionIdException
 
 # --- CONFIGURATION & AUTHENTICATION ---
-TICKET = "L3NutYEhmS9PA0ScGKjzEwhg7-lYrTqD2qEBhfnESydZPPb_Ogns-l2hKOB2tcXWS3Gc_IygKfTDih6Qiy7tUXOd"
 HUB_URL = "https://www.dmhl.ca/stats#/533/scores?division_id=41979"
 BOXSCORE_TEMPLATE = "https://www.dmhl.ca/stats#/533/game/{game_id}/boxscore"
 ROSTER_API_URL = "https://web.api.digitalshift.ca/partials/stats/game/team-stats"
@@ -24,7 +23,7 @@ MANIFEST_FILE = os.path.join(DATA_DIR, "games_manifest.csv")
 # Request Headers for API interaction
 API_HEADERS = {
     'Accept': 'application/json, text/plain, */*',
-    'Authorization': f'ticket="{TICKET}"',
+    'Authorization': f'ticket="{auth_ticket}"',
     'Origin': 'https://www.dmhl.ca',
     'Referer': 'https://www.dmhl.ca/',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
