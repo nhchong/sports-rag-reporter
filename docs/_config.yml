@@ -23,6 +23,7 @@ breadcrumbs: true
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+  - jekyll-include-cache
 
 # Collections
 collections:
