@@ -1,14 +1,35 @@
-# 🚨 CRITICAL: Remove the line 'theme: jekyll-theme-cayman' if it exists
+# --- THEME CONFIGURATION ---
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
-minimal_mistakes_skin: "air"
+minimal_mistakes_skin: "air" # The clean white 'Athletic' aesthetic
 
-# Site Info
+# --- PLUGINS (Fixes 'include_cached' error) ---
+plugins:
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+
+# --- SITE SETTINGS ---
 title: "THE LOW B DISPATCH"
 description: "Data-driven insights and candid locker-room analysis for the DMHL."
 url: "https://nhchong.github.io"
-baseurl: "/sports-rag-reporter" # Ensure this matches your repo name exactly
+baseurl: "/sports-rag-reporter" # Must match your repo name
+repository: "nhchong/sports-rag-reporter"
 
-# Content settings
+# --- AUTHOR SETTINGS (The 'Beat Reporter' Sidebar) ---
+author:
+  name: "Nicholas Chong"
+  bio: "Senior DMHL Columnist & Data Analyst"
+  location: "Toronto, ON"
+  avatar: "/assets/images/bio-photo.jpg" # Optional: Add a photo to this path later
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/nhchong"
+
+# --- CONTENT STRUCTURE ---
 collections:
   posts:
     output: true
@@ -21,3 +42,11 @@ defaults:
     values:
       layout: "single"
       author_profile: true
+      read_time: true
+      share: true
+      related: true
+
+# --- BUILD SETTINGS ---
+sass:
+  style: compressed
+  sass_dir: _sass
