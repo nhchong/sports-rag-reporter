@@ -1,40 +1,5 @@
-remote_theme: "mmistakes/minimal-mistakes@4.19.1"
-title: "THE LOW B DISPATCH"
-logo: "/assets/images/logo.png" # If you have one
-locale: "en-US"
-
-# Strategy: Use the 'air' skin for that clean Athletic look
-minimal_mistakes_skin: "air"
-
-# Site settings
-author:
-  name: "The Low B Dispatch"
-  bio: "Data-driven analysis of the DMHL"
-  avatar: "/assets/images/logo.png"
-
-# Enable the feed for that "latest news" feel
-feed:
-  path: /feed.xml
-
-# Breadcrumbs for easy navigation
-breadcrumbs: true
-
-# Plugins
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-include-cache
-
-# Collections
-collections:
-  docs:
-    output: true
-
-# Defaults
-defaults:
-  - scope:
-      path: "_posts"
-      type: posts
-    values:
-      layout: single
-      author_profile: true
+theme: jekyll-theme-cayman
+title: 🗞️ The Low B Dispatch
+description: Data-driven insights and candid locker-room analysis for the DMHL.
+show_downloads: false
+google_analytics: # Add your ID here if you ever want to track visitors
