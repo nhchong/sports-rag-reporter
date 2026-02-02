@@ -1,4 +1,4 @@
-remote_theme: "mmistakes/minimal-mistakes@4.24.0"
+remote_theme: "mmistakes/minimal-mistakes@4.19.1"
 title: "THE LOW B DISPATCH"
 logo: "/assets/images/logo.png" # If you have one
 locale: "en-US"
