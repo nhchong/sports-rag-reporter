@@ -1,69 +1,34 @@
 ---
 ---
 
-/* Minimal Mistakes Theme Imports 
-  This ensures the 'Air' skin (clean white) is loaded first.
+/* We hardcode the skin name here to satisfy the Cursor linter 
+   and prevent Liquid processing errors.
 */
 @import "minimal-mistakes/skins/air";
-@import "minimal-mistakes/initialize"; 
+@import "minimal-mistakes";
 
 /* --- THE ATHLETIC STYLE OVERRIDES --- */
 
-// 1. Typography: Replicating the Serif/Sans-Serif balance
-h1, h2, h3, h4, .archive__item-title {
-  font-family: "Sentinel", "Georgia", "Times New Roman", serif !important;
+h1, h2, h3, h4 {
+  font-family: "Georgia", serif !important;
   font-weight: 800 !important;
-  color: #000;
-  letter-spacing: -0.5px;
-  text-transform: none; // The Athletic usually avoids all-caps for headlines
+  text-transform: none;
+  color: #000000;
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 1.15rem; // Slightly larger for that long-form journalism feel
-  color: #1a1a1a;
-  line-height: 1.7;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
-// 2. The "Athletic Red" Accent
-// Using a deep red for links and hover states
+/* Explicit CSS for links to avoid Sass nesting errors in some environments */
 a {
-  color: #c00000; 
+  color: #cc0000;
   text-decoration: none;
-  transition: color 0.2s ease-in-out;
-
-  &:hover {
-    color: #900000;
-    text-decoration: underline;
-  }
 }
 
-// 3. UI Cleaning
-// Removing unnecessary borders to keep the "Air" look minimalist
-.masthead {
-  border-bottom: 2px solid #000; // Bold top border like a newspaper
-}
-
-.page__footer {
-  border-top: 1px solid #eee;
-  font-size: 0.9rem;
-}
-
-// 4. Featured Images & Article Feed
-// Making the article excerpts look like news snippets
-.archive__item-excerpt {
-  font-size: 1rem;
-  color: #444;
-  margin-top: 0.5em;
-}
-
-.page__content {
-  // Adding specific spacing for blockquotes to highlight "The Chirp of the Week"
-  blockquote {
-    border-left: 5px solid #c00000;
-    font-style: italic;
-    background: #f9f9f9;
-    padding: 1em;
-    margin: 1.5em 0;
-  }
+a:hover {
+  text-decoration: underline;
+  color: #990000;
 }
