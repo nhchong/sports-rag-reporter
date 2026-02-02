@@ -1,5 +1,23 @@
-theme: jekyll-theme-cayman
-title: 🗞️ The Low B Dispatch
-description: Data-driven insights and candid locker-room analysis for the DMHL.
-show_downloads: false
-google_analytics: # Add your ID here if you ever want to track visitors
+# 🚨 CRITICAL: Remove the line 'theme: jekyll-theme-cayman' if it exists
+remote_theme: "mmistakes/minimal-mistakes@4.24.0"
+minimal_mistakes_skin: "air"
+
+# Site Info
+title: "THE LOW B DISPATCH"
+description: "Data-driven insights and candid locker-room analysis for the DMHL."
+url: "https://nhchong.github.io"
+baseurl: "/sports-rag-reporter" # Ensure this matches your repo name exactly
+
+# Content settings
+collections:
+  posts:
+    output: true
+    permalink: /:year/:month/:day/:title/
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "single"
+      author_profile: true

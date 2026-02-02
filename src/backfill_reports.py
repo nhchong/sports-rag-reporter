@@ -14,17 +14,18 @@ DETAILS_FILE = "data/game_details.csv"
 TEAM_STATS_FILE = "data/team_stats.csv"
 PLAYER_STATS_FILE = "data/player_stats.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
-DOCS_DIR = "docs"
-POSTS_DIR = os.path.join(DOCS_DIR, "_posts")
 
-# Automating exactly the last 10 Thursdays ending Jan 29, 2026
+# Re-directing to the _posts folder for the new Athletic-style layout
+POSTS_DIR = "docs/_posts"
+
+# Automating the last 10 Thursdays ending Feb 2, 2026 (or adjusted for Jan 29)
 def generate_last_ten_thursdays():
-    end_date = datetime(2026, 1, 29)
+    end_date = datetime(2026, 1, 29) # The most recent reporting Thursday
     thursdays = []
     for i in range(10):
         target = end_date - timedelta(weeks=i)
         thursdays.append(target.strftime('%Y-%m-%d'))
-    return thursdays # Already newest first
+    return thursdays
 
 BACKFILL_DATES = generate_last_ten_thursdays()
 
@@ -42,7 +43,7 @@ def get_historical_brief(target_date):
         standings = pd.read_csv(TEAM_STATS_FILE)
         player_stats = pd.read_csv(PLAYER_STATS_FILE)
 
-        # Handle DMHL year-less dates for Fall/Winter
+        # Handle DMHL year-less dates (Nov/Dec = 2025, Jan = 2026)
         manifest_df['DateClean'] = manifest_df['Date'].apply(
             lambda x: f"{str(x)}, 2025" if any(mo in str(x) for mo in ["Nov", "Dec"]) else f"{str(x)}, 2026"
         )
@@ -66,7 +67,7 @@ def get_historical_brief(target_date):
         officials = this_week_details[this_week_details['EventType'] == 'Official']
         ref_map = officials.groupby('GameID')['Description'].apply(list).to_dict()
 
-        # Serialization safety
+        # Final serialization cleanup
         weekly_manifest['ParsedDate'] = weekly_manifest['ParsedDate'].dt.strftime('%Y-%m-%d')
         
         brief = {
@@ -89,41 +90,27 @@ def get_historical_brief(target_date):
         return None
 
 def run_backfill():
-    print(f"🚀 Starting 10-Week Backfill: {BACKFILL_DATES[-1]} to {BACKFILL_DATES[0]}...")
-    os.makedirs(DOCS_DIR, exist_ok=True)
+    print(f"🚀 Starting Athletic-Style Backfill: {len(BACKFILL_DATES)} Reports...")
     os.makedirs(POSTS_DIR, exist_ok=True)
 
     system_instruction = """
-    You are the Senior Columnist for 'The Low B Dispatch,' a data-driven hockey newsletter. You cover the DMHL, which stands for the Downtown Mens Hockey League. The league is based in Toronto. Most of the players are between the ages of 25 and 35. Games are played on Monday and Wednesday. The division that you are covering is Monday/Wednesday Low B. 
+    You are the Senior Columnist for 'The Low B Dispatch.' 
     
-    VOICE & STYLE:
-    - ANALYTICAL: Use data to substantiate claims. 
-    - AUTHENTIC: Speak to the community as a peer but avois any unprofessional locker-room tone.
-    - ZERO FLUFF: Avoid generic PR language.
-    - COMPELLING NARRATIVE: Similar to the media outlet, The Atheltic
-    - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
-    - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
+    VOICE & INSPIRATION:
+    - THE ATHLETIC: Data-driven and analytical.
+    - SPITTIN' CHICLETS: Candid, peer-to-peer locker-room perspective.
+    - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor and wit. 
 
-    NARRATIVE STRATEGY:
-    1. THE BIG STORY: Identify standings shifts.
-    2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies.
-    3. THE OFFICIALS: Comment on officiating volume and whether or not it impacted the game. 
-    4. VIBE & VENUE: Contextualize results based on arena/time. 
-    5. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
-    6. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
+    EDITORIAL STRATEGY (80/20 Rule):
+    - 80% COVERAGE: Focus on the specific games from 'weekly_play_by_play'. 
+    - 20% CONTEXT: Ground results in standings and leaders.
 
-    STRUCTURE & LENGTH:
-    - WORD LIMIT: Approximately 250 words.
-    - FORMAT: Header, H1, H2
-
-    THE THREE STARS:
-    Must be strictly based on weekly data.
-    - 1st Star: MVP.
-    - 2nd Star: Standout (Goalie/Defense).
-    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter. 
+    STRUCTURE:
+    - WORD LIMIT: Approximately 600 words.
+    - MANDATORY: Conclude with 'The Three Stars of the Week'.
+    
+    FORMATTING: Use Markdown (## Headings). Use > blockquotes for specific data callouts.
     """
-
-    # Index.md is now handled by Jekyll's home layout - no manual table needed
 
     for date_str in BACKFILL_DATES:
         target_date = datetime.strptime(date_str, '%Y-%m-%d')
@@ -135,45 +122,40 @@ def run_backfill():
         print(f"🎙️ Generating Dispatch for {date_str}...")
 
         try:
+            # Using Gemini 2.0-flash as it is more stable for back-to-back requests
             response = client.models.generate_content(
-                model="gemini-2.5-flash", 
+                model="gemini-2.0-flash", 
                 contents=[system_instruction, f"DATA BRIEF:\n{json_brief}"]
             )
             
-            # Jekyll post naming convention: YYYY-MM-DD-dispatch.md
+            # JEKYLL FILENAME CONVENTION: YYYY-MM-DD-title.md
             filename = f"{date_str}-dispatch.md"
             filepath = os.path.join(POSTS_DIR, filename)
             
-            # Format date for front matter title
-            formatted_date = target_date.strftime('%B %d, %Y')
-            
-            # Jekyll Front Matter
+            # JEKYLL FRONT MATTER: Required for 'The Athletic' layout
             front_matter = f"""---
 layout: single
-title: 'Weekly Dispatch: {formatted_date}'
-excerpt: 'Data-driven analysis of the DMHL.'
+title: "Weekly Dispatch: {target_date.strftime('%B %d, %Y')}"
+date: {date_str}
+excerpt: "A deep dive into the DMHL action for the week of {target_date.strftime('%b %d')}. Data, drama, and the Three Stars."
 author_profile: true
-sidebar:
-  nav: "docs"
 ---
 
 """
             
             with open(filepath, "w") as f:
-                f.write(front_matter)
-                f.write(response.text)
+                f.write(front_matter + response.text)
 
             print(f"✅ Created: {filename}")
             
-            # --- API BREATHE TIMER ---
-            # Wait 15 seconds between reports to stay under the 20-request-per-day burst limit
+            # PAUSE: Reset the Token bucket and Request count
             time.sleep(15)
 
         except Exception as e:
             print(f"❌ Error during AI generation for {date_str}: {e}")
-            time.sleep(20)
+            time.sleep(30)
 
-    print("\n🏁 10-week archive complete. Push to GitHub to go live!")
+    print("\n🏁 Archive generation complete. Run git commands to push to GitHub.")
 
 if __name__ == "__main__":
     run_backfill()

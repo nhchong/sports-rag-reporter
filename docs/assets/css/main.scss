@@ -1,34 +1,15 @@
 ---
 ---
 
-/* We hardcode the skin name here to satisfy the Cursor linter 
-   and prevent Liquid processing errors.
-*/
 @import "minimal-mistakes/skins/air";
 @import "minimal-mistakes";
 
-/* --- THE ATHLETIC STYLE OVERRIDES --- */
-
-h1, h2, h3, h4 {
+/* Athletic Overrides */
+h1, h2, h3 {
   font-family: "Georgia", serif !important;
-  font-weight: 800 !important;
-  text-transform: none;
-  color: #000000;
+  color: #000;
 }
 
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-/* Explicit CSS for links to avoid Sass nesting errors in some environments */
 a {
   color: #cc0000;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: #990000;
 }
