@@ -6,6 +6,7 @@ import os
 DETAILS_FILE = "data/game_details.csv"
 TEAM_STATS_FILE = "data/team_stats.csv"
 PLAYER_STATS_FILE = "data/player_stats.csv"
+MANIFEST_FILE = "data/games_manifest.csv"
 
 def extract_pims_from_description(description):
     """
@@ -63,63 +64,65 @@ def initialize_game_data():
         return None
 
 def compute_league_standings(df):
-    """
-    Calculates team standings, including W-L-T records, points, and goal differentials.
+    print("🏆 Processing Team Standings (Manifest-Anchored)...")
     
-    Logic:
-    - Primary: Uses 'PeriodScore' with 'Final' period labels.
-    - Fallback: Reconstructs scores by aggregating 'Goal' events if score rows are missing.
-    """
-    print("🏆 Processing Team Standings...")
-    
-    # 1. ATTEMPT: Use official PeriodScore rows
-    finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')].copy()
-    
-    # 2. FALLBACK: Aggregate Goal events if PeriodScore is absent
-    if finals.empty:
-        print("⚠️ Official scores missing. Calculating standings from Goal logs...")
-        goals_df = df[df['EventType'] == 'Goal'].groupby(['GameID', 'Team']).size().reset_index(name='Score')
-        finals = goals_df.rename(columns={'Score': 'Description'})
+    # 1. LOAD THE MANIFEST AS THE SKELETON
+    if not os.path.exists(MANIFEST_FILE):
+        print("❌ Error: Manifest missing. Cannot anchor standings.")
+        return pd.DataFrame()
 
+    manifest_df = pd.read_csv(MANIFEST_FILE)
+    
+    # Standardize names in manifest immediately
+    for col in ['Home', 'Away']:
+        manifest_df[col] = manifest_df[col].str.strip().str.title().replace("'S", "'s", regex=True)
+
+    # 2. INITIALIZE STANDINGS FROM ALL TEAMS IN MANIFEST
+    all_teams = pd.concat([manifest_df['Home'], manifest_df['Away']]).unique()
     standings = {}
+    
+    for team in all_teams:
+        if "Bye" in team or team == "N/A": continue
+        # Calculate expected GP from the manifest
+        expected_gp = len(manifest_df[(manifest_df['Home'] == team) | (manifest_df['Away'] == team)])
+        
+        standings[team] = {
+            'Games Played': expected_gp, 
+            'Wins': 0, 'Losses': 0, 'Ties': 0, 'Points': 0, 
+            'Goals For': 0, 'Goals Against': 0, 'Penalty Minutes': 0,
+            'Actual Scraped Games': 0 # Track this for health checks
+        }
+
+    # 3. LAYER ON THE SCRAPED RESULTS
+    df['Team'] = df['Team'].str.strip().str.title().replace("'S", "'s", regex=True)
+    finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')].copy()
+    finals = finals.drop_duplicates(subset=['GameID', 'Team'])
+
     for game_id, game_data in finals.groupby('GameID'):
         teams = game_data['Team'].unique()
         if len(teams) < 2: continue
-            
         t1, t2 = teams[0], teams[1]
         
         try:
             s1 = parse_integer_value(game_data[game_data['Team'] == t1].iloc[0]['Description'])
             s2 = parse_integer_value(game_data[game_data['Team'] == t2].iloc[0]['Description'])
-        except (IndexError, KeyError): 
-            continue
+        except: continue
 
-        for t in [t1, t2]:
-            if t not in standings:
-                standings[t] = {'Games Played': 0, 'Wins': 0, 'Losses': 0, 'Ties': 0, 'Points': 0, 
-                                'Goals For': 0, 'Goals Against': 0, 'Penalty Minutes': 0}
+        # Update stats (Only if teams exist in our manifest-anchored dict)
+        if t1 in standings and t2 in standings:
+            standings[t1]['Actual Scraped Games'] += 1
+            standings[t2]['Actual Scraped Games'] += 1
+            standings[t1]['Goals For'] += s1
+            standings[t1]['Goals Against'] += s2
+            standings[t2]['Goals For'] += s2
+            standings[t2]['Goals Against'] += s1
 
-        standings[t1]['Games Played'] += 1
-        standings[t2]['Games Played'] += 1
-        standings[t1]['Goals For'] += s1
-        standings[t1]['Goals Against'] += s2
-        standings[t2]['Goals For'] += s2
-        standings[t2]['Goals Against'] += s1
-
-        # Record determination logic
-        if s1 > s2:
-            standings[t1]['Wins'] += 1
-            standings[t1]['Points'] += 2
-            standings[t2]['Losses'] += 1
-        elif s2 > s1:
-            standings[t2]['Wins'] += 1
-            standings[t2]['Points'] += 2
-            standings[t1]['Losses'] += 1
-        else:
-            standings[t1]['Ties'] += 1
-            standings[t1]['Points'] += 1
-            standings[t2]['Ties'] += 1
-            standings[t2]['Points'] += 1
+            if s1 > s2:
+                standings[t1]['Wins'] += 1; standings[t1]['Points'] += 2; standings[t2]['Losses'] += 1
+            elif s2 > s1:
+                standings[t2]['Wins'] += 1; standings[t2]['Points'] += 2; standings[t1]['Losses'] += 1
+            else:
+                standings[t1]['Ties'] += 1; standings[t1]['Points'] += 1; standings[t2]['Ties'] += 1; standings[t2]['Points'] += 1
 
     # Team-level PIM aggregation
     penalty_events = df[df['EventType'] == 'Penalty']
@@ -128,14 +131,14 @@ def compute_league_standings(df):
         if team in standings:
             standings[team]['Penalty Minutes'] += extract_pims_from_description(row['Description'])
 
-    if not standings: 
-        print("❌ Data Warning: No standings generated. Check CSV for 'Goal' or 'PeriodScore' events.")
-        return pd.DataFrame()
+    if not standings: return pd.DataFrame()
 
-    # Post-processing and sorting
+    # Post-processing
     std = pd.DataFrame.from_dict(standings, orient='index').reset_index().rename(columns={'index': 'Team'})
     std['Goal Differential'] = std['Goals For'] - std['Goals Against']
-    std['Win Percentage'] = (std['Points'] / (std['Games Played'] * 2)).fillna(0).round(3)
+    
+    # Use standard Points-per-Game logic if Games Played is zero for ghost teams
+    std['Win Percentage'] = (std['Points'] / (std['Games Played'] * 2)).replace([float('inf'), -float('inf')], 0).fillna(0).round(3)
     
     std = std.sort_values(by=['Points', 'Wins', 'Goal Differential'], ascending=False).reset_index(drop=True)
     std.index += 1
@@ -203,13 +206,12 @@ def identify_game_winning_goals(df):
 def compute_player_statistics(df):
     """
     Aggregates individual player data including Points, PIMs, and Game-Winning Goals.
-    Utilizes regex to extract player names and jersey numbers from event logs.
     """
     print("👤 Calculating Player Stats...")
     player_data = {}
     gwg_list = identify_game_winning_goals(df)
     
-    # 1. Initialize Roster and GP
+    # 1. Initialize from RosterAppearances (The Baseline)
     roster_df = df[df['EventType'] == 'RosterAppearance']
     for _, row in roster_df.iterrows():
         name, team = row['Description'].strip(), row['Team']
@@ -217,33 +219,25 @@ def compute_player_statistics(df):
             player_data[name] = {'Team': team, 'GP': 0, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
         player_data[name]['GP'] += 1
 
-    # 2. Individual PIM Calculation
-    penalty_events = df[df['EventType'] == 'Penalty']
-    for _, row in penalty_events.iterrows():
-        desc = row['Description']
-        # Extract player name (skipping jersey number) before the colon
-        name_match = re.search(r'#\d+\s+(.*?):', desc)
-        
-        if name_match:
-            p_name = name_match.group(1).strip()
-            if p_name in player_data:
-                player_data[p_name]['PIM'] += extract_pims_from_description(desc)
-
-    # 3. Individual Scoring Aggregation
+    # 2. Individual Scoring (The Discovery Phase)
     for _, row in df[df['EventType'] == 'Goal'].iterrows():
-        desc, gid, strength = row['Description'], row['GameID'], row['Strength']
+        desc, gid, strength, team = row['Description'], row['GameID'], row['Strength'], row['Team']
         
         # Scorer identification
         scorer_match = re.search(r'#\d+\s+([^(:]+)', desc)
         if scorer_match:
             p_name = scorer_match.group(1).strip()
-            if p_name in player_data:
-                p = player_data[p_name]
-                p['G'] += 1
-                p['Pts'] += 1
-                if 'PP' in str(strength): p['PPG'] += 1
-                if 'SH' in str(strength): p['SHG'] += 1
-                if (gid, desc) in gwg_list: p['GWG'] += 1
+            
+            # --- THE FIX: DISCOVERY LOGIC ---
+            if p_name not in player_data:
+                player_data[p_name] = {'Team': team, 'GP': 1, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
+            
+            p = player_data[p_name]
+            p['G'] += 1
+            p['Pts'] += 1
+            if 'PP' in str(strength): p['PPG'] += 1
+            if 'SH' in str(strength): p['SHG'] += 1
+            if (gid, desc) in gwg_list: p['GWG'] += 1
 
         # Assist identification
         assist_chunk = re.search(r'\((.*?)\)', desc)
@@ -252,11 +246,15 @@ def compute_player_statistics(df):
                 a_match = re.search(r'#\d+\s+([^,]+)', raw)
                 if a_match:
                     a_name = a_match.group(1).strip()
-                    if a_name in player_data:
-                        player_data[a_name]['A'] += 1
-                        player_data[a_name]['Pts'] += 1
+                    
+                    # --- THE FIX: DISCOVERY LOGIC ---
+                    if a_name not in player_data:
+                        player_data[a_name] = {'Team': team, 'GP': 1, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
+                    
+                    player_data[a_name]['A'] += 1
+                    player_data[a_name]['Pts'] += 1
 
-    # 4. Final aggregation into sorted DataFrame
+    # 3. Final aggregation into sorted DataFrame
     stats = []
     for name, d in player_data.items():
         stats.append({
