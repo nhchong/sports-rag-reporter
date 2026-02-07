@@ -6,33 +6,83 @@ header:
   overlay_filter: "0.5"
   overlay_image: /assets/images/rink-header.jpg 
   caption: "The Low B Dispatch: Where AI meets the Ice."
-excerpt: "A data-driven deep dive into the DMHL, powered by custom Selenium scrapers and LLMs."
+excerpt: "Autonomous sports journalism powered by custom Selenium scrapers and LLMs."
+
+# feature_row config for technical highlights
+feature_row:
+  - image_path: /assets/images/python-logo.png
+    alt: "Data Ingestion"
+    title: "Resilient Ingestion"
+    excerpt: "A Selenium-based engine built to handle async Angular rendering with Explicit URL guards and recursive retry loops."
+    url: "https://github.com/nhchong/sports-rag-reporter/blob/main/src/scraper.py"
+    btn_label: "View Scraper"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/gemini-logo.png
+    alt: "AI Generation"
+    title: "Generative Analytics"
+    excerpt: "Utilizes Google Gemini 1.5 Pro to transform structured CSV metrics into high-fidelity, data-backed sports narratives."
+    url: "https://github.com/nhchong/sports-rag-reporter/blob/main/src/reporter.py"
+    btn_label: "View Prompt Logic"
+    btn_class: "btn--primary"
+
+# Complete Team Lineup
+team_row:
+  - image_path: /assets/images/theshockers.png
+    alt: "The Shockers"
+    title: "The Shockers"
+  - image_path: /assets/images/thesahara.png
+    alt: "The Sahara"
+    title: "The Sahara"
+  - image_path: /assets/images/doncherrys.png
+    alt: "Don Cherry's"
+    title: "Don Cherry's"
+  - image_path: /assets/images/flatearthers.png
+    alt: "Flat-Earthers"
+    title: "Flat-Earthers"
+  - image_path: /assets/images/muffinmen.png
+    alt: "Muffin Men"
+    title: "Muffin Men"
+  - image_path: /assets/images/4lines.png
+    alt: "4 Lines"
+    title: "4 Lines"
 ---
 
-# 🏒 About the Dispatch
-The **Low B Dispatch** is more than a newsletter; it is an automated, AI-driven sports journalism pipeline. 
+# 🏒 Project Overview
+Welcome to **The Low B Dispatch**. This project is an automated end-to-end data pipeline designed to provide professional-grade coverage for the **Downtown Men’s Hockey League (DMHL)** in Toronto. 
 
-### The Project
-This project was built to solve the lack of granular coverage in amateur sports. By bridging the gap between raw web data and natural language generation, I've created a system that provides professional-grade reporting for the **Downtown Men’s Hockey League (DMHL)** in Toronto.
+Historically, amateur sports suffer from a narrative gap—stats exist on fragmented pages, but the "story" of the week is rarely told. This project bridges that gap by treating raw league data as a source of truth for an AI-driven newsroom, specifically covering the **Monday/Wednesday Low B** division.
 
-### The Pipeline (Under the Hood)
-* **Ingestion:** A Selenium-based engine crawls the official DMHL site, utilizing **Explicit URL Guards** and **Recursive Retry Loops** to ensure data integrity in high-latency environments.
-* **Analysis:** An ETL layer processes raw boxscores into structured team efficiency metrics (Power Play/Penalty Kill) and seasonal leaders.
-* **Narrative Generation:** The cleaned data is fed into **Google Gemini** using advanced prompt engineering to produce analytical, locker-room-style columns that are 100% evidence-backed.
+### 🛠 The Tech Stack
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Selenium](https://img.shields.io/badge/-selenium-%2343B02A?style=for-the-badge&logo=selenium&logoColor=white)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
+
+{% include feature_row %}
 
 ---
 
-### 📊 The State of the League
-*A visualization of Goal Differential vs. Total Points. Teams in the top-right are dominant; those in the bottom-left are underperforming.*
+### 📊 League Parity Dashboard
+*Goal Differential vs. Total Points. Top-right teams are dominant; bottom-left teams are battling for traction.*
 
 <figure style="text-align: center; margin-top: 1.5em; margin-bottom: 2.5em;">
   <img src="{{ '/assets/images/league_parity.png' | relative_url }}" alt="DMHL League Parity Scatter Plot" style="border: 1px solid #eaeaea; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 100%;">
   <figcaption style="font-size: 0.85rem; color: #666; margin-top: 12px; font-style: italic;">
-    Generated via `viz_generator.py`. Updated weekly following Wednesday night games.
+    Generated via <code>viz_generator.py</code>. Updated weekly following Wednesday night games.
   </figcaption>
 </figure>
 
+### 🏒 Division Lineup
+A visual guide to the teams currently under our automated coverage.
+
+{% include feature_row id="team_row" type="center" %}
+
 ---
 
-# The Feed
-The archives of **The Low B Dispatch**. We focus on the 80%—the weekly play-by-play—and the 20% context that grounds results in the standings. No fluff, just the facts and the Three Stars.
+[<i class="fab fa-github"></i> Explore the Repository](https://github.com/nhchong/sports-rag-reporter){: .btn .btn--info}
+[<i class="fas fa-ice-skate"></i> DMHL Official Standings](https://www.dmhl.ca/stats#/533/standings){: .btn .btn--success}
+
+---
+
+# 🗞 The Dispatch Feed
+Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to write a weekly recap with 100% evidence-backed accuracy.
