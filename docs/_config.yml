@@ -15,7 +15,7 @@ plugins:
 locale: "en-US"
 title: "The Low B Dispatch"
 title_separator: "-"
-subtitle: "Analytical DMHL Reporting"
+subtitle: "Bringing Storytelling to Amateur Sports"
 name: "Nicholas Chong"
 description: "An automated sports journalism pipeline utilizing custom Selenium scrapers and Google Gemini to provide professional-grade coverage of Toronto's DMHL."
 url: "https://nhchong.github.io"
@@ -26,8 +26,8 @@ teaser: "/assets/images/rink-header.jpg" # Default social sharing image
 # --- AUTHOR SETTINGS (Sidebar) ---
 author:
   name: "Nicholas Chong"
-  avatar: "/assets/images/profile.png" # Update this file in assets/images/
-  bio: "Product Manager| Building Autonomous Data Pipelines | Hockey Analyst"
+  avatar: "/assets/images/profile.png" 
+  bio: "Tech PM | Amateur Hockey Analyst"
   location: "Toronto, ON"
   links:
     - label: "GitHub"
@@ -64,3 +64,9 @@ defaults:
 sass:
   style: compressed
   sass_dir: _sass
+
+header:
+  cta_label: 
+  cta_url:
+
+site_navigation: []

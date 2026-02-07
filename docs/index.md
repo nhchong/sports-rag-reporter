@@ -5,8 +5,9 @@ header:
   overlay_color: "#000"
   overlay_filter: "0.5"
   overlay_image: /assets/images/rink-header.jpg 
-  caption: "The Low B Dispatch: Where AI meets the Ice."
-excerpt: "Autonomous sports journalism powered by custom Selenium scrapers and LLMs."
+  cta_label: false # This tells Jekyll "Do not render this"
+  cta_url: false   # This prevents the theme's fallback logic
+excerpt: "The definitive data record of the DMHL. Professional-grade reporting and analytical deep-dives for the Monday/Wednesday Low B division."
 
 # feature_row config for technical highlights
 feature_row:
@@ -51,14 +52,14 @@ team_row:
 Welcome to **The Low B Dispatch**. This project is an automated end-to-end data pipeline designed to provide professional-grade coverage for the **Downtown Men’s Hockey League (DMHL)** in Toronto. 
 
 Historically, amateur sports suffer from a narrative gap—stats exist on fragmented pages, but the "story" of the week is rarely told. This project bridges that gap by treating raw league data as a source of truth for an AI-driven newsroom, specifically covering the **Monday/Wednesday Low B** division.
-
+ <!-
 ### 🛠 The Tech Stack
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Selenium](https://img.shields.io/badge/-selenium-%2343B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
 
-{% include feature_row %}
+<!--{% include feature_row %} 
 
 ---
 
@@ -72,17 +73,9 @@ Historically, amateur sports suffer from a narrative gap—stats exist on fragme
   </figcaption>
 </figure>
 
-### 🏒 Division Lineup
-A visual guide to the teams currently under our automated coverage.
-
-{% include feature_row id="team_row" type="center" %}
-
+-->
 ---
 
-[<i class="fab fa-github"></i> Explore the Repository](https://github.com/nhchong/sports-rag-reporter){: .btn .btn--info}
-[<i class="fas fa-ice-skate"></i> DMHL Official Standings](https://www.dmhl.ca/stats#/533/standings){: .btn .btn--success}
-
----
 
 # 🗞 The Dispatch Feed
 Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to write a weekly recap with 100% evidence-backed accuracy.
