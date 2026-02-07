@@ -1,8 +1,8 @@
 # --- THEME CONFIGURATION ---
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
-minimal_mistakes_skin: "air" # The clean white 'Athletic' aesthetic
+minimal_mistakes_skin: "contrast" # Upgraded for a professional 'The Athletic' feel
 
-# --- PLUGINS (Fixes 'include_cached' error) ---
+# --- PLUGINS ---
 plugins:
   - jekyll-remote-theme
   - jekyll-include-cache
@@ -12,22 +12,33 @@ plugins:
   - jekyll-feed
 
 # --- SITE SETTINGS ---
-title: "THE LOW B DISPATCH"
-description: "Data-driven insights and candid locker-room analysis for the DMHL."
+locale: "en-US"
+title: "The Low B Dispatch"
+title_separator: "-"
+subtitle: "Analytical DMHL Reporting"
+name: "Nicholas Chong"
+description: "An automated sports journalism pipeline utilizing custom Selenium scrapers and Google Gemini to provide professional-grade coverage of Toronto's DMHL."
 url: "https://nhchong.github.io"
-baseurl: "/sports-rag-reporter" # Must match your repo name
+baseurl: "/sports-rag-reporter"
 repository: "nhchong/sports-rag-reporter"
+teaser: "/assets/images/rink-header.jpg" # Default social sharing image
 
-# --- AUTHOR SETTINGS (The 'Beat Reporter' Sidebar) ---
+# --- AUTHOR SETTINGS (Sidebar) ---
 author:
   name: "Nicholas Chong"
-  bio: "Senior DMHL Columnist & Data Analyst"
+  avatar: "/assets/images/profile.png" # Update this file in assets/images/
+  bio: "Product Manager| Building Autonomous Data Pipelines | Hockey Analyst"
   location: "Toronto, ON"
-  avatar: "/assets/images/bio-photo.jpg" # Optional: Add a photo to this path later
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/nhchong"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://linkedin.com/in/nhchong" # Update with your URL
+    - label: "DMHL Standings"
+      icon: "fas fa-fw fa-ice-skate"
+      url: "https://www.dmhl.ca/stats#/533/standings"
 
 # --- CONTENT STRUCTURE ---
 collections:
@@ -35,16 +46,19 @@ collections:
     output: true
     permalink: /:year/:month/:day/:title/
 
+# --- DEFAULTS (Automation Guard) ---
+# This ensures every post automatically shows your sidebar and bio
 defaults:
   - scope:
       path: ""
-      type: "posts"
+      type: posts
     values:
       layout: "single"
       author_profile: true
       read_time: true
       share: true
       related: true
+      show_date: true
 
 # --- BUILD SETTINGS ---
 sass:

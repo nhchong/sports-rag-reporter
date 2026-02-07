@@ -17,6 +17,16 @@ MANIFEST_FILE = "data/games_manifest.csv"
 DOCS_DIR = "docs"
 POSTS_DIR = os.path.join(DOCS_DIR, "_posts")
 
+# --- NEW: LOGO MAPPING ---
+LOGO_MAP = {
+    "The Shockers": "/assets/images/theshockers.png",
+    "The Sahara": "/assets/images/thesahara.png",
+    "Don Cherry's": "/assets/images/doncherrys.png",
+    "Flat-Earthers": "/assets/images/flatearthers.png",
+    "Muffin Men": "/assets/images/muffinmen.png",
+    "4 Lines": "/assets/images/4lines.png"
+}
+
 # Initialize the Gemini 2.5 Flash client
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
@@ -93,24 +103,35 @@ def generate_weekly_digest_report():
     - ZERO FLUFF: Avoid generic PR language.
     - COMPELLING NARRATIVE: Similar to the media outlet, The Atheltic
     - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
+    - PLAYER-FOCUSED: Much like the media outlet, the Player's Tribune. 
     - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
 
     NARRATIVE STRATEGY:
-    1. THE BIG STORY: Identify standings shifts.
+    1. THE BIG STORY: Start with shifts in the Standings. Use the 'team_stats' to explain why a team moved up or down.
     2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies.
     3. THE OFFICIALS: Comment on officiating volume and whether or not it impacted the game. 
     4. VIBE & VENUE: Contextualize results based on arena/time. 
     5. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
     6. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
+    7. Use the 'player_stats' to highlight specific player performances. Use the 'weekly_play_by_play' to highlight specific game events.
+    8. Use the 'schedule_and_arenas' to highlight specific arena and time of day of the games.
+    9. Use the 'official_assignments' to highlight specific referees and linesmen only if they called a lot of penalities or no penalities at all.
+    10. Use the 'game_details' to highlight specific game events. Weave in the game details into the narrative.
+    11. If there is a big story, make sure to weave it in to the narrative.
 
+    STYLE GUIDELINES:
     STRUCTURE & LENGTH:
-    - WORD LIMIT: Approximately 250 words.
+    - WORD LIMIT: Approximately 200 words.
 
     THE THREE STARS:
     Must be strictly based on weekly data.
     - 1st Star: MVP.
     - 2nd Star: Standout (Goalie/Defense).
     - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter. 
+
+    OUTPUT FORMAT:
+    - Your response MUST begin with a unique 'Headline' and 'Subline' on the first two lines.
+    - Followed by the newsletter body using Markdown (## Headings). Use > blockquotes for specific data callouts. No emojis.
     """
 
     prompt = f"DATA BRIEF:\n{json_brief}\n\nTask: Generate this week's newsletter dispatch."
@@ -122,6 +143,20 @@ def generate_weekly_digest_report():
         )
         report_text = response.text
         
+        # --- DYNAMIC TEASER LOGIC ---
+        # Pick a logo based on which team name appears first in the narrative
+        teaser_logo = "/assets/images/rink-header.jpg"
+        for team, logo_path in LOGO_MAP.items():
+            if team in report_text:
+                teaser_logo = logo_path
+                break
+
+        # --- DYNAMIC HEADLINE/SUBLINE PARSING ---
+        lines = report_text.strip().split('\n')
+        generated_headline = lines[0].strip() if len(lines) > 0 else f"Weekly Dispatch: {datetime.now().strftime('%B %d, %Y')}"
+        generated_subline = lines[1].strip() if len(lines) > 1 else "Data-driven analysis of the DMHL."
+        actual_content = "\n".join(lines[2:]).strip()
+
         # --- PUBLIC ARCHIVING LOGIC (GitHub Pages) ---
         os.makedirs(DOCS_DIR, exist_ok=True)
         os.makedirs(POSTS_DIR, exist_ok=True)
@@ -136,11 +171,11 @@ def generate_weekly_digest_report():
         # Jekyll Front Matter
         front_matter = f"""---
 layout: single
-title: 'Weekly Dispatch: {formatted_date}'
-excerpt: 'Data-driven analysis of the DMHL.'
+title: "{generated_headline}"
+excerpt: "{generated_subline}"
+header:
+  teaser: "{teaser_logo}"
 author_profile: true
-sidebar:
-  nav: "docs"
 ---
 
 """
