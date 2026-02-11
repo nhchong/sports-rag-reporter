@@ -34,7 +34,7 @@ def generate_last_ten_thursdays():
         thursdays.append(target.strftime('%Y-%m-%d'))
     return thursdays
 
-BACKFILL_DATES = generate_last_ten_thursdays()
+BACKFILL_DATES = ["2026-02-05"]
 
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
