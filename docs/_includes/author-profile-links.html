@@ -1,0 +1,14 @@
+{% for link in author.links %}
+  <li>
+    <a href="{{ link.url }}" rel="nofollow noopener noreferrer">
+      {% if link.image_path %}
+        <img src="{{ link.image_path | relative_url }}" 
+             alt="{{ link.label }}" 
+             style="width: 20px; height: 20px; margin-right: 10px; vertical-align: middle;">
+      {% elsif link.icon %}
+        <i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i>
+      {% endif %}
+      {{ link.label }}
+    </a>
+  </li>
+{% endfor %}

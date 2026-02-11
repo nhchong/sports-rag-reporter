@@ -21,24 +21,23 @@ description: "An automated sports journalism pipeline utilizing custom Selenium 
 url: "https://nhchong.github.io"
 baseurl: "/sports-rag-reporter"
 repository: "nhchong/sports-rag-reporter"
-teaser: "/assets/images/rink-header.jpg" # Default social sharing image
+teaser: "/assets/images/hockey-canada.jpg"
+favicon: "/favicon.ico"
 
 # --- AUTHOR SETTINGS (Sidebar) ---
 author:
   name: "Nicholas Chong"
-  avatar: "/assets/images/profile.png" 
-  bio: "Tech PM | Amateur Hockey Analyst"
-  location: "Toronto, ON"
+  avatar: "/assets/images/profile.png"
   links:
+    - label: "DMHL Standings"
+      image_path: "/assets/images/dmhl-logo.svg" 
+      url: "https://www.dmhl.ca/stats#/533/standings"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/nhchong"
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
-      url: "https://linkedin.com/in/nhchong" # Update with your URL
-    - label: "DMHL Standings"
-      icon: "fas fa-fw fa-ice-skate"
-      url: "https://www.dmhl.ca/stats#/533/standings"
+      url: "https://linkedin.com/in/nhchong"
 
 # --- CONTENT STRUCTURE ---
 collections:

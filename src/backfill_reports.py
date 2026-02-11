@@ -14,13 +14,20 @@ DETAILS_FILE = "data/game_details.csv"
 TEAM_STATS_FILE = "data/team_stats.csv"
 PLAYER_STATS_FILE = "data/player_stats.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
-
-# Re-directing to the _posts folder for the new Athletic-style layout
 POSTS_DIR = "docs/_posts"
 
-# Automating the last 10 Thursdays ending Feb 2, 2026 (or adjusted for Jan 29)
+# --- LOGO MAPPING FOR TEASERS ---
+LOGO_MAP = {
+    "The Shockers": "/assets/images/theshockers.png",
+    "The Sahara": "/assets/images/thesahara.png",
+    "Don Cherry's": "/assets/images/doncherrys.png",
+    "Flat-Earthers": "/assets/images/flatearthers.png",
+    "Muffin Men": "/assets/images/muffinmen.png",
+    "4 Lines": "/assets/images/4lines.png"
+}
+
 def generate_last_ten_thursdays():
-    end_date = datetime(2026, 1, 29) # The most recent reporting Thursday
+    end_date = datetime(2026, 1, 29) 
     thursdays = []
     for i in range(10):
         target = end_date - timedelta(weeks=i)
@@ -29,7 +36,6 @@ def generate_last_ten_thursdays():
 
 BACKFILL_DATES = generate_last_ten_thursdays()
 
-# Initialize Gemini Client
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 
@@ -43,7 +49,6 @@ def get_historical_brief(target_date):
         standings = pd.read_csv(TEAM_STATS_FILE)
         player_stats = pd.read_csv(PLAYER_STATS_FILE)
 
-        # Handle DMHL year-less dates (Nov/Dec = 2025, Jan = 2026)
         manifest_df['DateClean'] = manifest_df['Date'].apply(
             lambda x: f"{str(x)}, 2025" if any(mo in str(x) for mo in ["Nov", "Dec"]) else f"{str(x)}, 2026"
         )
@@ -67,7 +72,6 @@ def get_historical_brief(target_date):
         officials = this_week_details[this_week_details['EventType'] == 'Official']
         ref_map = officials.groupby('GameID')['Description'].apply(list).to_dict()
 
-        # Final serialization cleanup
         weekly_manifest['ParsedDate'] = weekly_manifest['ParsedDate'].dt.strftime('%Y-%m-%d')
         
         brief = {
@@ -90,10 +94,9 @@ def get_historical_brief(target_date):
         return None
 
 def run_backfill():
-    print(f"🚀 Starting Athletic-Style Backfill: {len(BACKFILL_DATES)} Reports...")
+    print(f"🚀 Starting Headline-Enabled Backfill: {len(BACKFILL_DATES)} Reports...")
     os.makedirs(POSTS_DIR, exist_ok=True)
 
-    # AI System Configuration: Professional Analysis x Locker Room Authenticity
     system_instruction = """
     You are the Senior Columnist for 'The Low B Dispatch,' a data-driven hockey newsletter. You cover the DMHL, which stands for the Downtown Mens Hockey League. The league is based in Toronto. Most of the players are between the ages of 25 and 35. Games are played on Monday and Wednesday. The division that you are covering is Monday/Wednesday Low B. 
     
@@ -101,16 +104,16 @@ def run_backfill():
     - ANALYTICAL: Use data to substantiate claims. 
     - AUTHENTIC: Speak to the community as a peer but avois any unprofessional locker-room tone.
     - ZERO FLUFF: Avoid generic PR language.
-    - COMPELLING NARRATIVE: Similar to the media outlet, The Atheltic
+    - COMPELLING NARRATIVE: Similar to the media outlet, The Athletic
     - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
-    - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
     - PLAYER-FOCUSED: Much like the media outlet, the Player's Tribune. 
+    - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
 
     NARRATIVE STRATEGY:
     1. THE BIG STORY: Start with shifts in the Standings. Use the 'team_stats' to explain why a team moved up or down.
     2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies.
     3. THE OFFICIALS: Comment on officiating volume and whether or not it impacted the game. 
-    4. VIBE & VENUE: Contextualize results based on arena/time. 
+    4. VIBE & VENUE: Contextualize results based on arena/time. Paint a visual by adding in weather data on that specific day. 
     5. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
     6. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
     7. Use the 'player_stats' to highlight specific player performances. Use the 'weekly_play_by_play' to highlight specific game events.
@@ -125,11 +128,13 @@ def run_backfill():
 
     THE THREE STARS:
     Must be strictly based on weekly data.
-    - 1st Star: MVP.
-    - 2nd Star: Standout (Goalie/Defense).
-    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter. 
-    
-    FORMATTING: Use Markdown (## Headings). Use > blockquotes for specific data callouts.
+    - 1st Star: Most points, favoring goals. Emphasis on important goals. 
+    - 2nd Star: Second most points, emphasis on goals. Someone
+    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie. 
+
+    OUTPUT FORMAT:
+    - Your response MUST begin with a unique 'Headline' and 'Subline' on the first two lines.
+    - Followed by the newsletter body using Markdown (## Headings). Use > blockquotes for specific data callouts. No emojis.
     """
 
     for date_str in BACKFILL_DATES:
@@ -142,40 +147,53 @@ def run_backfill():
         print(f"🎙️ Generating Dispatch for {date_str}...")
 
         try:
-            # Using Gemini 2.0-flash as it is more stable for back-to-back requests
             response = client.models.generate_content(
                 model="gemini-2.5-flash", 
-                contents=[system_instruction, f"DATA BRIEF:\n{json_brief}"]
+                contents=[system_instruction, f"DATA BRIEF:\n{json_brief}\n\nTask: Generate a historical newsletter dispatch."]
             )
+            report_text = response.text
+
+            # --- DYNAMIC TEASER LOGIC ---
+            for team, logo_path in LOGO_MAP.items():
+                if team in report_text:
+                    teaser_logo = logo_path
+                    break
+
+            # --- DYNAMIC HEADLINE/SUBLINE PARSING ---
+            lines = report_text.strip().split('\n')
+            generated_headline = lines[0].strip() if len(lines) > 0 else f"Weekly Dispatch: {target_date.strftime('%B %d, %Y')}"
+            generated_subline = lines[1].strip() if len(lines) > 1 else "Data-driven analysis of the DMHL."
+            # The actual body content starts after the headline/subline
+            actual_content = "\n".join(lines[2:]).strip()
             
-            # JEKYLL FILENAME CONVENTION: YYYY-MM-DD-title.md
+            # JEKYLL FILENAME CONVENTION
             filename = f"{date_str}-dispatch.md"
             filepath = os.path.join(POSTS_DIR, filename)
             
-            # JEKYLL FRONT MATTER: Required for 'The Athletic' layout
+            # JEKYLL FRONT MATTER
             front_matter = f"""---
 layout: single
-title: "Weekly Dispatch: {target_date.strftime('%B %d, %Y')}"
+title: "{generated_headline}"
+excerpt: "{generated_subline}"
 date: {date_str}
-excerpt: "A deep dive into the DMHL action for the week of {target_date.strftime('%b %d')}. Data, drama, and the Three Stars."
+header:
+  teaser: "{teaser_logo}"
 author_profile: true
 ---
 
 """
             
             with open(filepath, "w") as f:
-                f.write(front_matter + response.text)
+                f.write(front_matter + actual_content)
 
-            print(f"✅ Created: {filename}")
-            
-            # PAUSE: Reset the Token bucket and Request count
-            time.sleep(15)
+            print(f"✅ Created: {filename} with teaser: {teaser_logo}")
+            time.sleep(12) # Slightly faster for backfill but still safe
 
         except Exception as e:
             print(f"❌ Error during AI generation for {date_str}: {e}")
             time.sleep(30)
 
-    print("\n🏁 Archive generation complete. Run git commands to push to GitHub.")
+    print("\n🏁 Backfill complete.")
 
 if __name__ == "__main__":
     run_backfill()

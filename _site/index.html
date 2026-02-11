@@ -28,7 +28,7 @@
 
 
 
-  <meta property="og:image" content="http://localhost:4000/assets/images/rink-header.jpg">
+  <meta property="og:image" content="http://localhost:4000/assets/images/hockey-canada.jpg">
 
 
 
@@ -138,7 +138,7 @@
 
 
 <div class="page__hero--overlay"
-  style="background-color: #000; background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/assets/images/rink-header.jpg');"
+  style="background-color: #000; background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/assets/images/hockey-canada.jpg');"
 >
   
     <div class="wrapper">
@@ -187,30 +187,18 @@
       <h3 class="author__name" itemprop="name">Nicholas Chong</h3>
     
     
-      <div class="author__bio" itemprop="description">
-        <table>
-  <tbody>
-    <tr>
-      <td>Tech PM</td>
-      <td>Amateur Hockey Analyst</td>
-    </tr>
-  </tbody>
-</table>
-
-      </div>
-    
   </div>
 
   <div class="author__urls-wrapper">
     <button class="btn btn--inverse">Follow</button>
     <ul class="author__urls social-icons">
       
-        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
-          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Toronto, ON</span>
-        </li>
-      
 
       
+        
+          
+            <li><a href="https://www.dmhl.ca/stats#/533/standings" rel="nofollow noopener noreferrer"><i class="fas fa-link" aria-hidden="true"></i><span class="label">DMHL Standings</span></a></li>
+          
         
           
             <li><a href="https://github.com/nhchong" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
@@ -218,10 +206,6 @@
         
           
             <li><a href="https://linkedin.com/in/nhchong" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
-          
-        
-          
-            <li><a href="https://www.dmhl.ca/stats#/533/standings" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-ice-skate" aria-hidden="true"></i><span class="label">DMHL Standings</span></a></li>
           
         
       
@@ -292,12 +276,14 @@
 
   <div class="archive">
     
-    <h1 id="-project-overview">🏒 Project Overview</h1>
+    <h1 id="project-overview">Project Overview</h1>
 <p>Welcome to <strong>The Low B Dispatch</strong>. This project is an automated end-to-end data pipeline designed to provide professional-grade coverage for the <strong>Downtown Men’s Hockey League (DMHL)</strong> in Toronto.</p>
 
-<p>Historically, amateur sports suffer from a narrative gap—stats exist on fragmented pages, but the “story” of the week is rarely told. This project bridges that gap by treating raw league data as a source of truth for an AI-driven newsroom, specifically covering the <strong>Monday/Wednesday Low B</strong> division.
- &lt;!-</p>
-<h3 id="-the-tech-stack">🛠 The Tech Stack</h3>
+<p>Historically, amateur sports suffer from a narrative gap—stats exist on fragmented pages, but the “story” of the week is rarely told. This project bridges that gap by treating raw league data as a source of truth for an AI-driven newsroom, specifically covering the <strong>Monday/Wednesday Low B</strong> division.</p>
+
+<p>Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to write a weekly recap with 100% evidence-backed accuracy.</p>
+
+<h3 id="the-tech-stack">The Tech Stack</h3>
 <p><img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&amp;logo=python&amp;logoColor=ffdd54" alt="Python" />
 <img src="https://img.shields.io/badge/-selenium-%2343B02A?style=for-the-badge&amp;logo=selenium&amp;logoColor=white" alt="Selenium" />
 <img src="https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&amp;logo=pandas&amp;logoColor=white" alt="Pandas" />
@@ -385,8 +371,6 @@
 -->
 <hr />
 
-<h1 id="-the-dispatch-feed">🗞 The Dispatch Feed</h1>
-<p>Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to write a weekly recap with 100% evidence-backed accuracy.</p>
 
 
 <h3 class="archive__subtitle">Recent posts</h3>
