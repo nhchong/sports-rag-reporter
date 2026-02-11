@@ -2,9 +2,9 @@
 
 The Low B Dispatch is a production-grade **Structured RAG (Retrieval-Augmented Generation)** pipeline designed to transform fragmented recreational sports data into high-fidelity, professional-grade news reports. This system utilizes a deterministic logic layer combined with a generative synthesis engine to provide analytical depth for Toronto’s DMHL.
 
----
+---==
 
-## 🎯 The Problem: The Narrative Gap
+## The Problem: The Narrative Gap
 In recreational sports, data is often siloed in inconsistent web interfaces, creating a "Narrative Gap" between the events on the ice and the community's history.
 
 * Participant-Led Solution: As a player in the Monday/Wednesday Low B division of the DMHL, I built this engine to provide the narrative infrastructure that recreational athletes deserve.
@@ -31,24 +31,24 @@ This engine utilizes a **Structured Data Contract** to power its LLM generation.
 * **Historical Context (`backfill_reports.py`):** Facilitates targeted generation of past reports to build a data-consistent seasonal archive.
 * **Matchup Intelligence (`scout.py`):** Aggregates historical head-to-head results and individual player metrics to generate data-driven pre-game briefings.
 
-## ✨ Key Features
+## Key Features
 
-### 🛰️ Resilient Data Collection
+### Resilient Data Collection
 * **State-Aware Scraping:** Incremental updates that only process new Game IDs, drastically reducing network load.
 * **Multi-Source Ingestion:** Synergizes Selenium web-scraping with direct REST API requests for a complete data picture (rosters, officiating crews).
 * **Column-Shift Detection:** Intelligent manifest parsing that handles inconsistent CSV layouts (e.g., scores stored in 'Status' columns) automatically.
 
-### 📊 Deterministic Data Engineering
+### Deterministic Data Engineering
 * **Regex-Based Normalization:** Sanitizes inconsistent string data (e.g., `#8 Player: Infraction`) into structured integers.
 * **Unified PIM Logic:** Shares calculation helpers across team and player stats to ensure 1:1 statistical parity.
 * **Fallback Scoring:** Reconstructs game results from play-by-play logs if official score rows are missing.
 
-### 🎙️ AI Narrative Intelligence
+### AI Narrative Intelligence
 * **Gemini 2.5 Flash Integration:** Leverages high-speed, long-context windows for deep pattern analysis across entire seasons.
 * **Hybrid Editorial Tone:** Synthesizes the analytical depth of *The Athletic* with the raw authenticity of *Spittin' Chiclets*.
 * **Adversarial Pattern Detection:** Identifies "statistical frauds" by cross-referencing high rankings against negative goal differentials.
 
-## 📂 Project Structure
+## Project Structure
 ```text
 sports-rag-reporter/
 ├── docs/                     # Deployment Source (GitHub Pages)
