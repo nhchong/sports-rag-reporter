@@ -1,22 +1,35 @@
-# DMHL Analytics & Structured RAG Reporting Engine 🏒
+# Low B Dispatch: Technical Product Specification 🏒
 
-A modular **Structured RAG (Retrieval-Augmented Generation)** pipeline that transforms raw recreational hockey data into high-fidelity, professional-grade news reports. This system bridges the gap between fragmented league data and engaging community storytelling.
+The Low B Dispatch is a production-grade **Structured RAG (Retrieval-Augmented Generation)** pipeline designed to transform fragmented recreational sports data into high-fidelity, professional-grade news reports. This system utilizes a deterministic logic layer combined with a generative synthesis engine to provide analytical depth for Toronto’s DMHL.
 
 ---
 
 ## 🎯 The Problem: The Narrative Gap
-Recreational sports data is notoriously fragmented, often locked behind inconsistent web interfaces or stale boxscores. While the drama of a 10:30 PM comeback or a season-long rivalry is just as real as in the NHL, these stories are rarely told. Recreational sports lack the **narrative infrastructure**—the journalists, the beat reporters, and the analysts—that turn raw stats into shared community history.
+In recreational sports, data is often siloed in inconsistent web interfaces, creating a "Narrative Gap" between the events on the ice and the community's history.
 
-This project bridges that gap. By using **deterministic data processing** combined with **Generative AI**, we ensure 100% statistical accuracy while providing the engaging, human-centric storytelling that recreational athletes deserve.
+* Participant-Led Solution: As a player in the Monday/Wednesday Low B division of the DMHL, I built this engine to provide the narrative infrastructure that recreational athletes deserve.
+
+* Beyond Raw Stats: While standard platforms offer boxscores, they lack the analytical storytelling found in professional media.
+
+* Deterministic Integrity: To prevent the hallucinations common in standard LLM applications, this system processes data through a custom Pandas engine before any narrative synthesis occurs.
 
 
 
-## 🤖 System Architecture
+## Technical Architecture
 This engine utilizes a **Structured Data Contract** to power its LLM generation. Unlike standard RAG that searches through messy text, this system processes structured datasets first, ensuring the AI cannot "hallucinate" scores, standings, or penalty counts.
 
-1.  **Extraction (`scraper.py`):** A state-aware Selenium/Requests pipeline that handles dynamic DOM content and interfaces with private APIs to pull rosters and game events.
-2.  **Logic Layer (`analyzer.py`):** A deterministic Pandas layer that handles the "Hard Math"—calculating standings, PIM normalization, and special teams efficiency.
-3.  **Synthesis (`reporter.py` & `scout.py`):** A tiered JSON ingestion strategy that feeds **Gemini 2.5 Flash** both macro season trends and micro game-day details to produce distinct narrative outputs.
+1.  **Data Acquisition and Governance** 
+* **Resilient Extraction (`scraper.py`):** Utilizes a headless Selenium WebDriver to navigate asynchronous Angular-rendered content. It manages the extraction of a comprehensive game manifest and detailed play-by-play boxscores.
+* **API Ingestion (`ingestor.py`):** Interfaces directly with the DigitalShift partials API to retrieve high-fidelity game rosters. It uses BeautifulSoup to parse HTML content fragments, ensuring roster data is verified against league source files.
+
+2. **Deterministic Analytics Layer**
+* **Business Logic (`analyzer.py`):** A custom Pandas engine that performs all statistical calculations, including standings, goal differentials, and win percentages. It identifies Game Winning Goals (GWG) and computes special teams efficiency metrics such as PP% and PK%.
+* **Visualization Engine (`viz_generator.py`):** Translates team performance metrics into professional-grade scatter plots. It maps Goal Differential against Total Points to define division parity and performance trends.
+
+3. **Synthesis and Strategic Insights**
+* **Weekly Production (`reporter.py`):** Compiles a high-density JSON data package for Gemini 2.5 Flash. The engine generates weekly dispatches with unique headlines and sublines, utilizing dynamic team logo mapping for homepage thumbnails.
+* **Historical Context (`backfill_reports.py`):** Facilitates targeted generation of past reports to build a data-consistent seasonal archive.
+* **Matchup Intelligence (`scout.py`):** Aggregates historical head-to-head results and individual player metrics to generate data-driven pre-game briefings.
 
 ## ✨ Key Features
 
@@ -38,12 +51,19 @@ This engine utilizes a **Structured Data Contract** to power its LLM generation.
 ## 📂 Project Structure
 ```text
 sports-rag-reporter/
-├── src/
-│   ├── scraper.py     # Selenium/API ingestion pipeline
-│   ├── analyzer.py    # Deterministic data processing & normalization
-│   ├── reporter.py    # Weekly newsletter generation (The Dispatch)
-│   └── scout.py       # Gameday matchup intelligence
-├── data/              # Local CSV storage (Git ignored)
-├── .env               # Secrets & Authentication (Git ignored)
-├── requirements.txt   # Environment dependencies
-└── README.md          # Project documentation
+├── docs/                     # Deployment Source (GitHub Pages)
+│   ├── _posts/               # Automated Narrative Dispatches
+│   ├── _data/                # UI Configuration (navigation.yml)
+│   ├── assets/               # Parity Charts and Brand Assets
+│   └── index.md              # Public Dashboard and Visualizations
+├── src/                      # Engineering Core
+│   ├── scraper.py            # Selenium ingestion engine
+│   ├── ingestor.py           # API-level roster ingestion
+│   ├── analyzer.py           # Logic and standing calculations
+│   ├── viz_generator.py       # Data visualization output
+│   ├── reporter.py           # Production narrative synthesis
+│   ├── backfill_reports.py   # Historical archive generator
+│   ├── scout.py              # Pre-game matchup intelligence
+│   └── publish.sh            # Deployment orchestration
+├── data/                     # Source of Truth (CSV persistence)
+└── README.md                 # Product Documentation
