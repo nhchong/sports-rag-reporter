@@ -2,7 +2,7 @@
 
 The Low B Dispatch is a production-grade **Structured RAG (Retrieval-Augmented Generation)** pipeline designed to transform fragmented recreational sports data into high-fidelity, professional-grade news reports. This system utilizes a deterministic logic layer combined with a generative synthesis engine to provide analytical depth for Toronto’s DMHL.
 
----==
+---
 
 ## The Problem: The Narrative Gap
 In recreational sports, data is often siloed in inconsistent web interfaces, creating a "Narrative Gap" between the events on the ice and the community's history.
