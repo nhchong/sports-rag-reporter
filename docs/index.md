@@ -1,15 +1,16 @@
 ---
 layout: home
+title: "The Low B Dispatch"
 author_profile: true
 header:
   overlay_color: "#000"
   overlay_filter: "0.5"
-  overlay_image: /assets/images/hockey-canada.jpg # Removed /docs
+  overlay_image: /assets/images/hockey-canada.jpg
   cta_label: false 
   cta_url: false  
 excerpt: "The definitive data record of the DMHL. Professional-grade reporting and analytical deep-dives for the Monday/Wednesday Low B division."
 
-# feature_row config for technical highlights
+# technical highlights configuration
 feature_row:
   - image_path: /assets/images/python-logo.png
     alt: "Data Ingestion"
@@ -21,12 +22,12 @@ feature_row:
   - image_path: /assets/images/gemini-logo.png
     alt: "AI Generation"
     title: "Generative Analytics"
-    excerpt: "Utilizes Google Gemini 1.5 Pro to transform structured CSV metrics into high-fidelity, data-backed sports narratives."
+    excerpt: "Utilizes Google Gemini 2.5 Flash to transform structured CSV metrics into high-fidelity, data-backed sports narratives."
     url: "https://github.com/nhchong/sports-rag-reporter/blob/main/src/reporter.py"
     btn_label: "View Prompt Logic"
     btn_class: "btn--primary"
 
-# Complete Team Lineup
+# team lineup configuration
 team_row:
   - image_path: /assets/images/theshockers.png
     alt: "The Shockers"
@@ -47,13 +48,12 @@ team_row:
     alt: "4 Lines"
     title: "4 Lines"
 ---
+## Project Overview
+Welcome to **The Low B Dispatch**. This project is an automated end-to-end data pipeline designed to provide professional-grade coverage for the **Downtown Men’s Hockey League (DMHL)** in Toronto.
 
-# Project Overview
-Welcome to **The Low B Dispatch**. This project is an automated end-to-end data pipeline designed to provide professional-grade coverage for the **Downtown Men’s Hockey League (DMHL)** in Toronto. 
+Historically, amateur sports suffer from a narrative gap. While raw statistics exist on fragmented pages, the storytelling of the week is rarely captured or archived. As a participant in the Monday/Wednesday Low B division, I developed this engine to bridge that gap by treating raw league data as the source of truth for an AI-driven newsroom.
 
-Historically, amateur sports suffer from a narrative gap—stats exist on fragmented pages, but the "story" of the week is rarely told. This project bridges that gap by treating raw league data as a source of truth for an AI-driven newsroom, specifically covering the **Monday/Wednesday Low B** division.
-
-Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to write a weekly recap with 100% evidence-backed accuracy.
+Every report below is generated autonomously. The pipeline ingests the latest boxscores, analyzes team efficiency metrics, and prompts a specialized LLM agent to synthesize a weekly recap with 100% evidence-backed accuracy.
 
 ### The Tech Stack
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
@@ -61,7 +61,7 @@ Every report below is generated autonomously. The pipeline ingests the latest bo
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
 
-<!--{% include feature_row %} -->
+<!--{% include feature_row %}-->
 
 ---
 
@@ -72,6 +72,4 @@ Every report below is generated autonomously. The pipeline ingests the latest bo
   <img src="{{ '/assets/images/league_parity.png' | relative_url }}" alt="DMHL League Parity Scatter Plot" style="border: 1px solid #eaeaea; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 100%;">
 </figure>
 
-
 ---
-

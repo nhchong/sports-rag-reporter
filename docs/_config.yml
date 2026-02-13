@@ -18,11 +18,11 @@ title_separator: "-"
 subtitle: "Bringing Storytelling to Amateur Sports"
 name: "Nicholas Chong"
 description: "An automated sports journalism pipeline utilizing custom Selenium scrapers and Google Gemini to provide professional-grade coverage of Toronto's DMHL."
-url: "https://nhchong.github.io"
 baseurl: "/sports-rag-reporter"
+url: "https://nhchong.github.io"
 repository: "nhchong/sports-rag-reporter"
 teaser: "/assets/images/hockey-canada.jpg"
-favicon: "/favicon.ico"
+favicon: "/sports-rag-reporter/favicon.ico"
 
 # --- AUTHOR SETTINGS (Sidebar) ---
 author:
