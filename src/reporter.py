@@ -101,7 +101,7 @@ def generate_weekly_digest_report():
     - ANALYTICAL: Use data to substantiate claims. 
     - AUTHENTIC: Speak to the community as a peer but avois any unprofessional locker-room tone.
     - ZERO FLUFF: Avoid generic PR language.
-    - COMPELLING NARRATIVE: Similar to the media outlet, The Atheltic
+    - COMPELLING NARRATIVE: Similar to the media outlet, The Athletic
     - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
     - PLAYER-FOCUSED: Much like the media outlet, the Player's Tribune. 
     - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. 
@@ -110,7 +110,7 @@ def generate_weekly_digest_report():
     1. THE BIG STORY: Start with shifts in the Standings. Use the 'team_stats' to explain why a team moved up or down.
     2. DATA-DRIVEN INSIGHTS: Highlight specific player discrepancies.
     3. THE OFFICIALS: Comment on officiating volume and whether or not it impacted the game. 
-    4. VIBE & VENUE: Contextualize results based on arena/time. 
+    4. VIBE & VENUE: Contextualize results based on arena/time. Paint a visual by adding in weather data on that specific day. 
     5. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
     6. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
     7. Use the 'player_stats' to highlight specific player performances. Use the 'weekly_play_by_play' to highlight specific game events.
@@ -119,15 +119,20 @@ def generate_weekly_digest_report():
     10. Use the 'game_details' to highlight specific game events. Weave in the game details into the narrative.
     11. If there is a big story, make sure to weave it in to the narrative.
 
+    IMPORTANT NOTES:
+    1. This week was the second last week of the regular season. THe only game next week is a makeup game between the 4Lines and the Flat-Earthers. 
+    2. The playoffs begin on Feb 25. The playoff format is a best of 2 game series. 1st play6th, 2nd plays 5th, and 3 plays 4th. 
+    3. Since most regular season games have completed, make sure to emphasize the importance of this weeks games in the seeding for playoffs. The narrative should be around the push for the playoffs. 
+
     STYLE GUIDELINES:
     STRUCTURE & LENGTH:
-    - WORD LIMIT: Approximately 200 words.
+    - WORD LIMIT: Approximately 300 words.
 
     THE THREE STARS:
     Must be strictly based on weekly data.
-    - 1st Star: MVP.
-    - 2nd Star: Standout (Goalie/Defense).
-    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter. 
+    - 1st Star: Most points, favoring goals. Emphasis on important goals. 
+    - 2nd Star: Second most points, emphasis on goals. 
+    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie with a shootout. 
 
     OUTPUT FORMAT:
     - Your response MUST begin with a unique 'Headline' and 'Subline' on the first two lines.

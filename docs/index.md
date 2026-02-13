@@ -61,20 +61,17 @@ Every report below is generated autonomously. The pipeline ingests the latest bo
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
 
-<!--{% include feature_row %} 
+<!--{% include feature_row %} -->
 
 ---
 
-### 📊 League Parity Dashboard
+### League Parity Dashboard
 *Goal Differential vs. Total Points. Top-right teams are dominant; bottom-left teams are battling for traction.*
 
 <figure style="text-align: center; margin-top: 1.5em; margin-bottom: 2.5em;">
   <img src="{{ '/assets/images/league_parity.png' | relative_url }}" alt="DMHL League Parity Scatter Plot" style="border: 1px solid #eaeaea; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 100%;">
-  <figcaption style="font-size: 0.85rem; color: #666; margin-top: 12px; font-style: italic;">
-    Generated via <code>viz_generator.py</code>. Updated weekly following Wednesday night games.
-  </figcaption>
 </figure>
 
--->
+
 ---
 

@@ -129,7 +129,7 @@ def run_backfill():
     THE THREE STARS:
     Must be strictly based on weekly data.
     - 1st Star: Most points, favoring goals. Emphasis on important goals. 
-    - 2nd Star: Second most points, emphasis on goals. Someone
+    - 2nd Star: Second most points, emphasis on goals. 
     - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie. 
 
     OUTPUT FORMAT:

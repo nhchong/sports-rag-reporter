@@ -8,6 +8,10 @@ INPUT_FILE = "data/team_stats.csv"
 OUTPUT_DIR = "docs/assets/images"
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "league_parity.png")
 
+# --- TEAMS TO EXCLUDE FROM VISUALIZATION ---
+# Add exact team names here to hide them from the chart
+EXCLUDED_TEAMS = ["Arctic Dolphins", "Pdiym"]
+
 def generate_parity_chart():
     """
     Reads team stats and generates a professional scatter plot 
@@ -22,6 +26,17 @@ def generate_parity_chart():
 
     print("📊 Generating League Parity Chart...")
     df = pd.read_csv(INPUT_FILE)
+
+    # --- FILTERING STEP ---
+    if EXCLUDED_TEAMS:
+        print(f"📉 Excluding teams from visualization: {EXCLUDED_TEAMS}")
+        # Keep only rows where the team name is NOT in the excluded list
+        # The tilde (~) operator negates the boolean condition
+        df = df[~df['Team'].isin(EXCLUDED_TEAMS)].copy()
+    
+    if df.empty:
+        print("⚠️ Warning: No data left to plot after filtering.")
+        return
 
     # --- THE ATHLETIC STYLE SETUP ---
     plt.style.use('seaborn-v0_8-whitegrid') # A clean, professional base theme
@@ -56,6 +71,7 @@ def generate_parity_chart():
     ax.set_ylabel("Total Points (The Standings)", fontsize=12, fontweight='bold')
     
     # Add strong zero lines to define the quadrants
+    # Calculate mean only on the filtered data
     ax.axhline(y=df['Points'].mean(), color='grey', linestyle='--', alpha=0.5, linewidth=1)
     ax.axvline(x=0, color='black', linewidth=1.5)
 
