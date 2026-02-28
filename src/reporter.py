@@ -129,8 +129,9 @@ def generate_weekly_digest_report():
     6. VIBE & VENUE: Contextualize results using 'schedule_and_arenas' and specific weather data for that day to set the scene. 
     7. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
     8. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
-    9. Use the 'player_stats' to highlight specific player performances. Use the 'weekly_play_by_play' to highlight specific game events.
     10. Use the 'game_details' to highlight specific game events. Weave in the game details into the narrative.
+    11. Do not refer to games by their gameIDs
+
     </narrative_strategy>
 
     <playoff_logic>
@@ -156,12 +157,12 @@ def generate_weekly_digest_report():
     <format_requirements>
     Line 1: [Sharp Playoff Headline]
     Line 2: [Analytical Subline]
-    Body: Markdown headings. Use > blockquotes for 'Series Math' or 'Lucky Loser' projections.
+    Body: Markdown headings. Separate sections for 'Series Math' or 'Lucky Loser' projections. Keep these sections as short as possible. 
     Three Stars: 
     Must be strictly based on weekly data.
     - 1st Star: Most points, favoring goals. Emphasis on important goals. 
     - 2nd Star: Second most points, emphasis on goals. 
-    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie with a shootout. 
+    - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie with a shootout or the player who had a clutch goal. 
     Length: No more than 300 words
     </format_requirements>
 

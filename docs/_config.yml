@@ -31,7 +31,7 @@ author:
   links:
     - label: "DMHL Standings"
       image_path: "/assets/images/dmhl-logo.svg" 
-      url: "https://www.dmhl.ca/stats#/533/standings"
+      url: "https://www.dmhl.ca/stats#/533/standings?division_id=41979"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/nhchong"
