@@ -7,14 +7,13 @@ DETAILS_FILE = "data/game_details.csv"
 TEAM_STATS_FILE = "data/team_stats.csv"
 PLAYER_STATS_FILE = "data/player_stats.csv"
 MANIFEST_FILE = "data/games_manifest.csv"
+PLAYOFF_STATS_FILE = "data/playoff_standings.csv" 
+PLAYOFF_MATCHUP_FILE = "data/playoff_matchups.csv"
+
+# --- UTILITY HELPERS ---
 
 def extract_pims_from_description(description):
-    """
-    Parses penalty minutes from a text description using keyword mapping.
-    
-    Returns:
-        int: The number of penalty minutes assigned.
-    """
+    """Maps penalty string keywords to deterministic minute values."""
     desc = str(description).lower()
     if "double minor" in desc: return 4
     if "major" in desc: return 5
@@ -23,275 +22,168 @@ def extract_pims_from_description(description):
     return 0
 
 def parse_integer_value(val):
-    """
-    Safely extracts an integer from a string using regex.
-    Used for parsing scores and numeric data from messy text fields.
-    """
+    """Extracts the first integer from a string, safe for messy scraped data."""
     try:
         match = re.search(r'\d+', str(val))
         return int(match.group()) if match else 0
-    except (ValueError, AttributeError):
+    except:
         return 0
 
 def initialize_game_data():
-    """
-    Loads raw game details from CSV and performs initial data cleaning.
-    Ensures required columns exist and handles missing values.
-    """
-    try:
-        if not os.path.exists(DETAILS_FILE):
-             print(f"❌ Error: {DETAILS_FILE} not found. Ensure the scraper has run.")
-             return None
-        
-        print(f"📖 Loading data from {DETAILS_FILE}...")
-        df = pd.read_csv(DETAILS_FILE)
-        
-        # Verify master column structure
-        master_cols = ['GameID', 'EventType', 'Team', 'Description', 'Strength', 'ScrapedAt', 'Period', 'Time']
-        for col in master_cols:
-            if col not in df.columns:
-                df[col] = "N/A"
-            
-        # Data standardization
-        df['Description'] = df['Description'].fillna("").astype(str)
-        df['Team'] = df['Team'].fillna("Unknown")
-        df['Strength'] = df['Strength'].fillna("0")
-        df['GameID'] = df['GameID'].astype(str)
-        
-        return df
-    except Exception as e:
-        print(f"❌ Critical error loading data: {e}")
+    """Loads and cleans the master details file."""
+    if not os.path.exists(DETAILS_FILE):
         return None
+    df = pd.read_csv(DETAILS_FILE)
+    df['GameID'] = df['GameID'].astype(str)
+    # Ensure team names match manifest casing
+    df['Team'] = df['Team'].fillna("Unknown").str.strip().str.title().replace("'S", "'s", regex=True)
+    return df
 
-def compute_league_standings(df):
-    print("🏆 Processing Team Standings (Manifest-Anchored)...")
-    
-    # 1. LOAD THE MANIFEST AS THE SKELETON
-    if not os.path.exists(MANIFEST_FILE):
-        print("❌ Error: Manifest missing. Cannot anchor standings.")
-        return pd.DataFrame()
+# --- CORE ENGINES ---
 
-    manifest_df = pd.read_csv(MANIFEST_FILE)
-    
-    # Standardize names in manifest immediately
-    for col in ['Home', 'Away']:
-        manifest_df[col] = manifest_df[col].str.strip().str.title().replace("'S", "'s", regex=True)
+def compute_standings_engine(df, manifest_subset):
+    """Calculates full standings (W/L/T/Pts/GF/GA) for a specific subset of games."""
+    teams = pd.concat([manifest_subset['Home'], manifest_subset['Away']]).unique()
+    standings = {t: {'GP': 0, 'W': 0, 'L': 0, 'T': 0, 'Pts': 0, 'GF': 0, 'GA': 0, 'PIM': 0} for t in teams if "Bye" not in t}
 
-    # 2. INITIALIZE STANDINGS FROM ALL TEAMS IN MANIFEST
-    all_teams = pd.concat([manifest_df['Home'], manifest_df['Away']]).unique()
-    standings = {}
-    
-    for team in all_teams:
-        if "Bye" in team or team == "N/A": continue
-        # Calculate expected GP from the manifest
-        expected_gp = len(manifest_df[(manifest_df['Home'] == team) | (manifest_df['Away'] == team)])
-        
-        standings[team] = {
-            'Games Played': expected_gp, 
-            'Wins': 0, 'Losses': 0, 'Ties': 0, 'Points': 0, 
-            'Goals For': 0, 'Goals Against': 0, 'Penalty Minutes': 0,
-            'Actual Scraped Games': 0 # Track this for health checks
-        }
-
-    # 3. LAYER ON THE SCRAPED RESULTS
-    df['Team'] = df['Team'].str.strip().str.title().replace("'S", "'s", regex=True)
     finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')].copy()
-    finals = finals.drop_duplicates(subset=['GameID', 'Team'])
-
-    for game_id, game_data in finals.groupby('GameID'):
-        teams = game_data['Team'].unique()
-        if len(teams) < 2: continue
-        t1, t2 = teams[0], teams[1]
+    
+    for _, game in manifest_subset.iterrows():
+        gid = str(game['GameID'])
+        game_results = finals[finals['GameID'] == gid]
+        if len(game_results) < 2: continue
         
-        try:
-            s1 = parse_integer_value(game_data[game_data['Team'] == t1].iloc[0]['Description'])
-            s2 = parse_integer_value(game_data[game_data['Team'] == t2].iloc[0]['Description'])
-        except: continue
-
-        # Update stats (Only if teams exist in our manifest-anchored dict)
+        t1, t2 = game_results.iloc[0]['Team'], game_results.iloc[1]['Team']
+        s1, s2 = parse_integer_value(game_results.iloc[0]['Description']), parse_integer_value(game_results.iloc[1]['Description'])
+        
         if t1 in standings and t2 in standings:
-            standings[t1]['Actual Scraped Games'] += 1
-            standings[t2]['Actual Scraped Games'] += 1
-            standings[t1]['Goals For'] += s1
-            standings[t1]['Goals Against'] += s2
-            standings[t2]['Goals For'] += s2
-            standings[t2]['Goals Against'] += s1
+            standings[t1]['GP'] += 1; standings[t2]['GP'] += 1
+            standings[t1]['GF'] += s1; standings[t1]['GA'] += s2
+            standings[t2]['GF'] += s2; standings[t2]['GA'] += s1
 
             if s1 > s2:
-                standings[t1]['Wins'] += 1; standings[t1]['Points'] += 2; standings[t2]['Losses'] += 1
+                standings[t1]['W'] += 1; standings[t1]['Pts'] += 2; standings[t2]['L'] += 1
             elif s2 > s1:
-                standings[t2]['Wins'] += 1; standings[t2]['Points'] += 2; standings[t1]['Losses'] += 1
+                standings[t2]['W'] += 1; standings[t2]['Pts'] += 2; standings[t1]['L'] += 1
             else:
-                standings[t1]['Ties'] += 1; standings[t1]['Points'] += 1; standings[t2]['Ties'] += 1; standings[t2]['Points'] += 1
+                standings[t1]['T'] += 1; standings[t1]['Pts'] += 1; standings[t2]['T'] += 1; standings[t2]['Pts'] += 1
 
-    # Team-level PIM aggregation
+    # Apply PIMs only for games in this manifest subset
     penalty_events = df[df['EventType'] == 'Penalty']
+    subset_ids = set(manifest_subset['GameID'].astype(str))
     for _, row in penalty_events.iterrows():
-        team = row['Team']
-        if team in standings:
-            standings[team]['Penalty Minutes'] += extract_pims_from_description(row['Description'])
+        if row['Team'] in standings and row['GameID'] in subset_ids:
+            standings[row['Team']]['PIM'] += extract_pims_from_description(row['Description'])
 
-    if not standings: return pd.DataFrame()
+    std_df = pd.DataFrame.from_dict(standings, orient='index').reset_index().rename(columns={'index': 'Team'})
+    std_df['Diff'] = std_df['GF'] - std_df['GA']
+    std_df = std_df.sort_values(by=['Pts', 'W', 'Diff'], ascending=False).reset_index(drop=True)
+    std_df.insert(0, 'Rk', range(1, len(std_df) + 1))
+    return std_df
 
-    # Post-processing
-    std = pd.DataFrame.from_dict(standings, orient='index').reset_index().rename(columns={'index': 'Team'})
-    std['Goal Differential'] = std['Goals For'] - std['Goals Against']
-    
-    # Use standard Points-per-Game logic if Games Played is zero for ghost teams
-    std['Win Percentage'] = (std['Points'] / (std['Games Played'] * 2)).replace([float('inf'), -float('inf')], 0).fillna(0).round(3)
-    
-    std = std.sort_values(by=['Points', 'Wins', 'Goal Differential'], ascending=False).reset_index(drop=True)
-    std.index += 1
-    std.insert(0, 'Rank', std.index)
-    return std
-
-def compute_team_efficiency_metrics(df, standings_df):
-    """
-    Calculates advanced team-level metrics like Power Play and Penalty Kill efficiency.
-    """
+def compute_efficiency_metrics(df, standings_df):
+    """Calculates GFA, PP%, and PK% (original logic preserved)."""
     if standings_df.empty: return pd.DataFrame()
-    print("📊 Calculating Special Teams efficiency...")
     metrics = []
-    
     for _, row in standings_df.iterrows():
-        team = row['Team']
-        gp = row['Games Played']
+        team, gp = row['Team'], row['GP']
         team_games = df[df['Team'] == team]['GameID'].unique()
         
-        gfa = round(row['Goals For'] / gp, 2) if gp > 0 else 0.0
-        
-        # Power Play Percentage calculation
+        gfa = round(row['GF'] / gp, 2) if gp > 0 else 0.0
         ppg = len(df[(df['Team'] == team) & (df['EventType'] == 'Goal') & (df['Strength'] == 'PP')])
         pp_opps = len(df[(df['GameID'].isin(team_games)) & (df['Team'] != team) & (df['EventType'] == 'Penalty')])
         pp_pct = round((ppg / pp_opps) * 100, 1) if pp_opps > 0 else 0.0
-
-        # Penalty Kill Percentage calculation
+        
         ppga = len(df[(df['GameID'].isin(team_games)) & (df['Team'] != team) & (df['EventType'] == 'Goal') & (df['Strength'] == 'PP')])
         pk_opps = len(df[(df['Team'] == team) & (df['EventType'] == 'Penalty')])
         pk_pct = round(((pk_opps - ppga) / pk_opps) * 100, 1) if pk_opps > 0 else 0.0
-
+        
         metrics.append({'Team': team, 'GFA': gfa, 'PP%': f"{pp_pct}%", 'PK%': f"{pk_pct}%"})
-        
     return pd.DataFrame(metrics)
-
-def identify_game_winning_goals(df):
-    """
-    Determines which goals were technically the 'Game Winning Goal' (GWG).
-    Defined as the goal that put the winning team one goal ahead of the opponent's final total.
-    """
-    gwg_keys = []
-    finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')]
-    
-    if finals.empty:
-        finals = df[df['EventType'] == 'Goal'].groupby(['GameID', 'Team']).size().reset_index(name='Description')
-
-    for game_id, game_data in finals.groupby('GameID'):
-        if len(game_data) != 2: continue
-        t1, t2 = game_data.iloc[0]['Team'], game_data.iloc[1]['Team']
-        s1 = parse_integer_value(game_data.iloc[0]['Description'])
-        s2 = parse_integer_value(game_data.iloc[1]['Description'])
-        
-        if s1 == s2: continue 
-        
-        winner = t1 if s1 > s2 else t2
-        goal_num = (min(s1, s2) + 1)
-        
-        w_goals = df[(df['GameID'] == game_id) & (df['Team'] == winner) & (df['EventType'] == 'Goal')]
-        w_goals = w_goals.sort_values(by=['Period', 'Time'], ascending=[True, False])
-        
-        if len(w_goals) >= goal_num:
-            gwg_keys.append((game_id, w_goals.iloc[goal_num - 1]['Description']))
-    return gwg_keys
 
 def compute_player_statistics(df):
     """
-    Aggregates individual player data including Points, PIMs, and Game-Winning Goals.
+    FIX: Corrects GP using Unique Sets.
+    FIX: Captures Assisters from Description chunks.
     """
     print("👤 Calculating Player Stats...")
-    player_data = {}
-    gwg_list = identify_game_winning_goals(df)
-    
-    # 1. Initialize from RosterAppearances (The Baseline)
-    roster_df = df[df['EventType'] == 'RosterAppearance']
-    for _, row in roster_df.iterrows():
-        name, team = row['Description'].strip(), row['Team']
-        if name not in player_data:
-            player_data[name] = {'Team': team, 'GP': 0, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
-        player_data[name]['GP'] += 1
+    player_metrics = {}
+    player_games = {} # Tracking unique GIDs to solve the GP bug
 
-    # 2. Individual Scoring (The Discovery Phase)
+    # 1. Base GP from Roster appearances
+    for _, row in df[df['EventType'] == 'RosterAppearance'].iterrows():
+        p_name, team, gid = row['Description'].strip(), row['Team'], row['GameID']
+        if p_name not in player_metrics:
+            player_metrics[p_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
+            player_games[p_name] = set()
+        player_games[p_name].add(gid)
+
+    # 2. Points from Goals/Assists
     for _, row in df[df['EventType'] == 'Goal'].iterrows():
-        desc, gid, strength, team = row['Description'], row['GameID'], row['Strength'], row['Team']
+        desc, gid, team = row['Description'], row['GameID'], row['Team']
         
-        # Scorer identification
+        # Scorer logic
         scorer_match = re.search(r'#\d+\s+([^(:]+)', desc)
         if scorer_match:
             p_name = scorer_match.group(1).strip()
-            
-            # --- THE FIX: DISCOVERY LOGIC ---
-            if p_name not in player_data:
-                player_data[p_name] = {'Team': team, 'GP': 1, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
-            
-            p = player_data[p_name]
-            p['G'] += 1
-            p['Pts'] += 1
-            if 'PP' in str(strength): p['PPG'] += 1
-            if 'SH' in str(strength): p['SHG'] += 1
-            if (gid, desc) in gwg_list: p['GWG'] += 1
+            if p_name not in player_metrics:
+                player_metrics[p_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
+                player_games[p_name] = set()
+            player_metrics[p_name]['G'] += 1
+            player_metrics[p_name]['Pts'] += 1
+            player_games[p_name].add(gid)
 
-        # Assist identification
+        # Assist logic (names inside parentheses)
         assist_chunk = re.search(r'\((.*?)\)', desc)
         if assist_chunk:
             for raw in assist_chunk.group(1).split(','):
                 a_match = re.search(r'#\d+\s+([^,]+)', raw)
                 if a_match:
                     a_name = a_match.group(1).strip()
-                    
-                    # --- THE FIX: DISCOVERY LOGIC ---
-                    if a_name not in player_data:
-                        player_data[a_name] = {'Team': team, 'GP': 1, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
-                    
-                    player_data[a_name]['A'] += 1
-                    player_data[a_name]['Pts'] += 1
+                    if a_name not in player_metrics:
+                        player_metrics[a_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
+                        player_games[a_name] = set()
+                    player_metrics[a_name]['A'] += 1
+                    player_metrics[a_name]['Pts'] += 1
+                    player_games[a_name].add(gid)
 
-    # 3. Final aggregation into sorted DataFrame
+    # 3. Aggregating final list
     stats = []
-    for name, d in player_data.items():
-        stats.append({
-            'Player': name, 'Team': d['Team'], 'GP': d['GP'], 'G': d['G'], 'A': d['A'], 
-            'Pts': d['Pts'], 'Pts/G': round(d['Pts']/d['GP'], 2) if d['GP'] > 0 else 0,
-            'PIM': d['PIM'], 'PPG': d['PPG'], 'SHG': d['SHG'], 'GWG': d['GWG']
-        })
+    for name, m in player_metrics.items():
+        gp = len(player_games.get(name, set()))
+        stats.append({'Player': name, 'Team': m['Team'], 'GP': gp, 'G': m['G'], 'A': m['A'], 'Pts': m['Pts']})
     
-    if not stats: return pd.DataFrame()
     return pd.DataFrame(stats).sort_values(by='Pts', ascending=False)
 
 def run_analysis_pipeline():
-    """
-    Main entry point for the analysis script.
-    Coordinates the loading of data and the generation of team and player statistics.
-    """
+    """Main execution flow: Scrape -> Standings -> Playoff Views -> Players."""
     print("🚀 Starting Data Analysis...")
     df = initialize_game_data()
     if df is None: return
 
-    standings = compute_league_standings(df)
-    team_metrics = compute_team_efficiency_metrics(df, standings)
-    
-    # Save Team Stats
-    if not standings.empty:
-        if not team_metrics.empty:
-            team_stats = standings.merge(team_metrics, on='Team', how='left')
-        else:
-            team_stats = standings
-        team_stats.to_csv(TEAM_STATS_FILE, index=False)
-        print(f"✅ Team stats archived: {TEAM_STATS_FILE}")
-    
-    # Save Player Stats
+    manifest_df = pd.read_csv(MANIFEST_FILE)
+    for col in ['Home', 'Away']:
+        manifest_df[col] = manifest_df[col].str.strip().str.title().replace("'S", "'s", regex=True)
+
+    # 1. Season Stats + Efficiency
+    rs_manifest = manifest_df[manifest_df['GameType'] == 'Regular Season']
+    rs_standings = compute_standings_engine(df, rs_manifest)
+    rs_eff = compute_efficiency_metrics(df, rs_standings)
+    rs_final = rs_standings.merge(rs_eff, on='Team', how='left')
+    rs_final.to_csv(TEAM_STATS_FILE, index=False)
+    print(f"✅ Season stats & efficiency archived.")
+
+    # 2. Playoff Logic
+    po_manifest = manifest_df[manifest_df['GameType'] == 'Playoffs']
+    if not po_manifest.empty:
+        po_standings = compute_standings_engine(df, po_manifest)
+        po_standings.to_csv(PLAYOFF_STATS_FILE, index=False)
+        print(f"✅ Playoff Ranked Table archived.")
+
+    # 3. Player Leaderboard
     player_stats = compute_player_statistics(df)
-    if not player_stats.empty:
-        player_stats.to_csv(PLAYER_STATS_FILE, index=False)
-        print(f"✅ Player stats archived: {PLAYER_STATS_FILE}")
+    player_stats.to_csv(PLAYER_STATS_FILE, index=False)
+    print(f"✅ Player stats archived.")
     
     print(f"🏁 Analysis pipeline complete.")
 

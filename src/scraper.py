@@ -18,15 +18,16 @@ DETAILS_FILE = os.path.join(DATA_DIR, "game_details.csv")
 MANIFEST_FILE = os.path.join(DATA_DIR, "games_manifest.csv")
 
 def initialize_headless_browser():
+    """Initializes a headless Chrome instance for CI/CD compatibility."""
     options = Options()
-    options.add_argument("--headless=new") # Explicitly headless for CI/CD
+    options.add_argument("--headless=new") 
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--no-sandbox")
     return webdriver.Chrome(options=options)
 
 def format_event_record(game_id, event_type, team="N/A", desc="N/A", strength="N/A", period="N/A", time_val="N/A"):
-    # Normalize team names to prevent "The Sahara" vs "the sahara"
+    """Standardizes the record format for all scraped events."""
     clean_team = str(team).strip().title().replace("'S", "'s") if team and team != "N/A" else "N/A"
     return {
         'GameID': game_id, 
@@ -40,6 +41,10 @@ def format_event_record(game_id, event_type, team="N/A", desc="N/A", strength="N
     }
 
 def scrape_division_manifest(driver):
+    """
+    Scrapes the main schedule.
+    DECOUPLING LOGIC: Division captures raw text; GameType provides logic for analyzer.
+    """
     print(f"📡 Building Comprehensive Manifest...")
     driver.get(HUB_URL)
     try:
@@ -47,6 +52,7 @@ def scrape_division_manifest(driver):
     except:
         return []
 
+    # Angular settle time
     for _ in range(12):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(0.5)
@@ -57,17 +63,32 @@ def scrape_division_manifest(driver):
     for row in rows:
         try:
             cols = row.find_elements(By.TAG_NAME, "td")
-            if len(cols) < 8: continue
+            if len(cols) < 10: continue # index 9 is GT column
+            
             team_spans = cols[1].find_elements(By.CSS_SELECTOR, "span.d")
             if len(team_spans) < 2: continue
+            
             url = cols[1].find_element(By.TAG_NAME, "a").get_dom_attribute("href")
             game_id = url.split("/game/")[1].split("?")[0].split("/")[0]
             if game_id in seen_ids: continue
             seen_ids.add(game_id)
+            
+            # --- SCALE-FRIENDLY LOGIC ---
+            # Mapping raw league 'GT' tags to standardized internal labels
+            gt_raw = cols[9].text.strip()
+            game_type = "Playoffs" if gt_raw == "PO" else "Regular Season"
+
             manifest_data.append({
-                'GameID': game_id, 'Home': team_spans[0].text.strip(), 'Away': team_spans[1].text.strip(),
-                'Division': cols[2].text.strip(), 'Score': cols[3].text.strip(), 'Date': cols[4].text.strip(),
-                'Time': cols[5].text.strip(), 'Status': cols[6].text.strip(), 'Facility': cols[7].text.split("opens")[0].strip()
+                'GameID': game_id, 
+                'Home': team_spans[0].text.strip(), 
+                'Away': team_spans[1].text.strip(),
+                'Division': cols[2].text.strip(), # Raw league name maintained
+                'GameType': game_type,            # Standardized logical anchor
+                'Score': cols[3].text.strip(), 
+                'Date': cols[4].text.strip(),
+                'Time': cols[5].text.strip(), 
+                'Status': cols[6].text.strip(), 
+                'Facility': cols[7].text.split("opens")[0].strip()
             })
         except: continue
             
@@ -76,6 +97,7 @@ def scrape_division_manifest(driver):
     return manifest_data
 
 def scrape_detailed_boxscore(driver, game_id):
+    """Deep-dives into a boxscore using established table structural patterns."""
     print(f" | 🏒 Boxscore:", end=" ", flush=True)
     target_url = BOXSCORE_TEMPLATE.format(game_id=game_id)
     
@@ -85,9 +107,9 @@ def scrape_detailed_boxscore(driver, game_id):
         try:
             WebDriverWait(driver, 10).until(EC.url_contains(str(game_id)))
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h3[text()='Scoring']")))
-            time.sleep(2.5) # Allow Angular content to settle
+            time.sleep(2.5)
             
-            # 1. SCORES (Validation Anchor)
+            # 1. SCORES
             scoring_table = driver.find_element(By.XPATH, "//h3[text()='Scoring']/following::table[1]")
             rows = scoring_table.find_elements(By.TAG_NAME, "tr")[1:]
             for row in rows:
@@ -99,7 +121,7 @@ def scrape_detailed_boxscore(driver, game_id):
                 print(f"(Empty retry {attempt+1})", end="", flush=True)
                 continue
 
-            # 2. ROSTERS (Guard: Must have player name)
+            # 2. ROSTERS
             for side in ['left', 'right']:
                 try:
                     side_div = driver.find_element(By.CSS_SELECTOR, f"div[ng-if*='{side}']")
@@ -110,7 +132,7 @@ def scrape_detailed_boxscore(driver, game_id):
                             events.append(format_event_record(game_id, 'RosterAppearance', team=team_name, desc=name))
                 except: continue
 
-            # 3. GOALS (Guard: Must have team AND player name)
+            # 3. GOALS
             try:
                 for r in driver.find_elements(By.XPATH, "//h3[text()='Scoring Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr"):
                     c = r.find_elements(By.TAG_NAME, "td")
@@ -120,7 +142,7 @@ def scrape_detailed_boxscore(driver, game_id):
                             events.append(format_event_record(game_id, 'Goal', team=team, desc=desc, strength=c[2].text, period=c[0].text, time_val=c[1].text))
             except: pass
 
-            # 4. PENALTIES (Guard: Must have team AND type)
+            # 4. PENALTIES
             try:
                 for r in driver.find_elements(By.XPATH, "//h3[text()='Penalty Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr"):
                     c = r.find_elements(By.TAG_NAME, "td")
