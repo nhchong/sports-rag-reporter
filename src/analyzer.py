@@ -53,6 +53,7 @@ def compute_standings_engine(df, manifest_subset):
         game_results = finals[finals['GameID'] == gid]
         if len(game_results) < 2: continue
         
+        # We use the team names from the match events to determine winner/loser
         t1, t2 = game_results.iloc[0]['Team'], game_results.iloc[1]['Team']
         s1, s2 = parse_integer_value(game_results.iloc[0]['Description']), parse_integer_value(game_results.iloc[1]['Description'])
         
@@ -81,36 +82,53 @@ def compute_standings_engine(df, manifest_subset):
     std_df.insert(0, 'Rk', range(1, len(std_df) + 1))
     return std_df
 
-def compute_efficiency_metrics(df, standings_df):
-    """Calculates GFA, PP%, and PK% (original logic preserved)."""
-    if standings_df.empty: return pd.DataFrame()
-    metrics = []
-    for _, row in standings_df.iterrows():
-        team, gp = row['Team'], row['GP']
-        team_games = df[df['Team'] == team]['GameID'].unique()
+def compute_playoff_matchups(df, po_manifest):
+    """
+    Groups playoff games by matchup to calculate 'Series Points' (Race to Three).
+    Uses a temporary sorting logic to bridge Home/Away swaps without altering the source manifest.
+    """
+    print("🏒 Calculating Playoff Series Points...")
+    matchups = []
+    
+    # We work on a COPY to preserve the integrity of the original manifest labels
+    temp_po = po_manifest.copy()
+    temp_po['Pairing'] = temp_po.apply(lambda x: "-vs-".join(sorted([x['Home'], x['Away']])), axis=1)
+    
+    finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')].copy()
+
+    for pairing in temp_po['Pairing'].unique():
+        series_games = temp_po[temp_po['Pairing'] == pairing]
+        teams = pairing.split("-vs-")
+        t1, t2 = teams[0], teams[1]
         
-        gfa = round(row['GF'] / gp, 2) if gp > 0 else 0.0
-        ppg = len(df[(df['Team'] == team) & (df['EventType'] == 'Goal') & (df['Strength'] == 'PP')])
-        pp_opps = len(df[(df['GameID'].isin(team_games)) & (df['Team'] != team) & (df['EventType'] == 'Penalty')])
-        pp_pct = round((ppg / pp_opps) * 100, 1) if pp_opps > 0 else 0.0
+        t1_pts, t2_pts = 0, 0
         
-        ppga = len(df[(df['GameID'].isin(team_games)) & (df['Team'] != team) & (df['EventType'] == 'Goal') & (df['Strength'] == 'PP')])
-        pk_opps = len(df[(df['Team'] == team) & (df['EventType'] == 'Penalty')])
-        pk_pct = round(((pk_opps - ppga) / pk_opps) * 100, 1) if pk_opps > 0 else 0.0
-        
-        metrics.append({'Team': team, 'GFA': gfa, 'PP%': f"{pp_pct}%", 'PK%': f"{pk_pct}%"})
-    return pd.DataFrame(metrics)
+        for _, game in series_games.iterrows():
+            gid = str(game['GameID'])
+            res = finals[finals['GameID'] == gid]
+            if len(res) < 2: continue
+            
+            # Identify score by team name to ensure accuracy regardless of Home/Away status
+            s1_val = res[res['Team'] == t1]['Description'].values
+            s2_val = res[res['Team'] == t2]['Description'].values
+            
+            s1 = parse_integer_value(s1_val[0]) if len(s1_val) > 0 else 0
+            s2 = parse_integer_value(s2_val[0]) if len(s2_val) > 0 else 0
+            
+            if s1 > s2: t1_pts += 2
+            elif s2 > s1: t2_pts += 2
+            else: t1_pts += 1; t2_pts += 1
+            
+        matchups.append({'Matchup': pairing, 'TeamA': t1, 'PtsA': t1_pts, 'TeamB': t2, 'PtsB': t2_pts})
+    
+    return pd.DataFrame(matchups)
 
 def compute_player_statistics(df):
-    """
-    FIX: Corrects GP using Unique Sets.
-    FIX: Captures Assisters from Description chunks.
-    """
+    """Analyzes individual performance across Goals, Assists, and individual PIMs."""
     print("👤 Calculating Player Stats...")
     player_metrics = {}
-    player_games = {} # Tracking unique GIDs to solve the GP bug
+    player_games = {} 
 
-    # 1. Base GP from Roster appearances
     for _, row in df[df['EventType'] == 'RosterAppearance'].iterrows():
         p_name, team, gid = row['Description'].strip(), row['Team'], row['GameID']
         if p_name not in player_metrics:
@@ -118,11 +136,8 @@ def compute_player_statistics(df):
             player_games[p_name] = set()
         player_games[p_name].add(gid)
 
-    # 2. Points from Goals/Assists
     for _, row in df[df['EventType'] == 'Goal'].iterrows():
         desc, gid, team = row['Description'], row['GameID'], row['Team']
-        
-        # Scorer logic
         scorer_match = re.search(r'#\d+\s+([^(:]+)', desc)
         if scorer_match:
             p_name = scorer_match.group(1).strip()
@@ -133,7 +148,6 @@ def compute_player_statistics(df):
             player_metrics[p_name]['Pts'] += 1
             player_games[p_name].add(gid)
 
-        # Assist logic (names inside parentheses)
         assist_chunk = re.search(r'\((.*?)\)', desc)
         if assist_chunk:
             for raw in assist_chunk.group(1).split(','):
@@ -147,38 +161,54 @@ def compute_player_statistics(df):
                     player_metrics[a_name]['Pts'] += 1
                     player_games[a_name].add(gid)
 
-    # 3. Aggregating final list
+    for _, row in df[df['EventType'] == 'Penalty'].iterrows():
+        desc, gid, team = row['Description'], row['GameID'], row['Team']
+        name_match = re.search(r'#\d+\s+([^:]+)', desc)
+        if name_match:
+            p_name = name_match.group(1).strip()
+            if p_name in player_metrics:
+                player_metrics[p_name]['PIM'] += extract_pims_from_description(desc)
+                player_games[p_name].add(gid)
+
     stats = []
     for name, m in player_metrics.items():
         gp = len(player_games.get(name, set()))
-        stats.append({'Player': name, 'Team': m['Team'], 'GP': gp, 'G': m['G'], 'A': m['A'], 'Pts': m['Pts']})
+        stats.append({'Player': name, 'Team': m['Team'], 'GP': gp, 'G': m['G'], 'A': m['A'], 'Pts': m['Pts'], 'PIM': m['PIM']})
     
     return pd.DataFrame(stats).sort_values(by='Pts', ascending=False)
 
 def run_analysis_pipeline():
-    """Main execution flow: Scrape -> Standings -> Playoff Views -> Players."""
+    """Main execution flow: Cleans manifest, computes stats/matchups, and archives data."""
     print("🚀 Starting Data Analysis...")
     df = initialize_game_data()
     if df is None: return
 
     manifest_df = pd.read_csv(MANIFEST_FILE)
+    
+    # Ensure Notes column is present and sanitized
+    if 'Notes' not in manifest_df.columns: manifest_df['Notes'] = ""
+    manifest_df['Notes'] = manifest_df['Notes'].fillna("")
+
+    # Clean team names for consistent joins
     for col in ['Home', 'Away']:
         manifest_df[col] = manifest_df[col].str.strip().str.title().replace("'S", "'s", regex=True)
 
-    # 1. Season Stats + Efficiency
+    # 1. Season Stats
     rs_manifest = manifest_df[manifest_df['GameType'] == 'Regular Season']
-    rs_standings = compute_standings_engine(df, rs_manifest)
-    rs_eff = compute_efficiency_metrics(df, rs_standings)
-    rs_final = rs_standings.merge(rs_eff, on='Team', how='left')
-    rs_final.to_csv(TEAM_STATS_FILE, index=False)
-    print(f"✅ Season stats & efficiency archived.")
+    if not rs_manifest.empty:
+        rs_standings = compute_standings_engine(df, rs_manifest)
+        rs_standings.to_csv(TEAM_STATS_FILE, index=False)
+        print(f"✅ Season stats archived.")
 
     # 2. Playoff Logic
-    po_manifest = manifest_df[manifest_df['GameType'] == 'Playoffs']
+    po_manifest = manifest_df[manifest_df['GameType'] == 'Playoffs'].copy()
     if not po_manifest.empty:
         po_standings = compute_standings_engine(df, po_manifest)
         po_standings.to_csv(PLAYOFF_STATS_FILE, index=False)
-        print(f"✅ Playoff Ranked Table archived.")
+        
+        po_matchups = compute_playoff_matchups(df, po_manifest)
+        po_matchups.to_csv(PLAYOFF_MATCHUP_FILE, index=False)
+        print(f"✅ Playoff Ranked Table & Matchups archived.")
 
     # 3. Player Leaderboard
     player_stats = compute_player_statistics(df)

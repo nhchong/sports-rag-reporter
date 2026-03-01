@@ -27,7 +27,10 @@ def initialize_headless_browser():
     return webdriver.Chrome(options=options)
 
 def format_event_record(game_id, event_type, team="N/A", desc="N/A", strength="N/A", period="N/A", time_val="N/A"):
-    """Standardizes the record format for all scraped events."""
+    """
+    Standardizes the record format for all scraped events.
+    Ensures team names are consistently cased for relational joins.
+    """
     clean_team = str(team).strip().title().replace("'S", "'s") if team and team != "N/A" else "N/A"
     return {
         'GameID': game_id, 
@@ -42,8 +45,8 @@ def format_event_record(game_id, event_type, team="N/A", desc="N/A", strength="N
 
 def scrape_division_manifest(driver):
     """
-    Scrapes the main schedule.
-    DECOUPLING LOGIC: Division captures raw text; GameType provides logic for analyzer.
+    Fetches the high-level league schedule and merges it with local Commissioner insights.
+    Logic ensures that manual human enrichment is preserved across automated scrape cycles.
     """
     print(f"📡 Building Comprehensive Manifest...")
     driver.get(HUB_URL)
@@ -52,7 +55,7 @@ def scrape_division_manifest(driver):
     except:
         return []
 
-    # Angular settle time
+    # Angular settle time: Ensures dynamic content is fully rendered
     for _ in range(12):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(0.5)
@@ -73,8 +76,7 @@ def scrape_division_manifest(driver):
             if game_id in seen_ids: continue
             seen_ids.add(game_id)
             
-            # --- SCALE-FRIENDLY LOGIC ---
-            # Mapping raw league 'GT' tags to standardized internal labels
+            # Map raw league 'GT' tags to standardized logical anchors
             gt_raw = cols[9].text.strip()
             game_type = "Playoffs" if gt_raw == "PO" else "Regular Season"
 
@@ -82,8 +84,8 @@ def scrape_division_manifest(driver):
                 'GameID': game_id, 
                 'Home': team_spans[0].text.strip(), 
                 'Away': team_spans[1].text.strip(),
-                'Division': cols[2].text.strip(), # Raw league name maintained
-                'GameType': game_type,            # Standardized logical anchor
+                'Division': cols[2].text.strip(), 
+                'GameType': game_type,            
                 'Score': cols[3].text.strip(), 
                 'Date': cols[4].text.strip(),
                 'Time': cols[5].text.strip(), 
@@ -92,12 +94,37 @@ def scrape_division_manifest(driver):
             })
         except: continue
             
-    pd.DataFrame(manifest_data).to_csv(MANIFEST_FILE, index=False)
-    print(f"✅ Manifest complete: {len(manifest_data)} games indexed.")
+    # --- DATA INTEGRITY: Commissioner Note Preservation ---
+    # We treat the existing manifest as the secondary source of truth for 'Notes'
+    new_df = pd.DataFrame(manifest_data)
+    
+    if os.path.exists(MANIFEST_FILE):
+        old_df = pd.read_csv(MANIFEST_FILE)
+        
+        # Standardize GameID types to prevent 'False Misses' during the map
+        old_df['GameID'] = old_df['GameID'].astype(str)
+        new_df['GameID'] = new_df['GameID'].astype(str)
+        
+        if 'Notes' in old_df.columns:
+            # Map existing notes back to the new manifest using GameID as the Unique Key.
+            # This 'Left Join' ensures manual insights survive the schedule update.
+            notes_map = old_df.set_index('GameID')['Notes'].to_dict()
+            new_df['Notes'] = new_df['GameID'].map(notes_map).fillna("")
+            print("📝 Preserved existing Commissioner notes.")
+        else:
+            new_df['Notes'] = ""
+    else:
+        new_df['Notes'] = ""
+
+    new_df.to_csv(MANIFEST_FILE, index=False)
+    print(f"✅ Manifest complete: {len(new_df)} games indexed.")
     return manifest_data
 
 def scrape_detailed_boxscore(driver, game_id):
-    """Deep-dives into a boxscore using established table structural patterns."""
+    """
+    Deep-dives into a specific game's boxscore.
+    Uses established CSS/XPath patterns to extract rosters, goals, and penalties.
+    """
     print(f" | 🏒 Boxscore:", end=" ", flush=True)
     target_url = BOXSCORE_TEMPLATE.format(game_id=game_id)
     
@@ -109,7 +136,7 @@ def scrape_detailed_boxscore(driver, game_id):
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h3[text()='Scoring']")))
             time.sleep(2.5)
             
-            # 1. SCORES
+            # 1. FINAL SCORES
             scoring_table = driver.find_element(By.XPATH, "//h3[text()='Scoring']/following::table[1]")
             rows = scoring_table.find_elements(By.TAG_NAME, "tr")[1:]
             for row in rows:
@@ -121,7 +148,7 @@ def scrape_detailed_boxscore(driver, game_id):
                 print(f"(Empty retry {attempt+1})", end="", flush=True)
                 continue
 
-            # 2. ROSTERS
+            # 2. ROSTER APPEARANCES
             for side in ['left', 'right']:
                 try:
                     side_div = driver.find_element(By.CSS_SELECTOR, f"div[ng-if*='{side}']")
@@ -132,7 +159,7 @@ def scrape_detailed_boxscore(driver, game_id):
                             events.append(format_event_record(game_id, 'RosterAppearance', team=team_name, desc=name))
                 except: continue
 
-            # 3. GOALS
+            # 3. GOAL SUMMARY
             try:
                 for r in driver.find_elements(By.XPATH, "//h3[text()='Scoring Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr"):
                     c = r.find_elements(By.TAG_NAME, "td")
@@ -142,7 +169,7 @@ def scrape_detailed_boxscore(driver, game_id):
                             events.append(format_event_record(game_id, 'Goal', team=team, desc=desc, strength=c[2].text, period=c[0].text, time_val=c[1].text))
             except: pass
 
-            # 4. PENALTIES
+            # 4. PENALTY SUMMARY
             try:
                 for r in driver.find_elements(By.XPATH, "//h3[text()='Penalty Summary']/following::div[contains(@class, 'table-scroll')][1]//tbody/tr"):
                     c = r.find_elements(By.TAG_NAME, "td")
@@ -153,7 +180,7 @@ def scrape_detailed_boxscore(driver, game_id):
                             events.append(format_event_record(game_id, 'Penalty', team=team, desc=desc, period=c[0].text, time_val=c[1].text))
             except: pass
 
-            # 5. OFFICIALS
+            # 5. ASSIGNED OFFICIALS
             try:
                 for row in driver.find_elements(By.XPATH, "//h3[text()='Officials']/following::table[1]//tr")[1:]:
                     cols = row.find_elements(By.TAG_NAME, "td")
@@ -169,17 +196,21 @@ def scrape_detailed_boxscore(driver, game_id):
     return []
 
 def run_scraping_pipeline():
+    """Execution entry point: coordinates the manifest build and boxscore deep-scrape."""
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
     driver = initialize_headless_browser()
     try:
         manifest = scrape_division_manifest(driver)
         for game in manifest:
             gid = str(game['GameID'])
+            
+            # Skip games already in the database to optimize run-time
             if os.path.exists(DETAILS_FILE):
                 if gid in pd.read_csv(DETAILS_FILE)['GameID'].astype(str).values: continue
 
             print(f"[{gid}] {game.get('Home')} vs {game.get('Away')}", end="")
             
+            # Edge Case: Handle Forfeits without deep-scraping empty boxscores
             if str(game.get('Status')).strip().lower() == "forfeit":
                 print(" 🏳️ Recording Forfeit...", end="")
                 s_parts = str(game.get('Score')).split('-')
@@ -193,11 +224,13 @@ def run_scraping_pipeline():
                 print(" Done.")
                 continue
 
+            # Core Boxscore Extraction
             try:
                 combined_events = scrape_detailed_boxscore(driver, gid)
                 if combined_events:
                     pd.DataFrame(combined_events).to_csv(DETAILS_FILE, mode='a', header=not os.path.exists(DETAILS_FILE), index=False)
             except (InvalidSessionIdException, WebDriverException):
+                # Resilience: Restart browser session if connection hangs
                 driver.quit(); driver = initialize_headless_browser(); continue
     finally:
         driver.quit()
