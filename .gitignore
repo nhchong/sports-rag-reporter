@@ -11,6 +11,7 @@ env/
 # --- Data Layer ---
 # Ignores local CSV files and generated reports to keep the repo focused on logic
 data/*.csv
+data/*.bak
 
 # --- Python & System Caches ---
 # Ignores temporary files that Python generates to run
