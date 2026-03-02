@@ -91,7 +91,7 @@ def audit_report_integrity():
         with open(current_post_path, "r") as f:
             content = f.read()
         prompt = f"Extract factual claims to JSON: {content}" # Condensed for brevity
-        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt, config={'response_mime_type': 'application/json'})
+        response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=prompt, config={'response_mime_type': 'application/json'})
         audit_data = json.loads(response.text)
 
     print(f"\n--- 🧪 VALIDATOR START: {os.path.basename(current_post_path)} ---")

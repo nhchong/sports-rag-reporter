@@ -61,7 +61,7 @@ def compile_weekly_data_package():
         
         # 3. Temporal Filtering: Filter for the current week's action
         details_df['ScrapedAt'] = pd.to_datetime(details_df['ScrapedAt'])
-        today = datetime.now()
+        today = datetime(2026, 2, 26)
         monday_of_this_week = today - pd.Timedelta(days=today.weekday())
         
         this_week_details = details_df[
@@ -127,8 +127,8 @@ def generate_weekly_digest_report():
     - LIGHT-HEARTED BUT PROFESSIONAL: Similar the Spittin Chiclets podcast. 
     - PLAYER-FOCUSED: Much like the media outlet, the Player's Tribune. 
     - MATURE WIT: No 'hockey bro' lingo. Use sharp, sophisticated humor. No emojis.
+    - FAIR BUT COLORFUL: Keep the narrative engaging and dramatic. You may use colorful language to describe actions (e.g., 'a blistering shot', 'a relentless attack', 'a high-scoring affair'). However, you MUST NOT make subjective judgments about a team's effort or worthiness. Never demean a team by calling them 'flat', 'pathetic', or claiming one team 'drastically outplayed' another if it's not purely based on shot data. Let the stats prove dominance.
     </style_guide>
-
     """
 
     # --- PROMPT ARCHITECTURE: Seasonal Pivot Logic ---
@@ -139,14 +139,13 @@ def generate_weekly_digest_report():
         2. THE "RACE TO THREE": Explicitly mention point standings in the series (e.g., "The 416ers sit at 2 points; a tie in Game 2 punches their ticket").
         3. DATA ANCHORING: Every claim must be substantiated by the provided JSON data. Do not invent highlights. Use 'weekly_play_by_play' to highlight clutch goals or costly penalties.
         4. PLAYER FOCUS: Use 'player_stats' and 'weekly_play_by_play' to highlight clutch playoff performances. Use 'individual_leaders' to spotlight who is elevating their game in the post-season.
-        5. COMMISSIONER INSIGHTS: High Priority. Use 'Notes' to enrich the report with the game commentary provided by the commisioner who was at the game. 
-        6. THE OFFICIALS: Highlight 'official_assignments' only if they were a dominant factor in the weekly PIMs.
+        5. COMMISSIONER INSIGHTS: Use 'Notes' to enrich the atmosphere (e.g., penalty context, short benches). If the commissioner provides a subjective, demeaning quote (like a team "looked flat" or the game was "chippy"), you must filter it out or translate it into a neutral observation. Do not use quotes to validate a biased narrative.
+        6. THE OFFICIALS: Highlight 'official_assignments' only if they were a dominant factor in the weekly PIMs. Do not frame officiating as biased against any specific team.
         7. VIBE & VENUE: Contextualize results using 'schedule_and_arenas' and specific weather data for that day to set the scene. 
         8. 80/20 Rule: 80% COVERAGE is Focused on the 'weekly_play_by_play' events and 20% CONTEXT: Ground results in standings and leaders.
-        9. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. 
+        9. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. Ensure a balanced representation, objectively acknowledging the statistical merits of both winning and losing teams.
         10. Use the 'game_details' to highlight specific game events. Weave in the game details into the narrative.
         11. Do not refer to games by their gameIDs
-
         </narrative_strategy>
 
         <playoff_logic>
@@ -174,7 +173,7 @@ def generate_weekly_digest_report():
         Line 2: [Analytical Subline]
         Body: Markdown headings. Separate sections for 'Series Math' or 'Lucky Loser' projections. Keep these sections as short as possible. 
         Three Stars: 
-        Must be strictly based on weekly data.
+        Must be strictly based on weekly data. To prevent winner-bias, players on losing or tied teams must be considered if their individual statistical performances warrant it.
         - 1st Star: Most points, favoring goals. Emphasis on important goals. 
         - 2nd Star: Second most points, emphasis on goals. 
         - 3rd Star: The 'Productive Agitator' who contributes on the scoresheet and as a team contirbuter or the top goalie with a shootout or the player who had a clutch goal. 
@@ -193,7 +192,7 @@ def generate_weekly_digest_report():
         1. STANDINGS SHIFTS: Analyze how this week's results changed the Regular Season table.
         2. RACE FOR TOP SEED: Who is pulling away? Who is struggling in the 'Low B' basement?
         3. EFFICIENCY: Use 'regular_season_standings' to highlight powerplay and penalty kill trends.
-        4. COMMISSIONER INSIGHTS: High Priority. Use 'Notes' for locker room vibes and arena atmosphere.
+        4. COMMISSIONER INSIGHTS: High Priority. Use 'Notes' for locker room vibes and arena atmosphere. Maintain strict neutrality when reporting these observations.
         </narrative_strategy>
         """
 
