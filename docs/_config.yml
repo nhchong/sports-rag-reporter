@@ -55,8 +55,8 @@ defaults:
       layout: "single"
       author_profile: true
       read_time: true
-      share: true
-      related: true
+      share: false
+      related: false
       show_date: true
 
 # --- BUILD SETTINGS ---
@@ -68,4 +68,9 @@ header:
   cta_label: 
   cta_url:
 
-site_navigation: []
+# --- NAVIGATION & FOOTER ---
+# This tells Minimal Mistakes to look for the 'main' list in _data/navigation.yml
+navigation:
+  - container: main
+
+

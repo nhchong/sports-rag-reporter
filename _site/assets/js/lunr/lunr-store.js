@@ -58,4 +58,16 @@ var store = [{
         "tags": [],
         "url": "/2026/02/13/dispatch/",
         "teaser": "/assets/images/theshockers.png"
+      },{
+        "title": "The Curtain Falls (Quietly) on Regular Season, Playoff Brackets Set",
+        "excerpt":"The Curtain Falls (Quietly) on Regular Season, Playoff Brackets Set The DMHL Monday/Wednesday Low B division wraps up with a whimper, not a bang, as teams brace for a best-of-2 playoff battle. Final Standings Set: Cherry’s Reign Supreme, Playoff Picture Clear Well, folks, that’s a wrap on the regular season....","categories": [],
+        "tags": [],
+        "url": "/2026/02/19/dispatch/",
+        "teaser": "/assets/images/theshockers.png"
+      },{
+        "title": "**Playoff Race Ignites: Top Seeds Punch Early Tickets, Others Scramble for Round 2 Berth**",
+        "excerpt":"Playoff Race Ignites: Top Seeds Punch Early Tickets, Others Scramble for Round 2 Berth Don Cherry’s and The Sahara take commanding leads, while Flat-Earthers and The Shockers remain deadlocked after the intense playoff opener at St. Mikes Arena. The postseason drama commenced Wednesday evening at St. Mikes Arena, setting a...","categories": [],
+        "tags": [],
+        "url": "/2026/02/28/dispatch/",
+        "teaser": "/assets/images/theshockers.png"
       }]
