@@ -1,0 +1,8 @@
+# _data/navigation.yml
+main:
+  - title: "Home"
+    url: /
+  - title: "Standings"
+    url: https://www.dmhl.ca/stats#/533/standings?render=division&division_id=41979
+  - title: "Report Error"
+    url: "mailto:n.chong87@gmail.com?subject=DMHL%20Correction%20Request&body=Article%20Date:%0AError%20Details:"

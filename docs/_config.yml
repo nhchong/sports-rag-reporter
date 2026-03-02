@@ -68,9 +68,9 @@ header:
   cta_label: 
   cta_url:
 
-# --- NAVIGATION & FOOTER ---
-# This tells Minimal Mistakes to look for the 'main' list in _data/navigation.yml
-navigation:
-  - container: main
+# --- NAVIGATION SETTINGS ---
+# This tells the theme: "Look in _data/navigation.yml for the 'main' list"
+header:
+  nav: "main"
 
 

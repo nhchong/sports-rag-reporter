@@ -38,3 +38,18 @@ blockquote {
   font-style: italic;
   padding: 1.5rem;
 }
+
+// Custom CSS for Navigation Font Size
+.masthead__menu-item {
+  a {
+    // Standard size is usually 1rem; adjust this as needed
+    font-size: 0.85rem !important; 
+    font-weight: 500;
+  }
+}
+
+// Specifically target the "Report Error" link if you want it even smaller
+.masthead__menu-item {
+  font-size: 0.75rem !important;
+  opacity: 0.8; // Makes it look secondary and less "shouty"
+}
