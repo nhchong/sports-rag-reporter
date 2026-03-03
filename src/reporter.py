@@ -59,14 +59,12 @@ def compile_weekly_data_package():
         if 'Notes' not in manifest_df.columns:
             manifest_df['Notes'] = ""
         
-        # 3. Temporal Filtering: Filter for the current week's action
+        # 3. Temporal Filtering: Filter strictly for TODAY'S action
         details_df['ScrapedAt'] = pd.to_datetime(details_df['ScrapedAt'])
-        today = datetime(2026, 2, 26)
-        monday_of_this_week = today - pd.Timedelta(days=today.weekday())
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         
-        this_week_details = details_df[
-            details_df['ScrapedAt'] >= monday_of_this_week.replace(hour=0, minute=0)
-        ].copy()
+        # Filter for records that match today's date exactly
+        this_week_details = details_df[details_df['ScrapedAt'] >= today].copy()
         
         # 4. Map Official Assignments
         officials = this_week_details[this_week_details['EventType'] == 'Official']

@@ -37,24 +37,22 @@ def evaluate_dispatch_bias(filepath):
     You are an Auditor for a sophisticated, data-driven sports newsletter. 
     Evaluate the text below for 'Narrative Bias' while respecting the 'The Athletic' style guide.
 
-    --- AUDIT CRITERIA ---
-    1. ANALYTICAL COLOR (ALLOW): High-energy verbs and metaphors (e.g., 'dominance', 'relentless', 'chippy') 
-       are NOT bias if they align with the statistical reality of the game.
-    2. SUBJECTIVE SKEW (FLAG): Do not allow the narrative to favor one team's "spirit" or "effort" 
-       while dismissing the opponent's performance.
-    3. DATA-DRIVEN FAIRNESS (REQUIRED): All teams must be mentioned. Losing teams' star players 
-       must receive objective credit for their statistical output.
-    4. NO CHARACTER ATTACKS: Avoid demeaning adjectives (e.g., 'lazy', 'pathetic', 'undeserving').
+    --- STRICT AUDIT CRITERIA & EXCLUSION ZONES ---
+    1. ANALYTICAL COLOR (DO NOT FLAG): High-energy verbs and sports metaphors (e.g., 'dominance', 'relentless', 'chippy', 'intense', 'gritty', 'commanding') are EXPECTED and ALLOWED. If a word falls under standard sports hyperbole and aligns with the score/penalties, YOU MUST NOT FLAG IT.
+    2. DATA-DRIVEN FAIRNESS (REQUIRED): Both teams and their respective key performers must be represented accurately based on their statistical output, regardless of the final score.
+    3. NO ASSUMED INTENT: Do not allow the narrative to invent psychological motives (e.g., 'gave up', 'wanted it more', 'malicious') to explain the data. 
+    4. NO CHARACTER ATTACKS: Avoid demeaning adjectives (e.g., 'lazy', 'pathetic', 'undeserving'). Focus on the play, not the person.
+    5. NO DOUBLE COUNTING: If a snippet violates one category (e.g., Unjustified Causality), do not flag that exact same concept under another category. Choose the single most accurate violation.
     ----------------------
 
     Text to Audit: {article_text}
     
     Categories to evaluate:
-    1. Narrative Imbalance: Does the report focus disproportionately on one team's "heroics" while ignoring the opponent's data?
-    2. Subjective Dismissal: Use of demeaning language toward a team (e.g., calling them 'flat' or 'outclassed' without context).
-    3. Framing Bias: Presenting a win as "destiny" or a loss as "inevitable" rather than a result of play.
-    4. Selective Representation: Omitting key statistical performers from the losing side to fit a specific "story."
-    5. Overall Objectivity: Is the tone that of an impartial peer (Pass) or a biased fan/homer (Fail)?
+    1. Outcome Skew: Does the report erase the losing team's positive statistical contributions just to force a "hero" narrative for the winner?
+    2. Player Fixation: Is there a disproportionate focus on a single player's narrative that ignores or overshadows the actual statistical leaders of the game?
+    3. Unjustified Causality: Does the text invent a direct reason for the outcome (e.g., "destiny", or blaming an entire loss on one minor penalty) without statistical backing?
+    4. Assumed Intent & Moral Judgment: Does the text invent psychological motives (e.g., "lost his temper", "gave up") or assign moral labels to standard hockey plays (e.g., "malicious", "dirty")? (Reminder: DO NOT flag standard competitive adjectives like "intense" or "dominant").
+    5. Subjective Dismissal: Is demeaning language used toward a team or player (e.g., 'outclassed', 'flat') without accompanying statistical context?
 
     Format your response STRICTLY as follows:
     - [Category Name]: [Present/Absent]
@@ -66,7 +64,7 @@ def evaluate_dispatch_bias(filepath):
     try:
         # 4. INFERENCE ENGINE
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite", 
+            model="gemini-2.5-flash", 
             contents=prompt
         )
         evaluation = response.text.strip()

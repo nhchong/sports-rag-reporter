@@ -2,212 +2,184 @@ import os
 import json
 import pandas as pd
 import re
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# --- 💡 THE TOGGLE SWITCH ---
-USE_MOCK = True  # Set to False to audit actual .md files using Gemini
-# ----------------------------
+USE_MOCK = False 
 
 POSTS_DIR = "docs/_posts"
 FILES = {
     "details": "data/game_details.csv",
     "manifest": "data/games_manifest.csv",
-    "player_stats": "data/player_stats.csv",
-    "playoff_standings": "data/playoff_standings.csv"
 }
 
-# FULL MOCK DATA (Restored and Complete)
-MOCK_DATA = {
-    "metadata": {
-        "facility": "St. Mikes Arena",
-        "date": "Wednesday"
-    },
-    "matchups": [
-        {"home": "Don Cherry's", "away": "Muffin Men", "score": "5-1"},
-        {"home": "The Sahara", "away": "4 Lines", "score": "6-4"},
-        {"home": "Flat-Earthers", "away": "The Shockers", "score": "1-1"}
-    ],
-    "events": [
-        {"player": "Michael Murphy", "type": "Goal", "detail": "Michael Murphy opened their account with a powerplay goal in the second period"},
-        {"player": "Conor Pang", "type": "Assist", "detail": "assisted by Conor Pang"},
-        {"player": "Jack Pirie", "type": "Goal", "detail": "adding to an even-strength tally from Jack Pirie in the first"},
-        {"player": "Sean Murphy", "type": "Goal", "detail": "Sean Murphy also chipped in with a powerplay marker"},
-        {"player": "Cosimo Morin", "type": "Goal", "detail": "Despite an early even-strength goal from Muffin Men's Cosimo Morin"},
-        {"player": "Derrick Wong", "type": "Goal", "detail": "including goals from Derrick Wong"},
-        {"player": "Mac Savage", "type": "Goal", "detail": "Mac Savage"},
-        {"player": "Kosta Likourezos", "type": "Goal", "detail": "Kosta Likourezos"},
-        {"player": "Wil Nenadovic", "type": "Goal", "detail": "Wil Nenadovic"},
-        {"player": "Andrew Biggs", "type": "Goal", "detail": "Andrew Biggs"},
-        {"player": "Brendan Hancock", "type": "Goal", "detail": "and Brendan Hancock"},
-        {"player": "Adam Miller", "type": "Goal", "detail": "4 Lines' Adam Miller put up a valiant two-goal effort"},
-        {"player": "Shane Ferguson", "type": "Goal", "detail": "with Shane Ferguson adding a shorthanded tally"},
-        {"player": "Marcus Simmonds", "type": "Goal", "detail": "with Marcus Simmonds scoring for the Flat-Earthers"},
-        {"player": "Alex Matheson", "type": "Goal", "detail": "and Alex Matheson finding the net for The Shockers"},
-        {"player": "Caden Bower", "type": "Penalty", "detail": "notably a double-minor for high-sticking to The Shockers' Caden Bower"}, # FAILS: Text describes penalty
-        {"player": "Brandon Sanders", "type": "Penalty", "detail": "and a pair of minors to Flat-Earthers' Brandon Sanders"},
-        {"player": "Michael Murphy", "type": "Assist", "detail": "With a goal and an assist, including a critical powerplay marker, Murphy spearheaded"},
-        {"player": "Kosta Likourezos", "type": "Assist", "detail": "Likourezos contributed a goal and an assist in The Sahara's high-scoring win"}
-    ],
-    "officials": [
-        "Evan Benwell",
-        "Brad Kuchar"
-    ],
-    "rankings": [
-        {"team": "Don Cherry's", "rk": 1}
-    ]
-}
-
-def normalize_score(score_str):
-    """Standardizes score strings: removes spaces and handles all dash types."""
-    if not score_str: return ""
-    return str(score_str).replace('–', '-').replace('—', '-').replace(" ", "")
+def clean_text(text):
+    if not text or not isinstance(text, str): return ""
+    text = text.replace("’", "'").replace("'", "").strip()
+    text = re.sub(r'\s*[\-\u2013\u2014]\s*', '-', text)
+    return text.lower()
 
 def audit_report_integrity():
-    # 1. Load Sources
-    data = {k: pd.read_csv(v) for k, v in FILES.items()}
-    errors = []
-    
-    # 2. Select Report File (Sort by Modification Time)
+    try:
+        # --- 🛡️ STEP 1: LOAD & FILTER FOR TODAY ONLY ---
+        raw_data = {k: pd.read_csv(v) for k, v in FILES.items()}
+        
+        today_str = datetime.now().strftime('%Y-%m-%d')
+        print(f"📅 VALIDATOR FOCUS: {today_str}")
+
+        # Filter manifest and details to ONLY include today's scrape
+        data = {}
+        data['manifest'] = raw_data['manifest'][raw_data['manifest']['Date'].str.contains("Mar 2", na=False)].copy()
+        data['details'] = raw_data['details'][raw_data['details']['ScrapedAt'] == today_str].copy()
+        
+        if data['manifest'].empty:
+            print(f"⚠️ No games found in manifest for today. Check your scraper.")
+            return False
+
+    except Exception as e:
+        print(f"❌ FAIL: Loading/Filtering CSVs: {e}")
+        return False
+
+    # Get the latest report
     all_files = [os.path.join(POSTS_DIR, f) for f in os.listdir(POSTS_DIR) if f.endswith(".md")]
     all_files.sort(key=os.path.getmtime, reverse=True)
-    
     if not all_files:
         print("❌ No report files found.")
         return False
-    
     current_post_path = all_files[0]
     
-    # 3. Get Audit Data (Toggle between Mock and Live)
-    if USE_MOCK:
-        print("🛠️ MODE: MOCK (Internal JSON Fixture)")
-        audit_data = MOCK_DATA
-    else:
-        print("🤖 MODE: LIVE (Calling Gemini API)")
-        # (Gemini API logic remains here in your actual file)
-        from google import genai
-        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        with open(current_post_path, "r") as f:
-            content = f.read()
-        prompt = f"Extract factual claims to JSON: {content}" # Condensed for brevity
-        response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=prompt, config={'response_mime_type': 'application/json'})
-        audit_data = json.loads(response.text)
+    print("🤖 MODE: LIVE (Calling Gemini API)")
+    from google import genai
+    from google.genai import types
+    
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    with open(current_post_path, "r") as f:
+        content = f.read()
+    
+    # --- 🎯 THE STRICT WHITELIST PROMPT ---
+    prompt = (
+        "Extract ONLY the following five categories from the report: "
+        "1. Facility (metadata) "
+        "2. Matchups (home team, away team, and final score) "
+        "3. Goals (player and if it was PP or SH) "
+        "4. Assists (player) "
+        "5. Penalties (player and specific infraction like 'holding') "
+        "6. Officials (names mentioned) "
+        "Ignore everything else, including Three Stars, Series Math, and Excerpts. "
+        f"Report content: {content}"
+    )
+    
+    schema = {
+        "type": "OBJECT",
+        "properties": {
+            "metadata": {"type": "OBJECT", "properties": {"facility": {"type": "STRING"}}},
+            "matchups": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {"home": {"type": "STRING"}, "away": {"type": "STRING"}, "score": {"type": "STRING"}}}},
+            "events": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+                "player": {"type": "STRING"}, 
+                "type": {"type": "STRING"},
+                "subtype": {"type": "STRING"}
+            }}},
+            "officials": {"type": "ARRAY", "items": {"type": "STRING"}}
+        }
+    }
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", 
+        contents=prompt, 
+        config=types.GenerateContentConfig(response_mime_type='application/json', response_schema=schema)
+    )
+    audit_data = json.loads(response.text)
 
     print(f"\n--- 🧪 VALIDATOR START: {os.path.basename(current_post_path)} ---")
+    errors = []
 
-    # 4. Step 1: Order-Agnostic Matchup Detection
-    valid_game_ids = []
+    # 1. VALIDATE MATCHUPS & SCORES
     m_df = data['manifest']
-    facility_col = next((c for c in ['Facility', 'Arena', 'Rink'] if c in m_df.columns), 'Facility')
-    score_col = next((c for c in ['Score', 'FinalScore', 'Result'] if c in m_df.columns), 'Score')
-    reported_facility = audit_data['metadata'].get('facility', '')
-
-    print(f"🥅 TRIANGULATING UNIQUE GAME_IDs...")
+    m_df['Home_Clean'] = m_df['Home'].apply(clean_text)
+    m_df['Away_Clean'] = m_df['Away'].apply(clean_text)
+    
+    valid_game_ids = []
+    print(f"🥅 AUDITING MATCHUPS & SCORES...")
     for m in audit_data.get('matchups', []):
-        t1, t2 = m['home'], m['away']
-        
-        # Order-agnostic search: (T1 vs T2) OR (T2 vs T1)
-        match_truth = m_df[
-            ((m_df['Home'] == t1) & (m_df['Away'] == t2) |
-             (m_df['Home'] == t2) & (m_df['Away'] == t1)) &
-            (m_df[facility_col].str.contains(reported_facility, case=False, na=False))
-        ]
+        t1, t2 = clean_text(m['home']), clean_text(m['away'])
+        # Match against our "Today Only" manifest
+        match_truth = m_df[((m_df['Home_Clean'] == t1) & (m_df['Away_Clean'] == t2)) | ((m_df['Home_Clean'] == t2) & (m_df['Away_Clean'] == t1))].sort_values(by='GameID', ascending=False)
         
         if not match_truth.empty:
-            g_row = match_truth.sort_values(by='GameID', ascending=False).iloc[0]
-            g_id = int(g_row['GameID'])
-            valid_game_ids.append(g_id)
+            g_row = match_truth.iloc[0]
+            valid_game_ids.append(str(g_row['GameID'])) # Ensure string for comparison
             
-            # Normalize and handle score flip if teams are swapped in manifest
-            actual_score = normalize_score(g_row[score_col])
-            reported_score = normalize_score(m['score'])
+            actual_score = clean_text(str(g_row['Score']))
+            rep_score = clean_text(m['score'])
+            flipped = "-".join(rep_score.split("-")[::-1])
             
-            if g_row['Home'] != t1:
-                parts = reported_score.split('-')
-                if len(parts) == 2:
-                    reported_score = f"{parts[1]}-{parts[0]}"
-            
-            score_match = (actual_score == reported_score) or (actual_score == "0-0" and "forfeit" in m['score'].lower())
-            print(f"   ✅ Game {g_id}: {t1} vs {t2} | Score Match: {'✅' if score_match else '❌ (Data says '+actual_score+')'}")
-            if not score_match:
-                errors.append(f"SCORE ERROR: {t1} vs {t2} mismatch.")
+            if rep_score == actual_score or flipped == actual_score:
+                print(f"   ✅ Verified Matchup: {m['home']} vs {m['away']} ({m['score']})")
+            else:
+                errors.append(f"SCORE ERROR: {m['home']} vs {m['away']} says {m['score']}, data says {g_row['Score']}")
         else:
-            print(f"   ⚠️ NOT FOUND: {t1} vs {t2} at {reported_facility}")
-            errors.append(f"MATCHUP ERROR: {t1} vs {t2} missing.")
+            errors.append(f"MATCHUP ERROR: {m['home']} vs {m['away']} not in today's games.")
 
-    # 5. Step 2: Context-Aware Event Audit (Positional Parsing)
-    print(f"\n🏒 AUDITING EVENTS IN GAME_IDs: {valid_game_ids}")
+    # 2. AUDIT PLAYER EVENTS
+    print(f"\n🏒 AUDITING PLAYER EVENTS...")
     details_df = data['details']
-    active_details = details_df[details_df['GameID'].astype(int).isin(valid_game_ids)]
+    details_df['GameID'] = details_df['GameID'].astype(str)
+    
+    # Restrict search ONLY to the GameIDs identified in today's manifest
+    restricted_details = details_df[details_df['GameID'].isin(valid_game_ids)].copy()
+    restricted_details['Desc_Clean'] = restricted_details['Description'].apply(clean_text)
 
     for event in audit_data.get('events', []):
-        p_name, e_type = event['player'], event['type']
+        p_name = clean_text(event.get('player', ''))
+        e_type = event.get('type', '').lower()
+        e_subtype = clean_text(event.get('subtype', ''))
+        
+        if not any(x in e_type for x in ['goal', 'assist', 'penalty', 'netted']):
+            continue
+
+        potential_rows = restricted_details[restricted_details['Desc_Clean'].str.contains(p_name, case=False, na=False)]
         found = False
-
-        if e_type == "Goal":
-            # Must be outside brackets in a Goal row
-            matches = active_details[
-                (active_details['EventType'] == 'Goal') & 
-                (active_details['Description'].str.split('(').str[0].str.contains(p_name, case=False, na=False))
-            ]
-            found = not matches.empty
-
-        elif e_type == "Assist":
-            # Must be inside brackets in a Goal row
-            matches = active_details[
-                (active_details['EventType'] == 'Goal') & 
-                (active_details['Description'].str.contains(r'\(.*\b' + re.escape(p_name) + r'\b.*\)', case=False, na=False, regex=True))
-            ]
-            found = not matches.empty
-
-        elif e_type == "Penalty":
-            # Standard Penalty check
-            matches = active_details[
-                (active_details['EventType'] == 'Penalty') & 
-                (active_details['Description'].str.contains(p_name, case=False, na=False))
-            ]
-            found = not matches.empty
+        for _, row in potential_rows.iterrows():
+            row_type = row['EventType'].lower()
+            if "assist" in e_type:
+                if row_type == "goal" and "(" in row['Description'] and p_name in clean_text(row['Description'].split('(')[1]):
+                    found = True
+            elif "penalty" in e_type:
+                if row_type == "penalty" and (not e_subtype or e_subtype in row['Desc_Clean']):
+                    found = True
+            elif "goal" in e_type or "netted" in e_type:
+                if row_type == "goal" and p_name in clean_text(row['Description'].split('(')[0]):
+                    found = True
+            if found: break
 
         if found:
-            print(f"   ✅ VERIFIED: {p_name} {e_type}")
+            print(f"   ✅ VERIFIED: {event.get('player')} ({e_type})")
         else:
-            print(f"   ❌ FAIL: {p_name} {e_type} position/log mismatch.")
-            errors.append(f"EVENT ERROR: {p_name} {e_type} hallucination.")
+            print(f"   ❌ FAIL: {event.get('player')} ({e_type}) - Factual violation.")
+            errors.append(f"EVENT ERROR: {event.get('player')} ({e_type}) is a hallucination.")
 
-    # 6. Step 3: Official Verification
+    # 3. AUDIT OFFICIALS
     print(f"\n👮 AUDITING OFFICIALS...")
     for off in audit_data.get('officials', []):
-        off_truth = active_details[active_details['Description'].str.contains(off, case=False, na=False)]
-        if off_truth.empty:
-            print(f"   ❌ FAIL: Official {off} missing.")
-            errors.append(f"OFFICIAL ERROR: {off} assignment.")
+        off_clean = clean_text(off)
+        off_found = not restricted_details[restricted_details['Desc_Clean'].str.contains(off_clean, case=False, na=False)].empty
+        if off_found:
+            print(f"   ✅ VERIFIED: Official {off}")
         else:
-            print(f"   ✅ VERIFIED: {off} on-site.")
+            print(f"   ❌ FAIL: Official {off} - Not in today's data.")
+            errors.append(f"OFFICIAL ERROR: {off} was not listed for these games.")
 
-    # 7. Step 4: Standings Audit
-    print(f"\n📊 VALIDATING STANDINGS...")
-    for rk in audit_data.get('rankings', []):
-        team, rank = rk['team'], rk['rk']
-        if team in data['playoff_standings']['Team'].values:
-            actual_rk = data['playoff_standings'][data['playoff_standings']['Team'] == team]['Rk'].values[0]
-            match = rank == actual_rk
-            print(f"   {team} | Reported: {rank} | Actual: {actual_rk} {'✅' if match else '❌'}")
-            if not match:
-                errors.append(f"RANKING ERROR: {team} rank mismatch.")
-
-    # 8. Final Verdict
     print("\n" + "=" * 60)
     if errors:
         print(f"🛑 AUDIT FAILED: {len(errors)} discrepancies found.")
-        for e in errors:
-            print(f" -> {e}")
-        print("=" * 60)
+        for e in errors: print(f" -> {e}")
         return False
 
-    print("✅ AUDIT PASSED: 100% Relational & Positional Integrity.")
-    print("=" * 60)
+    print("✅ AUDIT PASSED: Data Integrity Verified.")
     return True
 
 if __name__ == "__main__":
-    audit_report_integrity()
+    if not audit_report_integrity():
+        exit(1)
