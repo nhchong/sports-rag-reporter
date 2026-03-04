@@ -2,6 +2,7 @@ import os
 import re
 from google import genai
 from dotenv import load_dotenv
+import sys
 
 # Initialize environment variables
 load_dotenv()
@@ -99,11 +100,19 @@ def evaluate_dispatch_bias(filepath):
     
     print("-" * 50)
     if present_count >= 2:
-        print(f"{RED}{BOLD}🛑 AUDIT FAILED: Systemic bias detected. Human-in-the-loop review required.{ENDC}")
-        return False
+        print(f"{RED}{BOLD}🛑 AUDIT FAILED: Systemic bias detected.{ENDC}")
     elif present_count == 1:
-        print(f"{YELLOW}{BOLD}⚠️  MINOR SKEW DETECTED: Review the flag above. Proceeding with publication.{ENDC}")
-        return True
+        print(f"{YELLOW}{BOLD}⚠️  MINOR SKEW DETECTED: Review the flag above.{ENDC}")
+    
+    # If any bias is present, prompt the user
+    if present_count >= 1:
+        choice = input("\n👨‍⚖️ EDITOR-IN-CHIEF OVERRIDE: Do you want to publish this report anyway? (y/n): ").strip().lower()
+        if choice in ['y', 'yes']:
+            print(f"{GREEN}✅ Override accepted. Proceeding...{ENDC}")
+            return True
+        else:
+            print(f"{RED}🛑 PUBLICATION ABORTED.{ENDC}")
+            sys.exit(1) # Forces bash to stop immediately
     
     print(f"{GREEN}{BOLD}🎉 AUDIT PASSED: Content is objective and balanced.{ENDC}")
     return True
