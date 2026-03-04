@@ -44,11 +44,15 @@ echo "📝 ENTERING EXECUTIVE EDITOR MODE..."
 python3 src/enricher.py
 
 # 3. Processing & Generation
+echo ""
 python3 src/analyzer.py
+echo ""
 echo "✍️ Writing this weeks Dispatch..."
+echo ""
 python3 src/reporter.py
 
 # 4. Factual Integrity
+echo ""
 echo "🧮 Running Factual Validator..."
 VALIDATOR_OUTPUT=$(python3 src/validator.py)
 echo "$VALIDATOR_OUTPUT"
@@ -61,6 +65,7 @@ if [[ "$VALIDATOR_OUTPUT" == *"🛑 AUDIT FAILED"* ]]; then
 fi
 
 # 5. Bias Audit & Human-in-the-Loop
+echo ""
 echo "🛡️ Running Trust & Safety Audit..."
 BIAS_OUTPUT=$(python3 src/bias_checker.py)
 echo "$BIAS_OUTPUT"
