@@ -207,7 +207,7 @@ def run_scraping_pipeline():
             
         games_to_scrape = [game for game in manifest if str(game['GameID']) not in existing_gids]
         
-        print(f"\n🔍 Found {len(games_to_scrape)} new game(s) since last run.\n")
+        print(f"\n🔍 Found {len(games_to_scrape)} new game(s) since last publication.\n")
         for game in manifest:
             gid = str(game['GameID'])
             

@@ -80,7 +80,9 @@ fi
 # ---------------------------------------------------------
 # DEPLOYMENT (Only reached if no CLI flags were used)
 # ---------------------------------------------------------
-echo "📤 Uploading to GitHub Pages..."
+echo ""
+echo "Publishing the lastest version of 'The Low B Dispatch"
+echo ""
 git add .
 git commit -m "Automated Dispatch Update: $(date)"
 git push origin main
