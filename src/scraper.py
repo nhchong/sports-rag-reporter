@@ -201,6 +201,13 @@ def run_scraping_pipeline():
     driver = initialize_headless_browser()
     try:
         manifest = scrape_division_manifest(driver)
+        existing_gids = set()
+        if os.path.exists(DETAILS_FILE):
+            existing_gids = set(pd.read_csv(DETAILS_FILE)['GameID'].astype(str).values)
+            
+        games_to_scrape = [game for game in manifest if str(game['GameID']) not in existing_gids]
+        
+        print(f"\n🔍 Found {len(games_to_scrape)} new game(s) since last run.\n")
         for game in manifest:
             gid = str(game['GameID'])
             
