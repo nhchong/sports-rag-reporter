@@ -84,8 +84,14 @@ def audit_report_integrity():
     # 1. Audit Scores
     print(f"\n🥅 AUDITING MATCHUPS & SCORES...")
     for m in audit_data.get('matchups', []):
-        t1, t2 = clean_team_name(m['home']), clean_team_name(m['away'])
-        reported_score = m['score'].replace(" ", "")
+        t1, t2 = clean_team_name(m.get('home', '')), clean_team_name(m.get('away', ''))
+        
+        # DEFENSIVE CHECK: Handle cases where AI returns null for score
+        raw_score = m.get('score')
+        if not raw_score: 
+            continue
+            
+        reported_score = str(raw_score).replace(" ", "")
         
         if not re.match(r'^\d+-\d+$', reported_score): continue # Ignore non-numerical summaries
 
