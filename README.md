@@ -1,69 +1,74 @@
-# Low B Dispatch: Technical Product Specification 🏒
+# The Low B Dispatch 🏒
 
-The Low B Dispatch is a production-grade **Structured RAG (Retrieval-Augmented Generation)** pipeline designed to transform fragmented recreational sports data into high-fidelity, professional-grade news reports. This system utilizes a deterministic logic layer combined with a generative synthesis engine to provide analytical depth for Toronto’s DMHL.
+**An autonomous, enterprise-grade AI sports journalism pipeline.**
+
+The Low B Dispatch is a production-ready **Structured RAG (Retrieval-Augmented Generation)** pipeline designed to bring professional-level sports media coverage to local recreational hockey leagues. 
+
+It transforms fragmented, bare-bones boxscore data into high-fidelity, community-focused news reports, operating with strict factual guardrails and Human-in-the-Loop (HITL) enrichment.
 
 ---
 
-## The Problem: The Narrative Gap
-In recreational sports, data is often siloed in inconsistent web interfaces, creating a "Narrative Gap" between the events on the ice and the community's history.
+## 🥅 The Product Vision: Closing the "Narrative Gap"
 
-* Participant-Led Solution: As a player in the Monday/Wednesday Low B division of the DMHL, I built this engine to provide the narrative infrastructure that recreational athletes deserve.
+Millions of adults play recreational sports. They pay league fees, battle through late-night games, and build years-long rivalries. Yet, the digital experience for these players is notoriously poor—usually limited to a static, unstyled table of scores on a clunky website. 
 
-* Beyond Raw Stats: While standard platforms offer boxscores, they lack the analytical storytelling found in professional media.
+**There is a massive gap between the passion on the ice and the data on the screen.**
 
-* Deterministic Integrity: To prevent the hallucinations common in standard LLM applications, this system processes data through a custom Pandas engine before any narrative synthesis occurs.
+As a player in the Monday/Wednesday Low B division of Toronto's DMHL, I built *The Low B Dispatch* to give recreational athletes the "pro treatment." The product doesn't just recite scores; it generates the connective narrative tissue of a sports season. It provides:
+* **Weekly Dispatches:** Recaps that highlight momentum shifts, depth scoring, and penalty troubles.
+* **Playoff Stakes:** Mathematical breakdowns of series-clinching scenarios and tiebreakers (like the "Lucky Loser" race).
+* **Community Authenticity:** A distinct editorial persona that blends the analytical depth of *The Athletic* with the locker-room camaraderie of *Spittin' Chiclets*.
+
+## ⚙️ The Engineering Challenge: AI Integrity
+
+While standard LLMs are excellent at creative writing, they are fundamentally bad at arithmetic and deterministic data retrieval. If you feed an AI a raw web scrape of an 8-day playoff series, it will frequently "hallucinate" goal totals or invent assists for the sake of a better story.
+
+**The Solution:** A decoupled architecture where Python handles the math, humans handle the context, and the AI is heavily constrained to narrative synthesis, backed by strict continuous integration (CI) auditing.
 
 
 
-## Technical Architecture
-This engine utilizes a **Structured Data Contract** to power its LLM generation. Unlike standard RAG that searches through messy text, this system processes structured datasets first, ensuring the AI cannot "hallucinate" scores, standings, or penalty counts.
+---
 
-1.  **Data Acquisition and Governance** 
-* **Resilient Extraction (`scraper.py`):** Utilizes a headless Selenium WebDriver to navigate asynchronous Angular-rendered content. It manages the extraction of a comprehensive game manifest and detailed play-by-play boxscores.
-* **API Ingestion (`ingestor.py`):** Interfaces directly with the DigitalShift partials API to retrieve high-fidelity game rosters. It uses BeautifulSoup to parse HTML content fragments, ensuring roster data is verified against league source files.
+## 🏗️ Technical Architecture
 
-2. **Deterministic Analytics Layer**
-* **Business Logic (`analyzer.py`):** A custom Pandas engine that performs all statistical calculations, including standings, goal differentials, and win percentages. It identifies Game Winning Goals (GWG) and computes special teams efficiency metrics such as PP% and PK%.
-* **Visualization Engine (`viz_generator.py`):** Translates team performance metrics into professional-grade scatter plots. It maps Goal Differential against Total Points to define division parity and performance trends.
+This system operates sequentially via a unified bash orchestrator (`publish.sh`), processing structured datasets to ensure 100% data integrity before publication to GitHub Pages.
 
-3. **Synthesis and Strategic Insights**
-* **Weekly Production (`reporter.py`):** Compiles a high-density JSON data package for Gemini 2.5 Flash. The engine generates weekly dispatches with unique headlines and sublines, utilizing dynamic team logo mapping for homepage thumbnails.
-* **Historical Context (`backfill_reports.py`):** Facilitates targeted generation of past reports to build a data-consistent seasonal archive.
-* **Matchup Intelligence (`scout.py`):** Aggregates historical head-to-head results and individual player metrics to generate data-driven pre-game briefings.
+### 1. Ingestion & Data Governance
+* **Resilient Extraction (`scraper.py`):** Utilizes a headless Selenium WebDriver to navigate asynchronous Angular-rendered content. It features state-aware scraping to drastically reduce network load by only processing delta updates.
+* **API Synergies (`ingestor.py`):** Interfaces with external APIs to retrieve high-fidelity game rosters, parsing HTML fragments to ensure data is verified against league source files.
 
-## Key Features
+### 2. Human-in-the-Loop (HITL) Enrichment
+* **Context Curation (`enricher.py`):** Pure data lacks "soul." This interactive CLI tool pauses the pipeline to query the league commissioner for qualitative insights (e.g., short benches, locker-room vibes). It utilizes atomic backups and Pandas masking to safely merge human context with scraped data.
 
-### Resilient Data Collection
-* **State-Aware Scraping:** Incremental updates that only process new Game IDs, drastically reducing network load.
-* **Multi-Source Ingestion:** Synergizes Selenium web-scraping with direct REST API requests for a complete data picture (rosters, officiating crews).
-* **Column-Shift Detection:** Intelligent manifest parsing that handles inconsistent CSV layouts (e.g., scores stored in 'Status' columns) automatically.
+### 3. Deterministic Analytics Layer (The "Source of Truth")
+* **Statistical Aggregation (`analyzer.py`):** To prevent hallucinations, this custom Pandas layer pre-calculates all standings, goal differentials, and individual point totals. By passing a mathematically verified "Stat Sheet" to the AI, we eliminate arithmetic errors at the source.
+* **Visualization Engine (`viz_generator.py`):** Translates team performance metrics into professional-grade scatter plots, defining division parity and performance trends.
 
-### Deterministic Data Engineering
-* **Regex-Based Normalization:** Sanitizes inconsistent string data (e.g., `#8 Player: Infraction`) into structured integers.
-* **Unified PIM Logic:** Shares calculation helpers across team and player stats to ensure 1:1 statistical parity.
-* **Fallback Scoring:** Reconstructs game results from play-by-play logs if official score rows are missing.
+### 4. Generative Synthesis
+* **Context-Aware Reporting (`reporter.py`):** Compiles a high-density JSON data brief for the Gemini API. It uses dynamic prompt routing to pivot the narrative strategy based on seasonality (e.g., shifting from "Regular Season Standings" to "Playoff Race to Three" logic).
 
-### AI Narrative Intelligence
-* **Gemini 2.5 Flash Integration:** Leverages high-speed, long-context windows for deep pattern analysis across entire seasons.
-* **Hybrid Editorial Tone:** Synthesizes the analytical depth of *The Athletic* with the raw authenticity of *Spittin' Chiclets*.
-* **Adversarial Pattern Detection:** Identifies "statistical frauds" by cross-referencing high rankings against negative goal differentials.
+### 5. Trust, Safety, & Factual Validation
+* **Factual Circuit Breaker (`validator.py`):** An "LLM-as-a-Judge" QA system. It extracts factual claims (scores, goals, assists) from the generated Markdown and uses strict Python Regex to cross-reference them against the original CSV databases. The pipeline halts if the AI invents a play or misstates a score.
+* **Bias & Tone Auditing (`bias_checker.py`):** A proactive Trust & Safety layer. It scans the narrative for subjective, demeaning framing (e.g., calling a team "pathetic" instead of citing their negative goal differential). It flags systemic bias and requires an Editor-in-Chief override to deploy.
 
-## Project Structure
+---
+
+## 📂 Project Structure
 ```text
 sports-rag-reporter/
 ├── docs/                     # Deployment Source (GitHub Pages)
 │   ├── _posts/               # Automated Narrative Dispatches
-│   ├── _data/                # UI Configuration (navigation.yml)
-│   ├── assets/               # Parity Charts and Brand Assets
 │   └── index.md              # Public Dashboard and Visualizations
 ├── src/                      # Engineering Core
 │   ├── scraper.py            # Selenium ingestion engine
 │   ├── ingestor.py           # API-level roster ingestion
-│   ├── analyzer.py           # Logic and standing calculations
-│   ├── viz_generator.py       # Data visualization output
-│   ├── reporter.py           # Production narrative synthesis
+│   ├── enricher.py           # Interactive HITL context injection
+│   ├── analyzer.py           # Deterministic logic & aggregation
+│   ├── viz_generator.py      # Data visualization output
+│   ├── reporter.py           # LLM narrative synthesis
+│   ├── validator.py          # Factual integrity regex auditor
+│   ├── bias_checker.py       # Trust & safety tone auditor
 │   ├── backfill_reports.py   # Historical archive generator
-│   ├── scout.py              # Pre-game matchup intelligence
-│   └── publish.sh            # Deployment orchestration
+│   └── publish.sh            # CI/CD deployment orchestration
 ├── data/                     # Source of Truth (CSV persistence)
-└── README.md                 # Product Documentation
+└── README.md                 # Architecture Documentation

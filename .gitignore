@@ -10,8 +10,13 @@ env/
 
 # --- Data Layer ---
 # Ignores local CSV files and generated reports to keep the repo focused on logic
-data/*.csv
-data/*.bak
+data/
+
+# --- Code Layer ---
+src/ingestor.py
+src/backfill_reports.py
+src/publish.sh
+src/scout.py
 
 # --- Python & System Caches ---
 # Ignores temporary files that Python generates to run

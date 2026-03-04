@@ -48,7 +48,7 @@ def scrape_division_manifest(driver):
     Fetches the high-level league schedule and merges it with local Commissioner insights.
     Logic ensures that manual human enrichment is preserved across automated scrape cycles.
     """
-    print(f"📡 Building Comprehensive Manifest...")
+    print(f"Building manifest...")
     driver.get(HUB_URL)
     try:
         WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "//main//table//tbody/tr[@role='article']")))
