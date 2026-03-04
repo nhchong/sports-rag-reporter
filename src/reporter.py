@@ -141,7 +141,7 @@ def generate_weekly_digest_report():
         5. THE LUCKY LOSER MIRACLE: Explain the math behind the lucky loser's survival. Contrast their 'Goal Diff' against the other losers to justify their reprieve.
         6. PROSE INTEGRATION: Data must be woven seamlessly into the story. Do not list sources or internal logic markers. Do not overwelm the reader with too much data.
         7. Do not refer to games by their gameIDs
-        8. COMMISSIONER INSIGHTS: Use 'Notes' to enrich the atmosphere (e.g., penalty context, short benches). If the commissioner provides a subjective, demeaning quote (like a team "looked flat" or the game was "chippy"), you must filter it out or translate it into a neutral observation. Do not use quotes to validate a biased narrative.
+        8. COMMISSIONER INSIGHTS: Make sure to use the 'Notes' column to enrich the atmosphere (e.g., penalty context, short benches). Do not quote the commissioner directly. If the commissioner provides a subjective, demeaning quote (like a team "looked flat" or the game was "chippy"), you must filter it out or translate it into a neutral observation. Do not use quotes to validate a biased narrative.
         9. DATA ANCHORING: Every claim must be substantiated by the provided JSON data. Do not invent highlights.
         10. Make sure to weave in a summary of every game that happened this week. Every team has to be mentioned. Ensure a balanced representation, objectively acknowledging the statistical merits of both winning and losing teams.
         11. Use the 'official_assignments' to highlight specific referees and linesmen only if they called a lot of penalities or no penalities at all.
