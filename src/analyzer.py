@@ -124,28 +124,65 @@ def compute_playoff_matchups(df, po_manifest):
     return pd.DataFrame(matchups)
 
 def compute_player_statistics(df):
-    """Analyzes individual performance across Goals, Assists, and individual PIMs."""
+    """Analyzes individual performance across Goals, Assists, PIMs, and Special Teams."""
     print("👤 Calculating Player Stats...")
     player_metrics = {}
     player_games = {} 
 
+    # --- Pre-calculate Game-Winning Goals ---
+    # A goal is the GWG if it is the goal that puts the winning team one ahead of the losing team's final score.
+    finals = df[(df['EventType'] == 'PeriodScore') & (df['Period'] == 'Final')].copy()
+    game_winners = {} # dict of GameID: Winning Team's Target Goal Number
+    
+    for gid in finals['GameID'].unique():
+        game_res = finals[finals['GameID'] == gid]
+        if len(game_res) == 2:
+            s1, s2 = parse_integer_value(game_res.iloc[0]['Description']), parse_integer_value(game_res.iloc[1]['Description'])
+            t1, t2 = game_res.iloc[0]['Team'], game_res.iloc[1]['Team']
+            
+            if s1 > s2:
+                game_winners[gid] = {'winner': t1, 'gwg_number': s2 + 1}
+            elif s2 > s1:
+                game_winners[gid] = {'winner': t2, 'gwg_number': s1 + 1}
+
+    # Helper function to initialize player in dict
+    def init_player(p_name, team):
+        if p_name not in player_metrics:
+            player_metrics[p_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0, 'PPG': 0, 'SHG': 0, 'GWG': 0}
+            player_games[p_name] = set()
+
     for _, row in df[df['EventType'] == 'RosterAppearance'].iterrows():
         p_name, team, gid = row['Description'].strip(), row['Team'], row['GameID']
-        if p_name not in player_metrics:
-            player_metrics[p_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
-            player_games[p_name] = set()
+        init_player(p_name, team)
         player_games[p_name].add(gid)
 
+    # Track running score per team per game to find the GWG
+    running_scores = {}
+
     for _, row in df[df['EventType'] == 'Goal'].iterrows():
-        desc, gid, team = row['Description'], row['GameID'], row['Team']
+        desc, gid, team, strength = row['Description'], row['GameID'], row['Team'], str(row['Strength']).strip()
+        
+        # Increment running score
+        if gid not in running_scores: running_scores[gid] = {}
+        if team not in running_scores[gid]: running_scores[gid][team] = 0
+        running_scores[gid][team] += 1
+        current_goal_num = running_scores[gid][team]
+
         scorer_match = re.search(r'#\d+\s+([^(:]+)', desc)
         if scorer_match:
             p_name = scorer_match.group(1).strip()
-            if p_name not in player_metrics:
-                player_metrics[p_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
-                player_games[p_name] = set()
+            init_player(p_name, team)
+            
             player_metrics[p_name]['G'] += 1
             player_metrics[p_name]['Pts'] += 1
+            
+            # --- NEW NARRATIVE DATA POINTS ---
+            if strength == 'PP': player_metrics[p_name]['PPG'] += 1
+            if strength == 'SH': player_metrics[p_name]['SHG'] += 1
+            
+            if gid in game_winners and game_winners[gid]['winner'] == team and current_goal_num == game_winners[gid]['gwg_number']:
+                player_metrics[p_name]['GWG'] += 1
+            
             player_games[p_name].add(gid)
 
         assist_chunk = re.search(r'\((.*?)\)', desc)
@@ -154,9 +191,7 @@ def compute_player_statistics(df):
                 a_match = re.search(r'#\d+\s+([^,]+)', raw)
                 if a_match:
                     a_name = a_match.group(1).strip()
-                    if a_name not in player_metrics:
-                        player_metrics[a_name] = {'Team': team, 'G': 0, 'A': 0, 'Pts': 0, 'PIM': 0}
-                        player_games[a_name] = set()
+                    init_player(a_name, team)
                     player_metrics[a_name]['A'] += 1
                     player_metrics[a_name]['Pts'] += 1
                     player_games[a_name].add(gid)
@@ -173,7 +208,11 @@ def compute_player_statistics(df):
     stats = []
     for name, m in player_metrics.items():
         gp = len(player_games.get(name, set()))
-        stats.append({'Player': name, 'Team': m['Team'], 'GP': gp, 'G': m['G'], 'A': m['A'], 'Pts': m['Pts'], 'PIM': m['PIM']})
+        stats.append({
+            'Player': name, 'Team': m['Team'], 'GP': gp, 
+            'G': m['G'], 'A': m['A'], 'Pts': m['Pts'], 'PIM': m['PIM'],
+            'PPG': m['PPG'], 'SHG': m['SHG'], 'GWG': m['GWG'] # Exposing to the LLM
+        })
     
     return pd.DataFrame(stats).sort_values(by='Pts', ascending=False)
 
