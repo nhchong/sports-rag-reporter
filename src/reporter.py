@@ -1,8 +1,9 @@
 import os
 import sys
 import json
+import warnings
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from google import genai
 from dotenv import load_dotenv
 
@@ -33,10 +34,10 @@ LOGO_MAP = {
 api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 
-def compile_weekly_data_package():
+def compile_weekly_data_package(target_date_str=None):
     """
     Constructs a comprehensive data package for the LLM.
-    Detects 'Seasonality' by checking GameType to pivot the AI's narrative focus.
+    Uses True Time Travel by filtering against the actual Game Dates in the manifest.
     """
     try:
         # 1. Load Quantitative Context
@@ -55,37 +56,71 @@ def compile_weekly_data_package():
         details_df = pd.read_csv(DETAILS_FILE)
         manifest_df = pd.read_csv(MANIFEST_FILE)
         
-        # Ensure 'Notes' column exists (Maker-Owner Safety Check)
         if 'Notes' not in manifest_df.columns:
             manifest_df['Notes'] = ""
+            
+        # --- TRUE TIME TRAVEL LOGIC ---
+        if target_date_str:
+            # Push the target to the absolute end of the day (11:59 PM)
+            target_date = pd.to_datetime(target_date_str).replace(hour=23, minute=59, second=59)
+        else:
+            target_date = datetime.now().replace(hour=23, minute=59, second=59)
+            
+        # Define "This Week" as the 7 days leading up to our target date
+        seven_days_ago = target_date - timedelta(days=7)
         
-        # 3. Temporal Filtering: Filter strictly for TODAY'S action
-        details_df['ScrapedAt'] = pd.to_datetime(details_df['ScrapedAt'])
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # --- THE MISSING YEAR FIX ---
+        def append_year(date_str):
+            if pd.isna(date_str): return date_str
+            # If the month is Jan, Feb, Mar, or Apr, it's 2026. Otherwise, it's 2025.
+            if any(m in str(date_str) for m in ['Jan', 'Feb', 'Mar', 'Apr']):
+                return f"{date_str} 2026"
+            return f"{date_str} 2025"
+            
+        manifest_df['Date'] = manifest_df['Date'].apply(append_year)
+        # ---------------------------------
         
-        # Filter for records that match today's date exactly
-        this_week_details = details_df[details_df['ScrapedAt'] >= today].copy()
+        # Parse dates in manifest (Silence the warning and force mixed format)
+        warnings.filterwarnings('ignore', category=UserWarning, module='pandas')
+        manifest_df['ParsedDate'] = pd.to_datetime(manifest_df['Date'], format='mixed', errors='coerce')
+        
+        # CRITICAL: Strip out the future! (Hide any games after our target date)
+        past_manifest = manifest_df[manifest_df['ParsedDate'] <= target_date]
+        
+        # Find games that happened *specifically* in the 7 days leading up to our target date
+        this_week_manifest = past_manifest[past_manifest['ParsedDate'] > seven_days_ago]
+        recent_game_ids = this_week_manifest['GameID'].astype(str).unique()
+        
+        # Filter the play-by-play details to ONLY include those specific GameIDs
+        details_df['GameID'] = details_df['GameID'].astype(str)
+        this_week_details = details_df[details_df['GameID'].isin(recent_game_ids)].copy()
         
         # 4. Map Official Assignments
         officials = this_week_details[this_week_details['EventType'] == 'Official']
         ref_map = officials.groupby('GameID')['Description'].apply(list).to_dict()
 
         # 5. Extract Recent Manifest & Determine Season Mode
-        this_week_details['ScrapedAt'] = this_week_details['ScrapedAt'].dt.strftime('%Y-%m-%d')
-        recent_game_ids = this_week_details['GameID'].unique().astype(str)
-        
-        recent_manifest = manifest_df[manifest_df['GameID'].astype(str).isin(recent_game_ids)][
+        recent_manifest = this_week_manifest[
             ['GameID', 'Home', 'Away', 'Date', 'Score', 'Facility', 'Notes', 'GameType']
         ]
 
-        # LOGIC: If any game this week is a Playoff game, we pivot the entire report to Playoff Mode
-        is_playoffs = "Playoffs" in recent_manifest['GameType'].values
+        # --- DEBUG BLOCK ---
+        print(f"\n🔍 DEBUG: Looking for games between {seven_days_ago.date()} and {target_date.date()}")
+        print(f"🔍 DEBUG: Found {len(recent_manifest)} games.")
+        if len(recent_manifest) > 0:
+            print(recent_manifest[['Date', 'Home', 'Away', 'GameType']])
+        print("-" * 50)
+        # -------------------
 
-        # 6. Extract Historical Matchups for AI Scouting
-        historical_scores = manifest_df[['Date', 'Home', 'Away', 'Score', 'GameType']].to_dict(orient='records')
+        # LOGIC: Bulletproof Playoff Check
+        game_types = recent_manifest['GameType'].fillna("")
+        is_playoffs = game_types.str.contains('Playoff|Semi-Final|Final', case=False, regex=True).any()
+
+        # 6. Extract Historical Matchups (Only up to the target date, hiding future matchups!)
+        historical_scores = past_manifest[['Date', 'Home', 'Away', 'Score', 'GameType']].to_dict(orient='records')
 
         brief = {
-            "is_playoff_mode": is_playoffs,
+            "is_playoff_mode": bool(is_playoffs),
             "data_sources": {
                 "playoff_series_points": playoff_series,
                 "playoff_rankings_table": playoff_standings,
@@ -97,8 +132,9 @@ def compile_weekly_data_package():
                 "official_assignments": ref_map
             },
             "report_metadata": {
-                "current_date": today.strftime('%B %d, %Y'),
-                "target_audience": "Toronto-based adult hockey players (25-35)"
+                "current_date": target_date.strftime('%B %d, %Y'),
+                "target_audience": "Toronto-based adult hockey players (25-35)",
+                "time_travel_warning": "CRITICAL: You are writing this on the current_date. Ignore any aggregated stats that imply games played after this date."
             }
         }
         return json.dumps(brief, indent=2), is_playoffs
@@ -106,11 +142,11 @@ def compile_weekly_data_package():
         print(f"❌ Error compiling weekly data package: {e}")
         return None, False
 
-def generate_weekly_digest_report():
+def generate_weekly_digest_report(target_date_str=None):
     """
     Pivots prompt instructions based on season mode and generates the Markdown report.
     """
-    json_brief, is_playoffs = compile_weekly_data_package() 
+    json_brief, is_playoffs = compile_weekly_data_package(target_date_str) 
     if not json_brief: return
 
     print(f"🎙️ Generating Mode: {'PLAYOFFS' if is_playoffs else 'REGULAR SEASON'}")
@@ -143,15 +179,15 @@ def generate_weekly_digest_report():
     if is_playoffs:
         mode_instructions = """
         <narrative_strategy>
-        1. DYNAMIC CURRENT STATE: Analyze the data to determine the *furthest* round currently being played (e.g., Semi-Finals). FOCUS ENTIRELY ON THIS ROUND. 
-        2. THE LEDE (THE HOOK): Do not write a generic intro. Make the opening paragraph an explosive hook about the biggest drama of the CURRENT round (e.g., #1 seed surviving a scare, a massive 3-goal comeback). 
-        3. COMBINED RECAP & SCOUTING: For the active matchups in the CURRENT round, write a single, flowing section blending the recap, momentum shifts, and the stakes for Game 2. 
-        4. PROSE FLOW: Use connective tissue and varied sentence structures. Write like a cynical, sharp, human sports columnist. No robotic recaps.
+        1. DYNAMIC PLAYOFF TRACKING: Analyze the 'schedule_and_arenas' and 'playoff_series_points'. Determine the exact round (If 4 teams are playing, it is the Semi-Finals. If 2 teams, it is the Finals). Also determine the exact stakes: if no team has 2 points yet, these are Game 1 tone-setters. If teams have points, these are elimination/clinching games.
+        2. THE LEDE (THE HOOK): Make the opening paragraph an explosive hook about the biggest drama of THIS specific week (e.g., the Lucky Loser pushing the #1 seed to the brink, or massive blown leads). Frame it around the context of the Semi-Finals.
+        3. COMBINED RECAP & SCOUTING: For the active matchups, write a single, flowing section blending the recap of the game just played, the momentum shifts, and how their regular-season 'Tale of the Tape' sets the stakes for Game 2.
+        4. PROSE FLOW: Use connective tissue and varied sentence structures. Write like a cynical, sharp, human sports columnist for 'The Athletic'. No robotic recaps.
         5. COMMISSIONER INSIGHTS: Use 'Notes' for atmosphere.
         </narrative_strategy>
 
         <data_guardrails>
-        1. TEMPORAL BOUNDARY (CRITICAL): If your data contains both Round 1 games and Semi-Final games, DO NOT write full recaps for the Round 1 games. Only mention them briefly as context (e.g., "Fresh off their Round 1 victory over..."). Your primary focus must be the most recent round.
+        1. TEMPORAL BOUNDARY (CRITICAL): You are writing this report on the 'current_date' provided in the JSON. You MUST ONLY recap the games that occurred in the 'weekly_play_by_play' data. Do not write full recaps for past rounds; only mention past rounds briefly as context (e.g., "Fresh off their Round 1 victory over..."). 
         2. THE SOURCE OF TRUTH: Use 'weekly_play_by_play' to understand the *flow* of the game. Use 'individual_leaders' for stats.
         3. NO HALLUCINATIONS: Do not invent regular season history or stakes.
         </data_guardrails>
@@ -160,13 +196,14 @@ def generate_weekly_digest_report():
         FORMAT: 2-game series, 'Race to Three' points (Win=2, Tie=1). 
         Determine who is leading, who is facing elimination, or if a series is tied based on the data. 
         TIEBREAKERS (If tied after Game 2): 1. Points, 2. Goal Differential, 3. Total Goals, 4. Fewest Penalty Minutes.
+        LUCKY LOSER: A team that advanced despite losing their previous series.
         </playoff_logic>
 
         <format_requirements>
-        - Headline: [Must contain the names of the teams involved in the biggest storyline you discovered. NO generic "Playoffs Begin" titles. Make it specific to the events.]
-        - Subline: [A sharp, one-sentence analytical summary placed right below the headline. No more than 15 words. Use this to add context to the upset, name the standout player, or highlight the secondary storyline.].  
+        - Headline: [Must contain the names of the teams involved in the biggest storyline. Example: "Lucky Losers Stun #1 Don Cherry's in Semi-Final Opener". NO generic "Playoffs Begin" titles.]
+        - Subline: [A sharp, one-sentence analytical summary placed right below the headline. No more than 15 words. Use this to add context to the upset or highlight the secondary storyline.]
         - The Lede: [One punchy paragraph hooking the reader with the organic storyline you identified.]
-        - The Matchups: [Use Markdown headings for each series. Write 1-2 flowing paragraphs per series blending recap, 'Tale of the Tape', and future stakes.]
+        - The Matchups: [Use Markdown headings for each series. Write 1-2 flowing paragraphs per series blending recap, 'Tale of the Tape', and Game 2 stakes.]
         - The Dispatch Three Stars: [Exactly THREE stars TOTAL for the entire week.]
           * Format: **[1st/2nd/3rd] Star: [Player Name] ([Team])** - [G]G, [A]A, [Pts]Pts. - [Reasoning]. 
           * 1st Star: "The Clutch Performer" 
@@ -175,7 +212,7 @@ def generate_weekly_digest_report():
         - Length: Target 400-500 words. Keep it brutally tight but well-written.
         </format_requirements>
         """
-        task_instruction = "Task: Generate the weekly Playoff wrap-up and preview report. Analyze the data to organically find the best headline narrative."
+        task_instruction = "Task: Generate the weekly Playoff wrap-up and preview report for the current week's action."
 
     else:
         mode_instructions = """
@@ -223,8 +260,10 @@ def generate_weekly_digest_report():
 
         # Persistence: Archive to GitHub Pages
         os.makedirs(POSTS_DIR, exist_ok=True)
-        today = datetime.now()
-        filename = f"{today.strftime('%Y-%m-%d')}-dispatch.md"
+        
+        # Use target_date for filename so you can time travel without overwriting today's post
+        file_date = datetime.strptime(target_date_str, "%Y-%m-%d") if target_date_str else datetime.now()
+        filename = f"{file_date.strftime('%Y-%m-%d')}-dispatch.md"
         filepath = os.path.join(POSTS_DIR, filename)
         
         front_matter = f"""---
@@ -249,4 +288,6 @@ author_profile: true
         print(f"❌ Gemini API Error: {e}")
 
 if __name__ == "__main__":
-    generate_weekly_digest_report()
+    # Catch a date passed via terminal (e.g. python3 src/reporter.py 2026-03-12)
+    passed_date = sys.argv[1] if len(sys.argv) > 1 else None
+    generate_weekly_digest_report(passed_date)
