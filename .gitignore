@@ -8,6 +8,12 @@ env/
 # Protects your Gemini API key from being exposed publicly
 .env
 
+# --- Source Code ---
+# Ignores source code that is not needed to be committed
+src/ingestor.py
+src/backfill_reports.py
+src/scout.py
+
 # --- Data Layer ---
 # Ignores local CSV files and generated reports to keep the repo focused on logic
 data/

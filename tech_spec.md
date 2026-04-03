@@ -1,47 +1,65 @@
 # Technical Specification: The Low B Dispatch Pipeline
 
-## 1. Project Overview
-**Name:** `sports-rag-reporter`
-**Architecture:** Structured RAG (Retrieval-Augmented Generation) & Deterministic AI Pipeline.
-**Goal:** To build an automated, enterprise-grade pipeline that extracts raw recreational sports data (DMHL), calculates deterministic statistics, enriches data via Human-in-the-Loop (HITL), and utilizes generative AI to produce high-fidelity, validated sports journalism.
+## 1. System Overview
+**Project Name:** `sports-rag-reporter`
+**Architecture Paradigm:** Structured RAG (Retrieval-Augmented Generation), Deterministic ETL, & Agentic LLM Orchestration.
+**Objective:** An autonomous, end-to-end data journalism pipeline that ingests raw recreational hockey telemetry (DMHL), calculates deterministic statistics, integrates Human-in-the-Loop (HITL) qualitative context, and utilizes generative AI to produce high-fidelity, validated sports media.
 
-## 2. Tech Stack
+## 2. Technology Stack
 * **Language:** Python 3.10+
-* **Web Scraping / Ingestion:** Selenium (WebDriver, Headless Chrome) and BeautifulSoup.
-* **Data Engineering & Analytics:** Pandas (aggregation, standing logic, regex cleaning).
+* **Ingestion & Extraction:** Selenium (Headless WebDriver), BeautifulSoup.
+* **Data Engineering (ETL):** Pandas (Temporal filtering, aggregation, standing logic, data normalization).
 * **AI/LLM Engine:** Google GenAI SDK (Gemini 2.5 Flash).
-* **Validation:** Strict Python Regex and LLM-as-a-Judge QA.
-* **Deployment & CI/CD:** Bash (`publish.sh`) to GitHub Pages (Jekyll/Markdown).
+* **Visual Analytics:** Matplotlib, Seaborn.
+* **Quality Assurance (QA):** Strict Regex pattern matching and LLM-as-a-Judge NLP auditing.
+* **Deployment:** Static Site Generation via Jekyll (GitHub Pages).
 
-## 3. Pipeline Architecture & Data Flow
-The system operates on a strict decoupling of **Deterministic Logic** (math) and **Generative Synthesis** (storytelling).
+## 3. Core Architectural Principles
+The system operates on a strict decoupling of **Deterministic Logic** (Math/Facts) and **Generative Synthesis** (Narrative/Storytelling) to eliminate LLM hallucinations. 
 
-1. **Ingestion (`scraper.py` / `ingestor.py`):** * Selenium navigates dynamic JS tables, extracting Game Manifests and detailed Play-by-Play boxscores. Data is appended locally to CSVs as the single source of truth.
-2. **Enrichment (`enricher.py`):** * CLI pauses execution to allow the League Commissioner (Human) to inject qualitative notes into the database, utilizing atomic backups for safety.
-3. **Deterministic Analytics (`analyzer.py`):** * Pandas calculates all standings, goal differentials, and individual point totals (Goals/Assists). Output is a "Verified Stat Sheet" (JSON/Dict) to prevent LLM hallucination.
-4. **Generative Synthesis (`reporter.py`):** * Compiles the structured data and context window. Gemini generates the narrative using dynamic prompt routing (e.g., 'Season Mode' vs 'Playoff Mode') and specific journalistic personas.
-5. **Trust & Validation (`validator.py` / `bias_checker.py`):**
-   * *Validator:* Extracts factual claims from the draft and matches them exactly against the source CSV. Fails on hallucinations.
-   * *Bias Checker:* Audits the tone for demeaning language to protect brand safety.
-6. **Publication (`publish.sh`):** * Orchestrates the entire pipeline. On success, writes to `docs/_posts/` for immediate web rendering.
+### 3.1. The Temporal Resolution Engine ("Time Travel")
+The pipeline does not rely on static "current day" execution. It utilizes a dynamic Pandas bounding box that allows the system to accurately reconstruct the exact database state of any historical date. 
+* **Auto-Seeker:** Automatically detects the most recent game played to define the active 7-day reporting window.
+* **Future-Stripping:** When generating historical reports, the pipeline programmatically deletes all games occurring after the target date to prevent future data leakage into the LLM context window.
 
-## 4. File Structure
+### 3.2. Dynamic Agentic Routing
+The generative layer (`reporter.py`) is context-aware. Before pinging the LLM, it evaluates the schedule to dynamically route the system into one of three distinct prompt architectures:
+1. **Regular Season:** Optimizes for standings shifts and momentum.
+2. **Playoffs:** Triggers "Race to Three" series math, elimination stakes, and tie-breaker logic.
+3. **Championship Finale:** Detects when only two teams remain, triggering an end-of-season retrospective and crowning statistical MVPs.
+
+## 4. Pipeline Data Flow
+1. **Extraction (`scraper.py` / `ingestor.py`):** Selenium navigates dynamic JS DOMs, extracting Game Manifests and detailed Play-by-Play boxscores. Data is appended to local CSVs as the immutable source of truth.
+2. **HITL Enrichment (`enricher.py`):** A CLI interface pauses execution, prompting the League Commissioner to inject qualitative notes (e.g., locker room vibes, short benches) into the database. Utilizes atomic `.bak` backups for data safety.
+3. **Deterministic Analytics (`analyzer.py`):** Pandas calculates W/L/T standings, goal differentials, playoff series points, and individual player stats. The output is a verified JSON "Stat Sheet" payload.
+4. **Generative Synthesis (`reporter.py`):** Compiles the JSON payload and routes the prompt to Gemini. The LLM acts solely as a "Senior Columnist," restricted to narrative synthesis based *only* on the provided payload.
+5. **Multi-Stage Validation:**
+   * **Factual Circuit Breaker (`validator.py`):** An LLM-as-a-Judge extracts claims (scores, goals, assists) from the drafted Markdown. Python Regex cross-references these claims against a 28-day chronological bounding box of the source CSV. Fails on hallucinations.
+   * **Trust & Safety NLP Audit (`bias_checker.py`):** A secondary LLM scans the narrative for subjective, demeaning framing or unjustified causality. Flags systemic bias and requires a manual CLI override to deploy.
+6. **Visual Synthesis (`viz_generator.py`):** Renders performance scatter plots (e.g., Goal Differential vs. Total Points), dynamically excluding inactive teams, and exports directly to the deployment assets folder.
+7. **Deployment (`main.py` / `publish.sh`):** Orchestrates the pipeline and writes final Markdown/YAML front-matter to `docs/_posts/` for immediate Jekyll rendering.
+
+## 5. File & Directory Structure
 ```text
 sports-rag-reporter/
-├── docs/                     # GitHub Pages deployment source
-│   ├── _posts/               # Generated Markdown reports
-│   └── _data/                
-├── src/                      # Core Engineering
-│   ├── scraper.py            # Selenium DOM extraction
-│   ├── ingestor.py           # API-level data ingestion
-│   ├── enricher.py           # HITL CLI interface
-│   ├── analyzer.py           # Pandas calculation engine
-│   ├── viz_generator.py      # Matplotlib/Seaborn visualization
-│   ├── reporter.py           # Gemini prompting and synthesis
-│   ├── validator.py          # Regex-based factual auditing
-│   ├── bias_checker.py       # LLM safety and tone audit
+├── docs/                     # Deployment Environment (GitHub Pages / Jekyll)
+│   ├── _posts/               # Verified Markdown narrative dispatches
+│   ├── assets/images/        # Static assets & dynamically generated visualiztions
+│   ├── _config.yml           # Static site configuration
+│   └── index.md              # Public Dashboard Frontpage
+├── src/                      # Engineering Core
+│   ├── main.py               # Application entry point / orchestrator
+│   ├── scraper.py            # Selenium DOM extraction engine
+│   ├── ingestor.py           # API-level roster/data ingestion
+│   ├── enricher.py           # HITL CLI interactive prompt
+│   ├── analyzer.py           # Deterministic Pandas ETL calculation engine
+│   ├── viz_generator.py      # Matplotlib data visualization output
+│   ├── reporter.py           # Context-aware LLM prompting and synthesis
+│   ├── scout.py              # Pre-game opponent analytics generation
+│   ├── validator.py          # LLM-as-a-Judge factual extraction & regex auditor
+│   ├── bias_checker.py       # Editorial tone & safety NLP auditor
 │   ├── backfill_reports.py   # Historical generation tool
-│   ├── scout.py              # Pre-game matchup generation
-│   └── publish.sh            # Main orchestration script
-├── data/                     # CSV Persistence layer
-└── tech_spec.md              # System architecture and rules
+│   └── publish.sh            # CI/CD deployment automation script
+├── data/                     # Source of Truth (CSV Persistence layer)
+├── requirements.txt          # Python environment dependencies
+└── tech_spec.md              # System architecture and rules (This Document)
